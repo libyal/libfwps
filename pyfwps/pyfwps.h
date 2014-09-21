@@ -1,5 +1,5 @@
 /*
- * Python bindings for libfwps (pyfwsi)
+ * Python bindings for libfwps (pyfwps)
  *
  * Copyright (c) 2013-2014, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -25,17 +25,17 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyfwsi_python.h"
+#include "pyfwps_python.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-PyObject *pyfwsi_get_version(
+PyObject *pyfwps_get_version(
            PyObject *self,
            PyObject *arguments );
 
-PyMODINIT_FUNC initpyfwsi(
+PyMODINIT_FUNC initpyfwps(
                 void );
 
 #if defined( __cplusplus )

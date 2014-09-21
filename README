@@ -1,4 +1,6 @@
-See:
-* http://code.google.com/p/libfwsi/wiki/Building
-* README.macosx
+libfwps is a library for Windows Property Store data types.
+
+For more information see:
+* Project documentation: https://github.com/libyal/libfwps/wiki/Home
+* How to build from source: https://github.com/libyal/libfwps/wiki/Building
 

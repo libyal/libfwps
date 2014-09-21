@@ -25,8 +25,8 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyfwsi_libcerror.h"
-#include "pyfwsi_python.h"
+#include "pyfwps_libcerror.h"
+#include "pyfwps_python.h"
 
 #define PYFWSI_ERROR_STRING_SIZE		768
 
@@ -34,7 +34,7 @@
 extern "C" {
 #endif
 
-void pyfwsi_error_raise(
+void pyfwps_error_raise(
       libcerror_error_t *error,
       PyObject *exception_object,
       const char *format_string,

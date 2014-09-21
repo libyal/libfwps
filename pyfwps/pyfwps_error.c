@@ -31,10 +31,10 @@
 #error Missing headers stdarg.h and varargs.h
 #endif
 
-#include "pyfwsi_error.h"
-#include "pyfwsi_libcerror.h"
-#include "pyfwsi_libcstring.h"
-#include "pyfwsi_python.h"
+#include "pyfwps_error.h"
+#include "pyfwps_libcerror.h"
+#include "pyfwps_libcstring.h"
+#include "pyfwps_python.h"
 
 #if defined( HAVE_STDARG_H ) || defined( WINAPI )
 #define VARARGS( function, error, exception_object, type, argument ) \
@@ -57,7 +57,7 @@
 /* Raises an error
  */
 void VARARGS(
-      pyfwsi_error_raise,
+      pyfwps_error_raise,
       libcerror_error_t *error,
       PyObject *exception_object,
       const char *,
@@ -68,7 +68,7 @@ void VARARGS(
 	char error_string[ PYFWSI_ERROR_STRING_SIZE ];
 	char exception_string[ PYFWSI_ERROR_STRING_SIZE ];
 
-	static char *function     = "pyfwsi_error_raise";
+	static char *function     = "pyfwps_error_raise";
 	size_t error_string_index = 0;
 	size_t print_count        = 0;
 

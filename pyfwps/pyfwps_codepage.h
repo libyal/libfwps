@@ -29,7 +29,7 @@
 extern "C" {
 #endif
 
-const char *pyfwsi_codepage_to_string(
+const char *pyfwps_codepage_to_string(
              int codepage );
 
 /* TODO add list function */

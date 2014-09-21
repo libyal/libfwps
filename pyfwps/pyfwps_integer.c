@@ -22,18 +22,18 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyfwsi_libcerror.h"
-#include "pyfwsi_integer.h"
-#include "pyfwsi_python.h"
+#include "pyfwps_libcerror.h"
+#include "pyfwps_integer.h"
+#include "pyfwps_python.h"
 
 /* Creates a new signed integer object from a 64-bit value
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyfwsi_integer_signed_new_from_64bit(
+PyObject *pyfwps_integer_signed_new_from_64bit(
            int64_t value_64bit )
 {
 	PyObject *integer_object = NULL;
-	static char *function    = "pyfwsi_integer_signed_new_from_64bit";
+	static char *function    = "pyfwps_integer_signed_new_from_64bit";
 
 #if defined( HAVE_LONG_LONG )
 	if( ( value_64bit < (int64_t) LLONG_MIN )
@@ -67,11 +67,11 @@ PyObject *pyfwsi_integer_signed_new_from_64bit(
 /* Creates a new unsigned integer object from a 64-bit value
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyfwsi_integer_unsigned_new_from_64bit(
+PyObject *pyfwps_integer_unsigned_new_from_64bit(
            uint64_t value_64bit )
 {
 	PyObject *integer_object = NULL;
-	static char *function    = "pyfwsi_integer_unsigned_new_from_64bit";
+	static char *function    = "pyfwps_integer_unsigned_new_from_64bit";
 
 #if defined( HAVE_LONG_LONG )
 	if( value_64bit > (uint64_t) ULLONG_MAX )
@@ -104,7 +104,7 @@ PyObject *pyfwsi_integer_unsigned_new_from_64bit(
 /* Copies a Python int or long object to a signed 64-bit value
  * Returns 1 if successful or -1 on error
  */
-int pyfwsi_integer_signed_copy_to_64bit(
+int pyfwps_integer_signed_copy_to_64bit(
      PyObject *integer_object,
      int64_t *value_64bit,
      libcerror_error_t **error )
@@ -114,7 +114,7 @@ int pyfwsi_integer_signed_copy_to_64bit(
 	PyObject *exception_type      = NULL;
 	PyObject *exception_value     = NULL;
 	char *error_string            = NULL;
-	static char *function         = "pyfwsi_integer_signed_copy_to_64bit";
+	static char *function         = "pyfwps_integer_signed_copy_to_64bit";
 	int result                    = 0;
 
 #if defined( HAVE_LONG_LONG )
@@ -325,7 +325,7 @@ int pyfwsi_integer_signed_copy_to_64bit(
 /* Copies a Python int or long object to an unsigned 64-bit value
  * Returns 1 if successful or -1 on error
  */
-int pyfwsi_integer_unsigned_copy_to_64bit(
+int pyfwps_integer_unsigned_copy_to_64bit(
      PyObject *integer_object,
      uint64_t *value_64bit,
      libcerror_error_t **error )
@@ -335,7 +335,7 @@ int pyfwsi_integer_unsigned_copy_to_64bit(
 	PyObject *exception_type      = NULL;
 	PyObject *exception_value     = NULL;
 	char *error_string            = NULL;
-	static char *function         = "pyfwsi_integer_unsigned_copy_to_64bit";
+	static char *function         = "pyfwps_integer_unsigned_copy_to_64bit";
 	int result                    = 0;
 
 #if defined( HAVE_LONG_LONG )

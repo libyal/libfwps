@@ -22,15 +22,15 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyfwsi_error.h"
-#include "pyfwsi_guid.h"
-#include "pyfwsi_libfguid.h"
-#include "pyfwsi_python.h"
+#include "pyfwps_error.h"
+#include "pyfwps_guid.h"
+#include "pyfwps_libfguid.h"
+#include "pyfwps_python.h"
 
 /* Creates a new string object from a GUID
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyfwsi_string_new_from_guid(
+PyObject *pyfwps_string_new_from_guid(
            const uint8_t *guid_buffer,
            size_t guid_buffer_size )
 {
@@ -40,13 +40,13 @@ PyObject *pyfwsi_string_new_from_guid(
 	libfguid_identifier_t *guid = NULL;
 	PyObject *string_object     = NULL;
 	const char *errors          = NULL;
-	static char *function       = "pyfwsi_string_new_from_guid";
+	static char *function       = "pyfwps_string_new_from_guid";
 
 	if( libfguid_identifier_initialize(
 	     &guid,
 	     &error ) != 1 )
 	{
-		pyfwsi_error_raise(
+		pyfwps_error_raise(
 		 error,
 		 PyExc_IOError,
 		 "%s: unable to create GUID.",
@@ -64,7 +64,7 @@ PyObject *pyfwsi_string_new_from_guid(
 	     LIBFGUID_ENDIAN_LITTLE,
 	     &error ) != 1 )
 	{
-		pyfwsi_error_raise(
+		pyfwps_error_raise(
 		 error,
 		 PyExc_IOError,
 		 "%s: unable to copy byte stream to GUID.",
@@ -82,7 +82,7 @@ PyObject *pyfwsi_string_new_from_guid(
 	     LIBFGUID_STRING_FORMAT_FLAG_USE_LOWER_CASE,
 	     &error ) != 1 )
 	{
-		pyfwsi_error_raise(
+		pyfwps_error_raise(
 		 error,
 		 PyExc_IOError,
 		 "%s: unable to copy GUID to string.",
@@ -97,7 +97,7 @@ PyObject *pyfwsi_string_new_from_guid(
 	     &guid,
 	     &error ) != 1 )
 	{
-		pyfwsi_error_raise(
+		pyfwps_error_raise(
 		 error,
 		 PyExc_IOError,
 		 "%s: unable to free GUID.",

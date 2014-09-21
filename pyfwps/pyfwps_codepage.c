@@ -22,14 +22,14 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyfwsi_codepage.h"
-#include "pyfwsi_libfwps.h"
+#include "pyfwps_codepage.h"
+#include "pyfwps_libfwps.h"
 
 /* Returns a string representation of the codepage
  * Codecs and aliases are defined: http://docs.python.org/library/codecs.html#standard-encodings
  * Returns 1 if successful or NULL if codepage is not supported
  */
-const char *pyfwsi_codepage_to_string(
+const char *pyfwps_codepage_to_string(
              int codepage )
 {
 	switch( codepage )

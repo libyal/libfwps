@@ -1,17 +1,17 @@
 #!/bin/sh
 # Script that synchronizes the local library dependencies
 #
-# Version: 20130330
+# Version: 20140915
 
-GIT_URL_PREFIX="https://code.google.com/p"
-LOCAL_LIBS="libcdata libcerror libcnotify libfdatetime libfguid libfwps libuna";
+GIT_URL_PREFIX="https://github.com/libyal";
+LOCAL_LIBS="libcdata libcerror libcnotify libfdatetime libfguid libfole libuna";
 
 OLDIFS=$IFS;
 IFS=" ";
 
 for LOCAL_LIB in ${LOCAL_LIBS};
 do
-	git clone ${GIT_URL_PREFIX}/${LOCAL_LIB}/ ${LOCAL_LIB}-$$;
+	git clone ${GIT_URL_PREFIX}/${LOCAL_LIB}.git ${LOCAL_LIB}-$$;
 
 	if [ -d ${LOCAL_LIB}-$$ ];
 	then

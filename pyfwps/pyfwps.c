@@ -1,5 +1,5 @@
 /*
- * Python bindings module for libfwps (pyfwsi)
+ * Python bindings module for libfwps (pyfwps)
  *
  * Copyright (c) 2013-2014, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -26,19 +26,19 @@
 #include <stdlib.h>
 #endif
 
-#include "pyfwsi.h"
-#include "pyfwsi_error.h"
-#include "pyfwsi_libcerror.h"
-#include "pyfwsi_libcstring.h"
-#include "pyfwsi_libfwps.h"
-#include "pyfwsi_python.h"
-#include "pyfwsi_unused.h"
+#include "pyfwps.h"
+#include "pyfwps_error.h"
+#include "pyfwps_libcerror.h"
+#include "pyfwps_libcstring.h"
+#include "pyfwps_libfwps.h"
+#include "pyfwps_python.h"
+#include "pyfwps_unused.h"
 
-/* The pyfwsi module methods
+/* The pyfwps module methods
  */
-PyMethodDef pyfwsi_module_methods[] = {
+PyMethodDef pyfwps_module_methods[] = {
 	{ "get_version",
-	  (PyCFunction) pyfwsi_get_version,
+	  (PyCFunction) pyfwps_get_version,
 	  METH_NOARGS,
 	  "get_version() -> String\n"
 	  "\n"
@@ -51,10 +51,10 @@ PyMethodDef pyfwsi_module_methods[] = {
 	  NULL}
 };
 
-/* Retrieves the pyfwsi/libfwps version
+/* Retrieves the pyfwps/libfwps version
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyfwsi_get_version(
+PyObject *pyfwps_get_version(
            PyObject *self PYFWSI_ATTRIBUTE_UNUSED,
            PyObject *arguments PYFWSI_ATTRIBUTE_UNUSED )
 {
@@ -90,9 +90,9 @@ PyObject *pyfwsi_get_version(
 #define PyMODINIT_FUNC void
 #endif
 
-/* Initializes the pyfwsi module
+/* Initializes the pyfwps module
  */
-PyMODINIT_FUNC initpyfwsi(
+PyMODINIT_FUNC initpyfwps(
                 void )
 {
 	PyObject *module                 = NULL;
@@ -106,9 +106,9 @@ PyMODINIT_FUNC initpyfwsi(
 	 * otherwise the module will segfault on a version mismatch
 	 */
 	module = Py_InitModule3(
-	          "pyfwsi",
-	          pyfwsi_module_methods,
-	          "Python libfwps module (pyfwsi)." );
+	          "pyfwps",
+	          pyfwps_module_methods,
+	          "Python libfwps module (pyfwps)." );
 
 	PyEval_InitThreads();
 
@@ -117,17 +117,17 @@ PyMODINIT_FUNC initpyfwsi(
 #ifdef TODO
 	/* Setup the volume type object
 	 */
-	pyfwsi_volume_type_object.tp_new = PyType_GenericNew;
+	pyfwps_volume_type_object.tp_new = PyType_GenericNew;
 
 	if( PyType_Ready(
-	     &pyfwsi_volume_type_object ) < 0 )
+	     &pyfwps_volume_type_object ) < 0 )
 	{
 		goto on_error;
 	}
 	Py_IncRef(
-	 (PyObject *) &pyfwsi_volume_type_object );
+	 (PyObject *) &pyfwps_volume_type_object );
 
-	volume_type_object = &pyfwsi_volume_type_object;
+	volume_type_object = &pyfwps_volume_type_object;
 
 	PyModule_AddObject(
 	 module,

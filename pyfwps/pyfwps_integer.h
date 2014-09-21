@@ -25,25 +25,25 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyfwsi_libcerror.h"
-#include "pyfwsi_python.h"
+#include "pyfwps_libcerror.h"
+#include "pyfwps_python.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-PyObject *pyfwsi_integer_signed_new_from_64bit(
+PyObject *pyfwps_integer_signed_new_from_64bit(
            int64_t value_64bit );
 
-PyObject *pyfwsi_integer_unsigned_new_from_64bit(
+PyObject *pyfwps_integer_unsigned_new_from_64bit(
            uint64_t value_64bit );
 
-int pyfwsi_integer_signed_copy_to_64bit(
+int pyfwps_integer_signed_copy_to_64bit(
      PyObject *integer_object,
      int64_t *value_64bit,
      libcerror_error_t **error );
 
-int pyfwsi_integer_unsigned_copy_to_64bit(
+int pyfwps_integer_unsigned_copy_to_64bit(
      PyObject *integer_object,
      uint64_t *value_64bit,
      libcerror_error_t **error );

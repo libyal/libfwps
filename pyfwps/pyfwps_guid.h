@@ -25,13 +25,13 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyfwsi_python.h"
+#include "pyfwps_python.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-PyObject *pyfwsi_string_new_from_guid(
+PyObject *pyfwps_string_new_from_guid(
            const uint8_t *guid_buffer,
            size_t guid_buffer_size );
 
