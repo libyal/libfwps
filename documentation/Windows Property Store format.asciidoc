@@ -1,5 +1,5 @@
 = Windows Property Store format
-Analysis of the Windows Property Store (SPS) format
+Analysis of the Windows Serialized Property Store (SPS) format
 
 :numbered!:
 [abstract]
@@ -15,9 +15,9 @@ Which should allow existing Open Source forensic tooling to be able to process t
 [cols="1,5"]
 |===
 | Author(s): | Joachim Metz <joachim.metz@gmail.com>
-| Abstract: | This document contains information about the Property Store format.
+| Abstract: | This document contains information about the Windows Serialized Property Store (SPS) format.
 | Classification: | Public
-| Keywords: | Property Store, Shell Property List
+| Keywords: | Property Store, Shell Property List, SPS
 |===
 
 [preface]
