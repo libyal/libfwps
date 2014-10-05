@@ -322,11 +322,11 @@ These that properties have not been confirmed yet.
 | 0x0004 | 0x0013 | PIDVSI_FRAME_HEIGHT | Frame height
 | 0x0005 | 0x0013 | PIDVSI_FRAME_COUNT | Number of frames
 | 0x0006 | 0x0013 | PIDVSI_FRAME_RATE | Frame rate +
-| Value in frames per milliseconds
+Value in frames per milliseconds
 | 0x0007 | 0x0013 | PIDVSI_TIMELENGTH | Time length +
-| Value in milliseconds
+Value in milliseconds
 | 0x0008 | 0x0013 | | Data rate +
-| Value in bytes per milliseconds
+Value in bytes per milliseconds
 | 0x0009 | 0x0013 | | Sample size
 | 0x000a | 0x001f | | Compression
 | 0x000b | 0x0012 | | Stream number
