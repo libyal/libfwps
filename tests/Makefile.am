@@ -6,11 +6,11 @@ AM_CPPFLAGS = \
 	@LIBCNOTIFY_CPPFLAGS@
 
 if HAVE_PYTHON
-TESTS_PYFSWI =
+TESTS_PYFWPS =
 endif
 
 TESTS = \
-	$(TESTS_PYFWSI)
+	$(TESTS_PYFWPS)
 
 check_SCRIPTS = \
 	test_runner.sh

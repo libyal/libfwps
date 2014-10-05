@@ -1,0 +1,789 @@
+= Windows Property Store format
+Analysis of the Windows Property Store (SPS) format
+
+:numbered!:
+[abstract]
+== Summary
+The Property store format is used by various Windows file formats like the Windows Shortcut File (LNK) and in the Windows Shell Items.
+This specification is based on earlier work on the format and was complimented by reverse engineering.
+
+This document is intended as a working document for the Property Store format specification.
+Which should allow existing Open Source forensic tooling to be able to process this file type.
+
+[preface]
+== Document information
+[cols="1,5"]
+|===
+| Author(s): | Joachim Metz <joachim.metz@gmail.com>
+| Abstract: | This document contains information about the Property Store format.
+| Classification: | Public
+| Keywords: | Property Store, Shell Property List
+|===
+
+[preface]
+== License
+....
+Copyright (c) 2013-2014, Joachim Metz <joachim.metz@gmail.com>.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled "GNU
+Free Documentation License".
+....
+
+[preface]
+== Revision history
+[cols="1,1,1,5",options="header"]
+|===
+| Version | Author | Date | Comments
+| 0.0.1 | J.B. Metz | June 2013 | Initial version based on liblnk and libfwsi documentation.
+| 0.0.2 | J.B. Metz | June 2014 | Small changes.
+| 0.0.3 | J.B. Metz | August 2014 | Moved the known property set documentation and notes to this document.
+| 0.0.4 | J.B. Metz | August 2014 | Additional information.
+| 0.0.5 | J.B. Metz | October 2014 | Switched to asccidoc format.
+|===
+
+:numbered:
+== Overview
+The Property store format is used by various Windows file formats like the Windows Shortcut File (LNK) and in the Windows Shell Items.
+
+[cols="1,5",options="header"]
+|===
+| Characteristics | Description
+| Byte order | little-endian
+| Date and time values | FILETIME in UTC
+| Character strings | ASCII strings are Single Byte Character (SBC) or Multi Byte Character (MBC) string stored with a codepage. +
+Sometimes referred to as ANSI string representation. +
+Though technically maybe incorrect, this document will use term extended ASCII string. +
++
+Unicode strings are stored in UTF-16 little-endian without the byte order mark (BOM).
+|===
+
+== Property store (aka shell property sheet list)
+The property store is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size of the property store +
+[yellow-background]*Includes the 4 bytes of the size itself*
+| 4 | ... | | The serialized property storage
+| ... | 4 | 0 | Terminal identifier +
+Signifies the end of the property store
+|===
+
+The last serialized property storage should be of size 0 to terminate the property store.
+
+[NOTE]
+In Windows Shell items the size of the property store is not necessarily stored directly before the first serialized property storage.
+
+=== Serialized property storage (aka Shell property sheet)
+The serialized property storage is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size of the serialized property storage +
+[yellow-background]*Includes the 4 bytes of the size itself*
+| 4 | 4 | "1SPS" | Version +
+(Serialized property storage version 1)
+| 8 | 16 | | Format class (or property set) identifier +
+GUID +
+See section: xref:format_class_identifiers[Format class (or property set) identifiers]
+| 24 | ...  | | Serialized property value
+| ...  | 4 | 0 | Terminal identifier +
+Signifies the end of the serialized property storage
+|===
+
+The last serialized property value should be of size 0 to terminate the serialized property storage.
+
+[NOTE]
+`[MS-PROPSTORE]` uses the term format class identifier, which can also seen in the FMTID names.
+The purpose of the format class identifiers are similar to that of the property set class identifiers used in the property set streams of OLE compound files they are considered equivalent in this document.
+Also see `[LIBOLECF]`.
+
+=== Serialized numeric property value (aka numeric shell property)
+The serialized numeric property value is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size of the serialized property value +
+[yellow-background]*Includes the 4 bytes of the size itself*
+| 4 | 4 | | Identifier
+| 8 | 1 | 0x00 | Reserved
+| 9 | ...  | | Typed property value
+|===
+
+=== Serialized name property value (aka named shell property)
+The serialized name property value is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size of the serialized property value +
+[yellow-background]*Includes the 4 bytes of the size itself*
+| 4 | 4 | | Name size
+| 8 | 1 | 0x00 | Reserved
+| 9 | ... | | Name string +
+UTF-16 little-endian string terminated by an end-of-string character
+| ... | ... | | Typed property value
+|===
+
+=== Typed property value
+The typed property value (TypedPropertyValue) is variable in size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Property value type +
+Contains an OLE defines property (variant) types. +
+Also see `[LIBFOLE]`
+| 2 | 2 | 0x00 | Padding
+| 4 | ...  | | Property value data
+|===
+
+[NOTE]
+The padding is sometimes considered part of the property value type.
+
+== Property sets
+Note that in the MSDN document the property values are sometimes indicated as a combination of the the property set identifier and the value identifier e.g.
+....
+b725f130-47ef-101a-a5f1-02608c9eebac/10
+....
+
+=== anchor:format_class_identifiers[Format class (or property set) identifiers]
+Note that the User defined properties: d5cdd505-2e9c-101b-9397-08002b2cf9ae use named property values where all other property sets should be numeric.
+
+[cols="1,1",options="header"]
+|===
+| GUID | Description
+| 000214a1-0000-0000-c000-000000000046 | [yellow-background]*Internet site* +
+[yellow-background]*(FMTID_InternetSite)*
+| 01a3057a-74d6-4e80-bea7-dc4c212ce50a | [yellow-background]*WPD_STORAGE_OBJECT_PROPERTIES_V1*
+| 46588ae2-4cbc-4338-bbfc-139326986dce | [yellow-background]*Unknown*
+| 4d545058-4fce-4578-95c8-8698a9bc0f49 | [yellow-background]*Unknown*
+| [yellow-background]*56a3372e-ce9c-11d2-9f0e-006097c686f6* | [yellow-background]*Music* +
+[yellow-background]*(FMTID_Music)*
+| 6444048f-4c8b-11d1-8b70-080036b11a03 | Image summary information +
+(FMTID_ImageSummaryInformation)
+| 64440490-4c8b-11d1-8b70-080036b11a03 | Audio summary information  +
+(FMTID_Audio, FMTID_AudioSummaryInformation)
+| 64440491-4c8b-11d1-8b70-080036b11a03 | Video  +
+(FMTID_Video)
+| 64440492-4c8b-11d1-8b70-080036b11a03 | Media file  +
+(FMTID_MediaFile)
+| 8f052d93-abca-4fc5-a5ac-b01df4dbe598 | [yellow-background]*WPD_FUNCTIONAL_OBJECT_PROPERTIES_V1*
+| b725f130-47ef-101a-a5f1-02608c9eebac | [yellow-background]*Unknown (Windows Search related?)*
+| d5cdd502-2e9c-101b-9397-08002b2cf9ae | Document summary information  +
+(FMTID_DocSummaryInformation)
+| d5cdd505-2e9c-101b-9397-08002b2cf9ae | User defined  +
+(FMTID_UserDefinedProperties)
+| ef6b490d-5cd8-437a-affc-da8b60ee4a3c | [yellow-background]*WPD_OBJECT_PROPERTIES_V1*
+| f29f85e0-4ff9-1068-ab91-08002b27b3d9 | Summary information  +
+(FMTID_SummaryInformation)
+|===
+
+=== Property set: 000214a1-0000-0000-c000-000000000046
+The property storage with identifier 000214a1-0000-0000-c000-000000000046 contains [yellow-background]*TODO* related properties and known to contain the following property values:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 9 | VT_UI4 +
+0x0013 |  [yellow-background]System.status*
+|===
+
+=== Property set: 01a3057a-74d6-4e80-bea7-dc4c212ce50a
+The property storage with identifier 01a3057a-74d6-4e80-bea7-dc4c212ce50a contains [yellow-background]*TODO* related properties and known to contain the following property values:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 2 | VT_UI4 +
+0x0013 | [yellow-background]*Unknown*
+| 3 | VT_LPWSTR +
+0x001f | File system
+| 4 | VT_UI8 +
+0x0015 | [yellow-background]*Unknown*
+| 5 | VT_UI8 +
+0x0015 | [yellow-background]*Unknown*
+| 6 | VT_ERROR +
+0x000a | [yellow-background]*Unknown*
+| 6 | VT_UI8 +
+0x0015 | [yellow-background]*Unknown*
+| 7 | VT_LPWSTR +
+0x001f | Storage name
+| 8 | VT_LPWSTR +
+0x001f | Serial number?
+| | | 
+| 11 | VT_UI4 +
+0x0013 | [yellow-background]*Unknown*
+|===
+
+=== Property set: 46588ae2-4cbc-4338-bbfc-139326986dce
+The property storage with identifier 46588ae2-4cbc-4338-bbfc-139326986dce contains [yellow-background]*TODO* related properties and known to contain the following property values:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 0 | VT_UI4 +
+0x0013 | [yellow-background]*Unknown*
+|===
+
+=== Property set: 4d545058-4fce-4578-95c8-8698a9bc0f49
+The property storage with identifier 4d545058-4fce-4578-95c8-8698a9bc0f49 contains [yellow-background]*TODO* related properties and known to contain the following property values:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 56325 | VT_UI2 +
+0x0012 | [yellow-background]*Unknown*
+|===
+
+=== Music properties: 56a3372e-ce9c-11d2-9f0e-006097c686f6
+The property storage with identifier 56a3372e-ce9c-11d2-9f0e-006097c686f6 contains music properties and is known to contain the following property values:
+
+[NOTE]
+These that properties have not been confirmed yet.
+
+[cols="1,1,1,5",options="header"]
+|===
+| Identifier | Type | Property identifier | Description
+| 0x0002 | | PIDSI_ARTIST | Artist
+| 0x0003 | | PIDSI_SONGTITLE | Song title
+| 0x0004 | | PIDSI_ALBUM | Album
+| 0x0005 | | PIDSI_YEAR | Year
+| 0x0006 | | PIDSI_COMMENT | Comment
+| 0x0007 | | PIDSI_TRACK | Track
+| | | | 
+| 0x000b | | PIDSI_GENRE | Genre
+| 0x000c | | PIDSI_LYRICS | Lyrics
+|===
+
+=== Image summary information properties: 6444048f-4c8b-11d1-8b70-080036b11a03
+The property storage with identifier 6444048f-4c8b-11d1-8b70-080036b11a03 contains image summary information properties and is known to contain the following property values:
+
+[NOTE]
+These that properties have not been confirmed yet.
+
+
+[cols="1,1,1,5",options="header"]
+|===
+| Identifier | Type | Property identifier | Description
+| 0x0002 | 0x001f | PIDISI_FILETYPE | File type
+| 0x0003 | 0x0013 | PIDISI_CX | Width
+| 0x0004 | 0x0013 | PIDISI_CY | Height
+| 0x0005 | 0x0013 | PIDISI_RESOLUTIONX | Horizontal resolution
+| 0x0006 | 0x0013 | PIDISI_RESOLUTIONY | Vertical resolution
+| 0x0007 | 0x0013 | PIDISI_BITDEPTH | Bit depth
+| 0x0008 | 0x001f | PIDISI_COLORSPACE | Color space
+| 0x0009 | 0x001f | PIDISI_COMPRESSION | Compression
+| 0x000a | 0x0013 | PIDISI_TRANSPARENCY | Transparency
+| 0x000b | 0x0013 | PIDISI_GAMMAVALUE | Gamma value
+| 0x000c | 0x0013 | PIDISI_FRAMECOUNT | Frame count
+| 0x000d | 0x001f | PIDISI_DIMENSIONS | Dimensions
+|===
+
+=== Audio summary information properties: 64440490-4c8b-11d1-8b70-080036b11a03
+The property storage with identifier 64440490-4c8b-11d1-8b70-080036b11a03 contains audio summary information properties and is known to contain the following property values:
+
+[NOTE]
+These that properties have not been confirmed yet.
+
+
+[cols="1,1,1,5",options="header"]
+|===
+| Identifier | Type | Property identifier | Description
+| 0x0002 | 0x0008 | PIDASI_FORMAT | 
+| 0x0003 | 0x0013 | PIDASI_TIMELENGTH | Value in milliseconds
+| 0x0004 | 0x0013 | PIDASI_AVG_DATA_RATE | Value in Hz
+| 0x0005 | 0x0013 | PIDASI_SAMPLE_RATE | Value in bits
+| 0x0006 | 0x0013 | PIDASI_SAMPLE_SIZE | Value in bits
+| 0x0007 | 0x0013 | PIDASI_CHANNEL_COUNT | 
+| 0x0008 | 0x0012 | PIDASI_STREAM_NUMBER | 
+| 0x0009 | 0x001f | PIDASI_STREAM_NAME | 
+| 0x000a | 0x001f | PIDASI_COMPRESSION |
+|===
+
+=== Video properties: 64440491-4c8b-11d1-8b70-080036b11a03
+The property storage with identifier 64440491-4c8b-11d1-8b70-080036b11a03 contains video properties and is known to contain the following property values:
+
+[NOTE]
+These that properties have not been confirmed yet.
+
+
+[cols="1,1,1,5",options="header"]
+|===
+| Identifier | Type | Property identifier | Description
+| 0x0002 | 0x001f | PIDVSI_STREAM_NAME | Stream name
+| 0x0003 | 0x0013 | PIDVSI_FRAME_WIDTH | Frame width
+| 0x0004 | 0x0013 | PIDVSI_FRAME_HEIGHT | Frame height
+| 0x0005 | 0x0013 | PIDVSI_FRAME_COUNT | Number of frames
+| 0x0006 | 0x0013 | PIDVSI_FRAME_RATE | Frame rate +
+| Value in frames per milliseconds
+| 0x0007 | 0x0013 | PIDVSI_TIMELENGTH | Time length +
+| Value in milliseconds
+| 0x0008 | 0x0013 | | Data rate +
+| Value in bytes per milliseconds
+| 0x0009 | 0x0013 | | Sample size
+| 0x000a | 0x001f | | Compression
+| 0x000b | 0x0012 | | Stream number
+|===
+
+=== Property set: 8f052d93-abca-4fc5-a5ac-b01df4dbe598
+The property storage with identifier 8f052d93-abca-4fc5-a5ac-b01df4dbe598 contains [yellow-background]*TODO* related properties and known to contain the following property values:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 2 | VT_CLSID +
+0x0048 | [yellow-background]*Unknown*
+|===
+
+=== Property set: b725f130-47ef-101a-a5f1-02608c9eebac
+The property storage with identifier b725f130-47ef-101a-a5f1-02608c9eebac contains  [yellow-background]*Windows Search?* related properties and known to contain the following property values:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 10 | VT_LPWSTR +
+0x001f | Filename +
+Contains an UTF-16 little-endian string
+|===
+
+=== Document Summary Information properties: d5cdd502-2e9c-101b-9397-08002b2cf9ae
+The property storage with identifier d5cdd502-2e9c-101b-9397-08002b2cf9ae contains document summary information properties and is known to contain the following property values:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Identifier | Type | Property identifier | Description
+| 0x0001 | 0x0002 | PIDDSI_CODEPAGE | Codepage +
+The codepage of the strings in the property section
+| 0x0002 | 0x001e +
+0x001f | PIDDSI_CATEGORY | Category +
+ASCII or Unicode string
+| 0x0003 | 0x001e +
+0x001f | PIDDSI_PRESFORMAT | Presentation format +
+ASCII or Unicode string +
+[yellow-background]*TODO add reference to section below*
+| 0x0004 | 0x0003 | PIDDSI_BYTECOUNT | Number of bytes (in document) +
+Signed 32-bit Integer
+| 0x0005 | 0x0003 | PIDDSI_LINECOUNT | Number of lines (in document) +
+Signed 32-bit Integer
+| 0x0006 | 0x0003 | PIDDSI_PARCOUNT | Number of paragraphs (in document) +
+Signed 32-bit Integer
+| 0x0007 | 0x0003 | PIDDSI_SLIDECOUNT | Number of slides (in document) +
+Signed 32-bit Integer
+| 0x0008 | 0x0003 | PIDDSI_NOTECOUNT | Number of notes (in document) +
+Signed 32-bit Integer
+| 0x0009 | 0x0003 | PIDDSI_HIDDENCOUNT | Number of hidden slides (in document) +
+Signed 32-bit Integer
+| 0x000a | 0x0003 | PIDDSI_MMCLIPCOUNT | Number of multimedia clips (in document) +
+Signed 32-bit Integer
+| 0x000b | 0x000b | PIDDSI_SCALE | Scale +
+Boolean
+| 0x000c | 0x100c | PIDDSI_HEADINGPAIR | Heading pair +
+Vector of Variant values
+| 0x000d | 0x101e +
+0x101f | PIDDSI_DOCPARTS | Document parts +
+Vector of ASCII or Unicode string values
+| 0x000e | 0x001e +
+0x001f | PIDDSI_MANAGER | Manager +
+ASCII or Unicode string
+| 0x000f | 0x001e +
+0x001f | PIDDSI_COMPANY | Company +
+ASCII or Unicode string
+| 0x0010 | 0x000b | PIDDSI_LINKSDIRTY | Links dirty +
+Boolean +
+True if the links have changed outside the application.
+| 0x0011 | 0x0003 | PIDDSI_CCHWITHSPACES | Number of characters including white-space (in document)
+| | | | 
+| 0x0013 | 0x000b | PIDDSI_SHAREDDOC | Shared document +
+Boolean +
+According to MSDN this always must be false.
+| 0x0014 | | PIDDSI_LINKBASE | [yellow-background]*Link base* +
+According to MSDN this value must not be written 
+| 0x0015 | | PIDDSI_HLINKS | i[yellow-background]*Hyper links* +
+According to MSDN this value must not be written 
+| 0x0016 | 0x000b | PIDDSI_HYPERLINKSCHANGED | Hyper links changed +
+Boolean +
+True if the hyper links have changed outside the application.
+| 0x0017 | 0x0003 | PIDDSI_VERSION | Creating application version +
+Signed 32-bit Integer +
+Where the major version is stored in the upper 16-bit and the minor version in the lower 16‑bit. E.g. a value of 0x000e0000 represents 14.0
+| 0x0018 | 0x0041 | PIDDSI_DIGSIG | [yellow-background]*Digital signature* +
+Binary data (BLOB)
+| | | | 
+| 0x001a | 0x001e +
+0x001f | PIDDSI_CONTENTTYPE | Content type +
+ASCII or Unicode string
+| 0x001b | 0x001e +
+0x001f | PIDDSI_CONTENTSTATUS | Content status +
+ASCII or Unicode string
+| 0x001c | 0x001e +
+0x001f | PIDDSI_LANGUAGE | Language +
+ASCII or Unicode string
+| 0x001d | 0x001e +
+0x001f | PIDDSI_DOCVERSION | Document version +
+ASCII or Unicode string
+|===
+
+[NOTE]
+For the property identifiers the variants PIDDSI_CATEGORY and PID_CATEGORY are used interchangeably.
+Other known variants are GKPIDDSI_CATEGORY.
+
+==== Presentation format
+
+[cols="1,2",options="header"]
+|===
+| Value | Description
+| "" | None (Empty string)
+| "On-screen Show" | 
+| "On-screen Show (4:3)" | 
+| "Letter Paper (8.5x11 in)" | 
+| "Ledger Paper (11x17 in)" | 
+| "A3 Paper (297x420 mm)" | 
+| "A4 Paper (210x297 mm)" | 
+| "B4 (ISO) Paper (250x353 mm)" | 
+| "B5 (ISO) Paper (176x250 mm)" | 
+| "B4 (JIS) Paper (257x364 mm)" | 
+| "B5 (JIS) Paper (182x257 mm)" | 
+| "Hagaki Card (100x148 mm)" | 
+| "35mm Slides" | 
+| "Overhead" | 
+| "Banner" | 
+| "Custom" | 
+| "On-screen Show (16:9)" | 
+| "On-screen Show (16:10)" | 
+|===
+
+==== Notes
+[yellow-background]*TODO*
+....
+GKPIDDSI_HEADINGPAIR
+0x0000000C 
+MUST be a VtVecHeadingPair property (section 2.3.3.1.15). Each VtHeadingPair element (section 2.3.3.1.13) in VtVecHeadingPair.vtValue.rgHeadingPairs defines a heading string and a count of document parts as found in the GKPIDDSI_DOCPARTS property (section 2.3.3.2.2.1) to which this heading applies. The total sum of document counts for all headers in this property MUST be equal to the number of elements in the GKPIDDSI_DOCPARTS property (section 2.3.3.2.2.1) property. 
+
+GKPIDDSI_DOCPARTS 
+0x0000000D 
+MUST be a VtVecUnalignedLpstr (section 2.3.3.1.10) or VtVecLpwstr property (section 2.3.3.1.8). Each string element of the vector specifies a part of the document. The elements of this vector are ordered according to the header they belong to as defined in the GKPIDDSI_HEADINGPAIR property (section 2.3.3.2.2.1). 
+Example: The first element of the heading pair vector indicates that it has four document parts associated with it. Elements 1 to 4 of the document parts vector are grouped under this header. The next element of the heading pair vector indicates that it has three document parts associated with it. The document part vector elements 5 to 7 are grouped under this header, and so on.
+
+GKPIDDSI_DIGSIG
+0x00000018
+MUST be a VtDigSig property (section 2.3.3.1.17). VtDigSig.vtValue specifies the data of the VBAdigital signature (2) for the VBA project embedded in the document. MUST NOT exist if the VBA project of the document does not have a digital signature (2) or if the project is absent. MAY be ignored.
+....
+
+=== User defined properties: d5cdd505-2e9c-101b-9397-08002b2cf9ae
+The property storage with identifier d5cdd505-2e9c-101b-9397-08002b2cf9ae contains user defined properties and is known to contain the following property values:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| AutoList | VT_STREAM +
+0x0042 | The auto list +
+Stream containing the cached auto list
+| AutolistCacheTime | VT_FILETIME +
+0x0040 | The date and time the auto list was cached +
+Contains a FILETIME
+| AutolistCacheKey | VT_LPWSTR +
+0x001f | The key to identify the cached auto list +
+Contains an UTF-16 little-endian string
+| OriginURL | VT_LPWSTR +
+0x001f | The URL of origin +
+Contains an UTF-16 little-endian string
+|===
+
+=== Property set: ef6b490d-5cd8-437a-affc-da8b60ee4a3c
+The property storage with identifier ef6b490d-5cd8-437a-affc-da8b60ee4a3c contains [yellow-background]*TODO* related properties and known to contain the following property values:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 4 | VT_LPWSTR +
+0x001f | [yellow-background]*Storage name*
+| 5 | VT_LPWSTR +
+0x001f | [yellow-background]*Storage identifier*
+| 6 | VT_CLSID +
+0x0048 | [yellow-background]*Unknown*
+| 7 | VT_CLSID +
+0x0048 | [yellow-background]*Unknown*
+| | | 
+| 12 | VT_LPWSTR +
+0x001f | [yellow-background]*Folder name*
+| 13 | VT_BOOLEAN +
+0x000b | [yellow-background]*Unknown* +
+stored as 2 bytes
+| | | 
+| 17 | VT_BOOLEAN +
+0x000b | [yellow-background]*Unknown* +
+stored as 2 bytes
+| 18 | VT_DATE +
+0x0007 | [yellow-background]*Unknown*
+| 19 | VT_DATE +
+0x0007 | [yellow-background]*Unknown*
+| | | 
+| 23 | VT_LPWSTR +
+0x001f | [yellow-background]*Storage partition identifier?*
+| | | 
+| 26 | VT_BOOLEAN +
+0x000b | [yellow-background]*Unknown* +
+stored as 2 bytes, 0xffff or 0x0000
+|===
+
+=== Summary Information properties: f29f85e0-4ff9-1068-ab91-08002b27b3d9
+The property storage with identifier f29f85e0-4ff9-1068-ab91-08002b27b3d9 contains summary information properties and is known to contain the following property values:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Identifier | Type | Property identifier | Description
+| 0x0000 | | PIDSI_DICTIONARY | [yellow-background]*Reserved*
+| 0x0001 | 0x0002 | PIDSI_CODEPAGE | Codepage +
+Signed 16-bit Integer +
+The codepage of the strings in the property section
+| 0x0002 | 0x001e +
+0x001f | PIDSI_TITLE | Title +
+ASCII or Unicode string
+| 0x0003 | 0x001e +
+0x001f | PIDSI_SUBJECT | Subject +
+ASCII or Unicode string
+| 0x0004 | 0x001e +
+0x001f | PIDSI_AUTHOR | Author +
+ASCII or Unicode string
+| 0x0005 | 0x001e +
+0x001f | PIDSI_KEYWORDS | Keywords +
+ASCII or Unicode string
+| 0x0006 | 0x001e +
+0x001f | PIDSI_COMMENTS | Comments +
+ASCII or Unicode string
+| 0x0007 | 0x001e +
+0x001f | PIDSI_TEMPLATE | Template +
+ASCII or Unicode string
+| 0x0008 | 0x001e +
+0x001f | PIDSI_LASTAUTHOR | Last Saved By +
+ASCII or Unicode string
+| 0x0009 | 0x001e +
+0x001f | PIDSI_REVNUMBER | Revision Number +
+ASCII or Unicode string
+| 0x000a | 0x0040 | PIDSI_EDITTIME | Total editing time +
+FILETIME +
+Value contains a duration
+| 0x000b | 0x0040 | PIDSI_LASTPRINTED | Last printed date and time +
+FILETIME
+| 0x000c | 0x0040 | PIDSI_CREATE_DTM | Creation date and time +
+FILETIME
+| 0x000d | 0x0040 | PIDSI_LASTSAVE_DTM | Last saved date and time +
+FILETIME
+| 0x000e | 0x0003 | PIDSI_PAGECOUNT | Number of pages +
+Signed 32-bit Integer
+| 0x000f | 0x0003 | PIDSI_WORDCOUNT | Number of words +
+Signed 32-bit Integer
+| 0x0010 | 0x0003 | PIDSI_CHARCOUNT | Number of characters +
+Signed 32-bit Integer
+| 0x0011 | 0x0047 | PIDSI_THUMBNAIL | Thumbnail +
+[yellow-background]*TODO*
+| 0x0012 | 0x001e +
+0x001f | PIDSI_APPNAME | Creating application name +
+ASCII or Unicode string
+| 0x0013 | 0x0003 | PIDSI_SECURITY | Security +
+Signed 32-bit Integer +
+[yellow-background]*TODO add reference to section below*
+|===
+
+[NOTE]
+The property identifiers the variants PIDSI_TITLE and PID_TITLE are used interchangeably. Other known variants are GKPIDSI_TITLE.
+
+==== Security
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00000000 | SECURITY_NONE | None +
+No security states specified by the property
+| 0x00000001 | SECURITY_PASSWORD | Password protected +
+The document MUST be password protected
+| 0x00000002 | SECURITY_READONLYRECOMMEND | Read-only recommended +
+The document read-only is recommended but not enforced
+| 0x00000004 | SECURITY_READONLYENFORCED | Read-only enforced +
+The document is always opened read-only
+| 0x00000008 | SECURITY_LOCKED | Locked for annotations +
+The document is always opened read-only except for annotations
+|===
+
+== Notes
+References for DocumentSummaryInformation stream: 
+
+* http://msdn.microsoft.com/en-us/library/dd945671%28v=office.12%29.aspx 
+* http://msdn.microsoft.com/en-us/library/windows/desktop/aa380374%28v=vs.85%29.aspx 
+* https://github.com/alexbevi/redmine_msg_preview/blob/master/data/FileInfo.pas
+
+=== Format identifiers
+DEFINE_SHLGUID(FMTID_Intshcut,0x000214A0L,0,0);
+DEFINE_SHLGUID(FMTID_InternetSite,0x000214A1L,0,0);
+
+:numbered!:
+[appendix]
+== References
+`[LIBFOLE]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | Object Linking and Embedding (OLE) definitions
+| Author(s): | Joachim Metz
+| Date: | September 2009
+| URL: | https://googledrive.com/host/0B3fBvzttpiiSaDZmMHFNNDgtNDA/OLE%20Definitions.pdf
+|===
+
+`[LIBOLECF]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | Object Linking and Embedding (OLE) Compound File (CF) format specification
+| Author(s): | Joachim Metz
+| Date: | December 2008
+| URL: | https://googledrive.com/host/0B3fBvzttpiiSS0hEb0pjU2h6a2c/OLE%20Compound%20File%20format.pdf
+|===
+
+`[MSDN]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | Microsoft Developer Network
+| URL: | http://msdn.microsoft.com/
+|===
+
+`[MS-PROPSTORE]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | `[MS-PROPSTORE]` Property Store Binary File Format
+| Date: | August 12, 2009
+| URL: | http://msdn.microsoft.com/
+|===
+
+[appendix]
+== GNU Free Documentation License
+Version 1.3, 3 November 2008
+Copyright © 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc. <http://fsf.org/>
+
+Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
+
+=== 0. PREAMBLE
+The purpose of this License is to make a manual, textbook, or other functional and useful document "free" in the sense of freedom: to assure everyone the effective freedom to copy and redistribute it, with or without modifying it, either commercially or noncommercially. Secondarily, this License preserves for the author and publisher a way to get credit for their work, while not being considered responsible for modifications made by others.
+
+This License is a kind of "copyleft", which means that derivative works of the document must themselves be free in the same sense. It complements the GNU General Public License, which is a copyleft license designed for free software.
+
+We have designed this License in order to use it for manuals for free software, because free software needs free documentation: a free program should come with manuals providing the same freedoms that the software does. But this License is not limited to software manuals; it can be used for any textual work, regardless of subject matter or whether it is published as a printed book. We recommend this License principally for works whose purpose is instruction or reference.
+
+=== 1. APPLICABILITY AND DEFINITIONS
+This License applies to any manual or other work, in any medium, that contains a notice placed by the copyright holder saying it can be distributed under the terms of this License. Such a notice grants a world-wide, royalty-free license, unlimited in duration, to use that work under the conditions stated herein. The "Document", below, refers to any such manual or work. Any member of the public is a licensee, and is addressed as "you". You accept the license if you copy, modify or distribute the work in a way requiring permission under copyright law.
+
+A "Modified Version" of the Document means any work containing the Document or a portion of it, either copied verbatim, or with modifications and/or translated into another language.
+
+A "Secondary Section" is a named appendix or a front-matter section of the Document that deals exclusively with the relationship of the publishers or authors of the Document to the Document's overall subject (or to related matters) and contains nothing that could fall directly within that overall subject. (Thus, if the Document is in part a textbook of mathematics, a Secondary Section may not explain any mathematics.) The relationship could be a matter of historical connection with the subject or with related matters, or of legal, commercial, philosophical, ethical or political position regarding them.
+
+The "Invariant Sections" are certain Secondary Sections whose titles are designated, as being those of Invariant Sections, in the notice that says that the Document is released under this License. If a section does not fit the above definition of Secondary then it is not allowed to be designated as Invariant. The Document may contain zero Invariant Sections. If the Document does not identify any Invariant Sections then there are none.
+
+The "Cover Texts" are certain short passages of text that are listed, as Front-Cover Texts or Back-Cover Texts, in the notice that says that the Document is released under this License. A Front-Cover Text may be at most 5 words, and a Back-Cover Text may be at most 25 words.
+
+A "Transparent" copy of the Document means a machine-readable copy, represented in a format whose specification is available to the general public, that is suitable for revising the document straightforwardly with generic text editors or (for images composed of pixels) generic paint programs or (for drawings) some widely available drawing editor, and that is suitable for input to text formatters or for automatic translation to a variety of formats suitable for input to text formatters. A copy made in an otherwise Transparent file format whose markup, or absence of markup, has been arranged to thwart or discourage subsequent modification by readers is not Transparent. An image format is not Transparent if used for any substantial amount of text. A copy that is not "Transparent" is called "Opaque".
+
+Examples of suitable formats for Transparent copies include plain ASCII without markup, Texinfo input format, LaTeX input format, SGML or XML using a publicly available DTD, and standard-conforming simple HTML, PostScript or PDF designed for human modification. Examples of transparent image formats include PNG, XCF and JPG. Opaque formats include proprietary formats that can be read and edited only by proprietary word processors, SGML or XML for which the DTD and/or processing tools are not generally available, and the machine-generated HTML, PostScript or PDF produced by some word processors for output purposes only.
+
+The "Title Page" means, for a printed book, the title page itself, plus such following pages as are needed to hold, legibly, the material this License requires to appear in the title page. For works in formats which do not have any title page as such, "Title Page" means the text near the most prominent appearance of the work's title, preceding the beginning of the body of the text.
+
+The "publisher" means any person or entity that distributes copies of the Document to the public.
+
+A section "Entitled XYZ" means a named subunit of the Document whose title either is precisely XYZ or contains XYZ in parentheses following text that translates XYZ in another language. (Here XYZ stands for a specific section name mentioned below, such as "Acknowledgements", "Dedications", "Endorsements", or "History".) To "Preserve the Title" of such a section when you modify the Document means that it remains a section "Entitled XYZ" according to this definition.
+
+The Document may include Warranty Disclaimers next to the notice which states that this License applies to the Document. These Warranty Disclaimers are considered to be included by reference in this License, but only as regards disclaiming warranties: any other implication that these Warranty Disclaimers may have is void and has no effect on the meaning of this License.
+
+=== 2. VERBATIM COPYING
+You may copy and distribute the Document in any medium, either commercially or noncommercially, provided that this License, the copyright notices, and the license notice saying this License applies to the Document are reproduced in all copies, and that you add no other conditions whatsoever to those of this License. You may not use technical measures to obstruct or control the reading or further copying of the copies you make or distribute. However, you may accept compensation in exchange for copies. If you distribute a large enough number of copies you must also follow the conditions in section 3.
+
+You may also lend copies, under the same conditions stated above, and you may publicly display copies.
+
+=== 3. COPYING IN QUANTITY
+If you publish printed copies (or copies in media that commonly have printed covers) of the Document, numbering more than 100, and the Document's license notice requires Cover Texts, you must enclose the copies in covers that carry, clearly and legibly, all these Cover Texts: Front-Cover Texts on the front cover, and Back-Cover Texts on the back cover. Both covers must also clearly and legibly identify you as the publisher of these copies. The front cover must present the full title with all words of the title equally prominent and visible. You may add other material on the covers in addition. Copying with changes limited to the covers, as long as they preserve the title of the Document and satisfy these conditions, can be treated as verbatim copying in other respects.
+
+If the required texts for either cover are too voluminous to fit legibly, you should put the first ones listed (as many as fit reasonably) on the actual cover, and continue the rest onto adjacent pages.
+
+If you publish or distribute Opaque copies of the Document numbering more than 100, you must either include a machine-readable Transparent copy along with each Opaque copy, or state in or with each Opaque copy a computer-network location from which the general network-using public has access to download using public-standard network protocols a complete Transparent copy of the Document, free of added material. If you use the latter option, you must take reasonably prudent steps, when you begin distribution of Opaque copies in quantity, to ensure that this Transparent copy will remain thus accessible at the stated location until at least one year after the last time you distribute an Opaque copy (directly or through your agents or retailers) of that edition to the public.
+
+It is requested, but not required, that you contact the authors of the Document well before redistributing any large number of copies, to give them a chance to provide you with an updated version of the Document.
+
+=== 4. MODIFICATIONS
+You may copy and distribute a Modified Version of the Document under the conditions of sections 2 and 3 above, provided that you release the Modified Version under precisely this License, with the Modified Version filling the role of the Document, thus licensing distribution and modification of the Modified Version to whoever possesses a copy of it. In addition, you must do these things in the Modified Version:
+A. Use in the Title Page (and on the covers, if any) a title distinct from that of the Document, and from those of previous versions (which should, if there were any, be listed in the History section of the Document). You may use the same title as a previous version if the original publisher of that version gives permission. 
+B. List on the Title Page, as authors, one or more persons or entities responsible for authorship of the modifications in the Modified Version, together with at least five of the principal authors of the Document (all of its principal authors, if it has fewer than five), unless they release you from this requirement. 
+C. State on the Title page the name of the publisher of the Modified Version, as the publisher. 
+D. Preserve all the copyright notices of the Document. 
+E. Add an appropriate copyright notice for your modifications adjacent to the other copyright notices. 
+F. Include, immediately after the copyright notices, a license notice giving the public permission to use the Modified Version under the terms of this License, in the form shown in the Addendum below. 
+G. Preserve in that license notice the full lists of Invariant Sections and required Cover Texts given in the Document's license notice. 
+H. Include an unaltered copy of this License. 
+I. Preserve the section Entitled "History", Preserve its Title, and add to it an item stating at least the title, year, new authors, and publisher of the Modified Version as given on the Title Page. If there is no section Entitled "History" in the Document, create one stating the title, year, authors, and publisher of the Document as given on its Title Page, then add an item describing the Modified Version as stated in the previous sentence. 
+J. Preserve the network location, if any, given in the Document for public access to a Transparent copy of the Document, and likewise the network locations given in the Document for previous versions it was based on. These may be placed in the "History" section. You may omit a network location for a work that was published at least four years before the Document itself, or if the original publisher of the version it refers to gives permission. 
+K. For any section Entitled "Acknowledgements" or "Dedications", Preserve the Title of the section, and preserve in the section all the substance and tone of each of the contributor acknowledgements and/or dedications given therein. 
+L. Preserve all the Invariant Sections of the Document, unaltered in their text and in their titles. Section numbers or the equivalent are not considered part of the section titles. 
+M. Delete any section Entitled "Endorsements". Such a section may not be included in the Modified Version. 
+N. Do not retitle any existing section to be Entitled "Endorsements" or to conflict in title with any Invariant Section. 
+O. Preserve any Warranty Disclaimers. 
+
+If the Modified Version includes new front-matter sections or appendices that qualify as Secondary Sections and contain no material copied from the Document, you may at your option designate some or all of these sections as invariant. To do this, add their titles to the list of Invariant Sections in the Modified Version's license notice. These titles must be distinct from any other section titles.
+
+You may add a section Entitled "Endorsements", provided it contains nothing but endorsements of your Modified Version by various parties—for example, statements of peer review or that the text has been approved by an organization as the authoritative definition of a standard.
+
+You may add a passage of up to five words as a Front-Cover Text, and a passage of up to 25 words as a Back-Cover Text, to the end of the list of Cover Texts in the Modified Version. Only one passage of Front-Cover Text and one of Back-Cover Text may be added by (or through arrangements made by) any one entity. If the Document already includes a cover text for the same cover, previously added by you or by arrangement made by the same entity you are acting on behalf of, you may not add another; but you may replace the old one, on explicit permission from the previous publisher that added the old one.
+
+The author(s) and publisher(s) of the Document do not by this License give permission to use their names for publicity for or to assert or imply endorsement of any Modified Version.
+
+=== 5. COMBINING DOCUMENTS
+You may combine the Document with other documents released under this License, under the terms defined in section 4 above for modified versions, provided that you include in the combination all of the Invariant Sections of all of the original documents, unmodified, and list them all as Invariant Sections of your combined work in its license notice, and that you preserve all their Warranty Disclaimers.
+
+The combined work need only contain one copy of this License, and multiple identical Invariant Sections may be replaced with a single copy. If there are multiple Invariant Sections with the same name but different contents, make the title of each such section unique by adding at the end of it, in parentheses, the name of the original author or publisher of that section if known, or else a unique number. Make the same adjustment to the section titles in the list of Invariant Sections in the license notice of the combined work.
+
+In the combination, you must combine any sections Entitled "History" in the various original documents, forming one section Entitled "History"; likewise combine any sections Entitled "Acknowledgements", and any sections Entitled "Dedications". You must delete all sections Entitled "Endorsements".
+
+=== 6. COLLECTIONS OF DOCUMENTS
+You may make a collection consisting of the Document and other documents released under this License, and replace the individual copies of this License in the various documents with a single copy that is included in the collection, provided that you follow the rules of this License for verbatim copying of each of the documents in all other respects.
+
+You may extract a single document from such a collection, and distribute it individually under this License, provided you insert a copy of this License into the extracted document, and follow this License in all other respects regarding verbatim copying of that document.
+
+=== 7. AGGREGATION WITH INDEPENDENT WORKS
+A compilation of the Document or its derivatives with other separate and independent documents or works, in or on a volume of a storage or distribution medium, is called an "aggregate" if the copyright resulting from the compilation is not used to limit the legal rights of the compilation's users beyond what the individual works permit. When the Document is included in an aggregate, this License does not apply to the other works in the aggregate which are not themselves derivative works of the Document.
+
+If the Cover Text requirement of section 3 is applicable to these copies of the Document, then if the Document is less than one half of the entire aggregate, the Document's Cover Texts may be placed on covers that bracket the Document within the aggregate, or the electronic equivalent of covers if the Document is in electronic form. Otherwise they must appear on printed covers that bracket the whole aggregate.
+
+=== 8. TRANSLATION
+Translation is considered a kind of modification, so you may distribute translations of the Document under the terms of section 4. Replacing Invariant Sections with translations requires special permission from their copyright holders, but you may include translations of some or all Invariant Sections in addition to the original versions of these Invariant Sections. You may include a translation of this License, and all the license notices in the Document, and any Warranty Disclaimers, provided that you also include the original English version of this License and the original versions of those notices and disclaimers. In case of a disagreement between the translation and the original version of this License or a notice or disclaimer, the original version will prevail.
+
+If a section in the Document is Entitled "Acknowledgements", "Dedications", or "History", the requirement (section 4) to Preserve its Title (section 1) will typically require changing the actual title.
+
+=== 9. TERMINATION
+You may not copy, modify, sublicense, or distribute the Document except as expressly provided under this License. Any attempt otherwise to copy, modify, sublicense, or distribute it is void, and will automatically terminate your rights under this License.
+
+However, if you cease all violation of this License, then your license from a particular copyright holder is reinstated (a) provisionally, unless and until the copyright holder explicitly and finally terminates your license, and (b) permanently, if the copyright holder fails to notify you of the violation by some reasonable means prior to 60 days after the cessation.
+
+Moreover, your license from a particular copyright holder is reinstated permanently if the copyright holder notifies you of the violation by some reasonable means, this is the first time you have received notice of violation of this License (for any work) from that copyright holder, and you cure the violation prior to 30 days after your receipt of the notice.
+
+Termination of your rights under this section does not terminate the licenses of parties who have received copies or rights from you under this License. If your rights have been terminated and not permanently reinstated, receipt of a copy of some or all of the same material does not give you any rights to use it.
+
+=== 10. FUTURE REVISIONS OF THIS LICENSE
+The Free Software Foundation may publish new, revised versions of the GNU Free Documentation License from time to time. Such new versions will be similar in spirit to the present version, but may differ in detail to address new problems or concerns. See http://www.gnu.org/copyleft/.
+
+Each version of the License is given a distinguishing version number. If the Document specifies that a particular numbered version of this License "or any later version" applies to it, you have the option of following the terms and conditions either of that specified version or of any later version that has been published (not as a draft) by the Free Software Foundation. If the Document does not specify a version number of this License, you may choose any version ever published (not as a draft) by the Free Software Foundation. If the Document specifies that a proxy can decide which future versions of this License can be used, that proxy's public statement of acceptance of a version permanently authorizes you to choose that version for the Document.
+
+=== 11. RELICENSING
+"Massive Multiauthor Collaboration Site" (or "MMC Site") means any World Wide Web server that publishes copyrightable works and also provides prominent facilities for anybody to edit those works. A public wiki that anybody can edit is an example of such a server. A "Massive Multiauthor Collaboration" (or "MMC") contained in the site means any set of copyrightable works thus published on the MMC site.
+
+"CC-BY-SA" means the Creative Commons Attribution-Share Alike 3.0 license published by Creative Commons Corporation, a not-for-profit corporation with a principal place of business in San Francisco, California, as well as future copyleft versions of that license published by that same organization.
+
+"Incorporate" means to publish or republish a Document, in whole or in part, as part of another Document.
+
+An MMC is "eligible for relicensing" if it is licensed under this License, and if all works that were first published under this License somewhere other than this MMC, and subsequently incorporated in whole or in part into the MMC, (1) had no cover texts or invariant sections, and (2) were thus incorporated prior to November 1, 2008.
+
+The operator of an MMC Site may republish an MMC contained in the site under CC-BY-SA on the same site at any time before August 1, 2009, provided the MMC is eligible for relicensing.
+
