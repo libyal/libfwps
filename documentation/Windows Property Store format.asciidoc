@@ -483,7 +483,8 @@ The property storage with identifier d5cdd505-2e9c-101b-9397-08002b2cf9ae contai
 | Identifier | Type | Description
 | AutoList | VT_STREAM +
 0x0042 | The auto list +
-Stream containing the cached auto list
+Stream containing the cached auto list +
+[yellow-background]*Contains an UTF-16 little-endian string that contains base64 encoded data without padding.*
 | AutolistCacheTime | VT_FILETIME +
 0x0040 | The date and time the auto list was cached +
 Contains a FILETIME
