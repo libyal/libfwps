@@ -55,7 +55,7 @@ The Property store format is used by various Windows file formats like the Windo
 | Date and time values | FILETIME in UTC
 | Character strings | ASCII strings are Single Byte Character (SBC) or Multi Byte Character (MBC) string stored with a codepage. +
 Sometimes referred to as ANSI string representation. +
-Though technically maybe incorrect, this document will use term extended ASCII string. +
+Though technically maybe incorrect, this document will use term (extended) ASCII string. +
 Unicode strings are stored in UTF-16 little-endian without the byte order mark (BOM).
 |===
 
