@@ -40,7 +40,7 @@ uint8_t libfwsp_format_class_identifier_named_properties[ 16 ] = {
 uint8_t libfwsp_format_class_identifier_unknown1[ 16 ] = {
 	0x30, 0xf1, 0x25, 0xb7, 0xef, 0x47, 0x1a, 0x10, 0xa5, 0xf1, 0x02, 0x60, 0x8c, 0x9e, 0xeb, 0xac };
 
-/* Creates an storage
+/* Creates a storage
  * Make sure the value storage is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
@@ -114,7 +114,7 @@ on_error:
 	return( -1 );
 }
 
-/* Frees an storage
+/* Frees a storage
  * Returns 1 if successful or -1 on error
  */
 int libfwps_storage_free(

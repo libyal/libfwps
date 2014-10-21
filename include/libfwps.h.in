@@ -91,6 +91,54 @@ int libfwps_error_backtrace_sprint(
      char *string,
      size_t size );
 
+/* -------------------------------------------------------------------------
+ * Format class identifier functions
+ * ------------------------------------------------------------------------- */
+
+/* Retrieves a string containing the identifier of the folder identifier
+ */
+LIBFWPS_EXTERN \
+const char *libfwps_format_class_identifier_get_identifier(
+             const uint8_t *format_class_identifier );
+
+/* Retrieves a string containing the description of the folder identifier
+ */
+LIBFWPS_EXTERN \
+const char *libfwps_format_class_identifier_get_description(
+             const uint8_t *format_class_identifier );
+
+/* -------------------------------------------------------------------------
+ * Storage functions
+ * ------------------------------------------------------------------------- */
+
+/* Creates a storage
+ * Make sure the value storage is referencing, is set to NULL
+ * Returns 1 if successful or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_storage_initialize(
+     libfwps_storage_t **storage,
+     libfwps_error_t **error );
+
+/* Frees a storage
+ * Returns 1 if successful or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_storage_free(
+     libfwps_storage_t **storage,
+     libfwps_error_t **error );
+
+/* Copies a serialized property storage from a byte stream
+ * Returns 1 if successful or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_storage_copy_from_byte_stream(
+     libfwps_storage_t *storage,
+     const uint8_t *byte_stream,
+     size_t byte_stream_size,
+     int ascii_codepage,
+     libfwps_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif
