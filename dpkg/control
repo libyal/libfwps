@@ -1,13 +1,12 @@
 Source: libfwps
-Section: unknown
+Section: libs
 Priority: extra
 Maintainer: Joachim Metz <joachim.metz@gmail.com>
 Build-Depends: debhelper (>= 7), autotools-dev, python-dev
-Standards-Version: 3.8.3
+Standards-Version: 3.9.5
 Homepage: https://github.com/libyal/libfwps/
 
 Package: libfwps
-Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: libfwps-dbg
@@ -17,21 +16,21 @@ Description: Library to access the Windows Property Store format
 Package: libfwps-dbg
 Architecture: any
 Section: debug
-Depends: libfwps (= ${Source-Version}), ${misc:Depends}
+Depends: libfwps (= ${binary:Version}), ${misc:Depends}
 Description: Debugging symbols for libfwps
  Debugging symbols for libfwps.
 
 Package: libfwps-dev
 Section: libdevel
 Architecture: any
-Depends: libfwps (= ${Source-Version})
+Depends: libfwps (= ${binary:Version}), ${misc:Depends}
 Description: Header files and libraries for developing applications for libfwps
  Header files and libraries for developing applications for libfwps.
 
 Package: libfwps-python
 Section: python
 Architecture: any
-Depends: libfwps (= ${Source-Version}), ${shlibs:Depends}, ${python:Depends}
+Depends: libfwps (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Suggests: libfwps-python-dbg
 Description: Python bindings for libfwps
  Python bindings for libfwps.
@@ -39,7 +38,7 @@ Description: Python bindings for libfwps
 Package: libfwps-python-dbg
 Section: debug
 Architecture: any
-Depends: libfwps-python (= ${Source-Version})
+Depends: libfwps-python (= ${binary:Version}), ${misc:Depends}
 Description: Debugging symbols for libfwps-python
  Debugging symbols for libfwps-python.
 
