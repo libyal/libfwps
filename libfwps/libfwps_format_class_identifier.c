@@ -55,12 +55,12 @@ const char *libfwps_format_class_identifier_get_identifier(
 		return( "Invalid format class identifier" );
 	}
 	while( memory_compare(
-	        ( libfwps_format_class_identifier_definitions[ iterator ] ).identifier,
+	        ( libfwps_format_class_identifier_definitions[ iterator ] ).class_identifier,
 	        libfwps_format_class_identifier_unknown,
 	        16 ) != 0 )
 	{
 		if( memory_compare(
-		     ( libfwps_format_class_identifier_definitions[ iterator ] ).identifier,
+		     ( libfwps_format_class_identifier_definitions[ iterator ] ).class_identifier,
 		     format_class_identifier,
 		     16 ) == 0 )
 		{
@@ -84,12 +84,12 @@ const char *libfwps_format_class_identifier_get_description(
 		return( "Invalid format class identifier" );
 	}
 	while( memory_compare(
-	        ( libfwps_format_class_identifier_definitions[ iterator ] ).identifier,
+	        ( libfwps_format_class_identifier_definitions[ iterator ] ).class_identifier,
 	        libfwps_format_class_identifier_unknown,
 	        16 ) != 0 )
 	{
 		if( memory_compare(
-		     ( libfwps_format_class_identifier_definitions[ iterator ] ).identifier,
+		     ( libfwps_format_class_identifier_definitions[ iterator ] ).class_identifier,
 		     format_class_identifier,
 		     16 ) == 0 )
 		{
