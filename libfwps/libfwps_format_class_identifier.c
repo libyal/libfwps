@@ -32,6 +32,9 @@ uint8_t libfwps_format_class_identifier_document_summary_information[ 16 ] = {
 uint8_t libfwps_format_class_identifier_summary_information[ 16 ] = {
 	0xe0, 0x85, 0x9f, 0xf2, 0xf9, 0x4f, 0x68, 0x10, 0xab, 0x91, 0x08, 0x00, 0x2b, 0x27, 0xb3, 0xd9 };
 
+uint8_t libfwps_format_class_identifier_user_defined[ 16 ] = {
+	0x05, 0xd5, 0xcd, 0xd5, 0x9c, 0x2e, 0x1b, 0x10, 0x93, 0x97, 0x08, 0x00, 0x2b, 0x2c, 0xf9, 0xae };
+
 uint8_t libfwps_format_class_identifier_unknown[ 16 ] = {
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
@@ -40,6 +43,7 @@ uint8_t libfwps_format_class_identifier_unknown[ 16 ] = {
 libfwps_format_class_identifier_definition_t libfwps_format_class_identifier_definitions[ ] = {
 	{ libfwps_format_class_identifier_document_summary_information,	"FMTID_DocumentSummaryInformation",	"Document summary information" },
 	{ libfwps_format_class_identifier_summary_information,		"FMTID_SummaryInformation",		"Summary information" },
+	{ libfwps_format_class_identifier_user_defined,			"FMTID_UserDefinedProperties",		"User defined" },
 
 	{ libfwps_format_class_identifier_unknown,			"Unknown",				"Unknown" } };
 

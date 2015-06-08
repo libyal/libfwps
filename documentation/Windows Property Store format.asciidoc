@@ -386,6 +386,7 @@ following property values:
 [cols="1,1,1,5",options="header"]
 |===
 | Identifier | Type | Property identifier | Description
+| 0x0000 | 0x0001 | | [yellow-background]*Unknown (NULL)*
 | 0x0001 | 0x0002 | PIDDSI_CODEPAGE | Codepage +
 The codepage of the strings in the property section
 | 0x0002 | 0x001e +
@@ -591,6 +592,7 @@ property values:
 |===
 | Identifier | Type | Property identifier | Description
 | 0x0000 | | PIDSI_DICTIONARY | [yellow-background]*Reserved*
+| 0x0000 | 0x0001 | | [yellow-background]*Unknown (NULL), could be PIDSI_DICTIONARY*
 | 0x0001 | 0x0002 | PIDSI_CODEPAGE | Codepage +
 Signed 16-bit Integer +
 The codepage of the strings in the property section
