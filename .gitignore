@@ -112,7 +112,6 @@ stamp-h[1-9]
 /include/libfwps/types.h
 /libfwps/libfwps.rc
 /libfwps/libfwps_definitions.h
-/pyfwps/setup.py
 /tests/tmp*
 
 # Local library dependencies specific files

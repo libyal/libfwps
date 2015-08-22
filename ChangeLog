@@ -1,6 +1,9 @@
 TODO
 * update libfmapi.3 man page
 
+20150822
+* worked on setup.py
+
 20150608
 * fixes in format class identifier
 

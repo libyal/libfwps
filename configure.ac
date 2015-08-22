@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libfwps],
- [20150608],
+ [20150822],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -182,7 +182,6 @@ AC_CONFIG_FILES([common/types.h])
 AC_CONFIG_FILES([dpkg/changelog])
 AC_CONFIG_FILES([dpkg/copyright])
 AC_CONFIG_FILES([libfwps/libfwps.rc])
-AC_CONFIG_FILES([pyfwps/setup.py])
 AC_CONFIG_FILES([libfwps.pc])
 AC_CONFIG_FILES([libfwps.spec])
 dnl Have configure write its configuration
