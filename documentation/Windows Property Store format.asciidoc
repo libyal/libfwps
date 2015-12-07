@@ -1,6 +1,9 @@
 = Windows Property Store format
 Analysis of the Windows Serialized Property Store (SPS) format
 
+:toc:
+:toclevels: 4
+
 :numbered!:
 [abstract]
 == Summary
