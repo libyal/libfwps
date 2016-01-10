@@ -15,8 +15,8 @@ SUBDIRS = \
 	libfole \
 	libfwps \
 	pyfwps \
-	pyfwps2 \
-	pyfwps3 \
+	pyfwps-python2 \
+	pyfwps-python3 \
 	po \
 	manuals \
 	tests \
