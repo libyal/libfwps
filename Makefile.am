@@ -15,6 +15,8 @@ SUBDIRS = \
 	libfole \
 	libfwps \
 	pyfwps \
+	pyfwps2 \
+	pyfwps3 \
 	po \
 	manuals \
 	tests \
@@ -28,8 +30,10 @@ DPKG_FILES = \
 	dpkg/copyright \
 	dpkg/copyright.in \
 	dpkg/rules \
-	dpkg/libfwps-dev.docs \
 	dpkg/libfwps.docs \
+	dpkg/libfwps-dev.docs \
+	dpkg/libfwps-python.docs \
+	dpkg/libfwps-python3.docs \
 	dpkg/source/format
 
 GETTEXT_FILES = \

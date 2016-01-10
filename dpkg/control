@@ -2,7 +2,7 @@ Source: libfwps
 Section: libs
 Priority: extra
 Maintainer: Joachim Metz <joachim.metz@gmail.com>
-Build-Depends: debhelper (>= 7), autotools-dev, python-dev
+Build-Depends: debhelper (>= 7), autotools-dev, python-dev, python3-dev
 Standards-Version: 3.9.5
 Homepage: https://github.com/libyal/libfwps/
 
@@ -32,8 +32,8 @@ Section: python
 Architecture: any
 Depends: libfwps (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Suggests: libfwps-python-dbg
-Description: Python bindings for libfwps
- Python bindings for libfwps.
+Description: Python 2 bindings for libfwps
+ Python 2 bindings for libfwps.
 
 Package: libfwps-python-dbg
 Section: debug
@@ -41,4 +41,19 @@ Architecture: any
 Depends: libfwps-python (= ${binary:Version}), ${misc:Depends}
 Description: Debugging symbols for libfwps-python
  Debugging symbols for libfwps-python.
+
+Package: libfwps-python3
+Section: python
+Architecture: any
+Depends: libfwps (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Suggests: libfwps-python3-dbg
+Description: Python 3 bindings for libfwps
+ Python 3 bindings for libfwps.
+
+Package: libfwps-python3-dbg
+Section: debug
+Architecture: any
+Depends: libfwps-python3 (= ${binary:Version}), ${misc:Depends}
+Description: Debugging symbols for libfwps-python3
+ Debugging symbols for libfwps-python3.
 

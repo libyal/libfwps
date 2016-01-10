@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYFWSI_LIBCERROR_H )
-#define _PYFWSI_LIBCERROR_H
+#if !defined( _PYFWPS_LIBCERROR_H )
+#define _PYFWPS_LIBCERROR_H
 
 #include <common.h>
 

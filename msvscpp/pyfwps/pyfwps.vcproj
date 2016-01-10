@@ -189,6 +189,10 @@
 				RelativePath="..\..\pyfwps\pyfwps_integer.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\pyfwps\pyfwps_storage.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -237,6 +241,10 @@
 			</File>
 			<File
 				RelativePath="..\..\pyfwps\pyfwps_python.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyfwps\pyfwps_storage.h"
 				>
 			</File>
 			<File

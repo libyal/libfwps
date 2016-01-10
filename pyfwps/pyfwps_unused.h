@@ -19,24 +19,24 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYFWSI_INTERNAL_UNUSED_H )
-#define _PYFWSI_INTERNAL_UNUSED_H
+#if !defined( _PYFWPS_INTERNAL_UNUSED_H )
+#define _PYFWPS_INTERNAL_UNUSED_H
 
 #include <common.h>
 
-#if !defined( PYFWSI_ATTRIBUTE_UNUSED )
+#if !defined( PYFWPS_ATTRIBUTE_UNUSED )
 #if defined( __GNUC__ ) && __GNUC__ >= 3
-#define PYFWSI_ATTRIBUTE_UNUSED	__attribute__ ((__unused__))
+#define PYFWPS_ATTRIBUTE_UNUSED	__attribute__ ((__unused__))
 #else
-#define PYFWSI_ATTRIBUTE_UNUSED
+#define PYFWPS_ATTRIBUTE_UNUSED
 #endif
 #endif
 
 #if defined( _MSC_VER )
-#define PYFWSI_UNREFERENCED_PARAMETER( parameter ) \
+#define PYFWPS_UNREFERENCED_PARAMETER( parameter ) \
 	UNREFERENCED_PARAMETER( parameter );
 #else
-#define PYFWSI_UNREFERENCED_PARAMETER( parameter ) \
+#define PYFWPS_UNREFERENCED_PARAMETER( parameter ) \
 	/* parameter */
 #endif
 

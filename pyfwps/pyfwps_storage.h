@@ -1,7 +1,7 @@
 /*
- * GUID functions
+ * Python object definition of the libfwps storage
  *
- * Copyright (C) 2013-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2014-2016, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -19,21 +19,44 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYFWPS_GUID_H )
-#define _PYFWPS_GUID_H
+#if !defined( _PYFWPS_STORAGE_H )
+#define _PYFWPS_STORAGE_H
 
 #include <common.h>
 #include <types.h>
 
+#include "pyfwps_libcerror.h"
+#include "pyfwps_libfwps.h"
 #include "pyfwps_python.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-PyObject *pyfwps_string_new_from_guid(
-           const uint8_t *guid_buffer,
-           size_t guid_buffer_size );
+typedef struct pyfwps_storage pyfwps_storage_t;
+
+struct pyfwps_storage
+{
+	/* Python object initialization
+	 */
+	PyObject_HEAD
+
+	/* The libfwps storage
+	 */
+	libfwps_storage_t *storage;
+};
+
+extern PyMethodDef pyfwps_storage_object_methods[];
+extern PyTypeObject pyfwps_storage_type_object;
+
+PyObject *pyfwps_storage_new(
+           void );
+
+int pyfwps_storage_init(
+     pyfwps_storage_t *pyfwps_storage );
+
+void pyfwps_storage_free(
+      pyfwps_storage_t *pyfwps_storage );
 
 #if defined( __cplusplus )
 }

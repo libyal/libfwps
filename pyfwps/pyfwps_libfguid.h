@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYFWSI_LIBFGUID_H )
-#define _PYFWSI_LIBFGUID_H
+#if !defined( _PYFWPS_LIBFGUID_H )
+#define _PYFWPS_LIBFGUID_H
 
 #include <common.h>
 

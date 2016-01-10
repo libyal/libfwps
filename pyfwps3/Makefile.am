@@ -1,4 +1,10 @@
-if HAVE_PYTHON
+# Note that we cannot use: AUTOMAKE_OPTIONS = subdir-objects
+# subdir-objects will compile the source files to a single version of Python.
+# Since subdir-objects is being deprecated we copy the source files instead.
+am__installdirs = "$(DESTDIR)$(pyexecdir3)"
+pyexecdir = $(pyexecdir3)
+
+if HAVE_PYTHON3
 AM_CFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
@@ -9,9 +15,9 @@ AM_CFLAGS = \
 	@LIBUNA_CPPFLAGS@ \
 	@LIBFGUID_CPPFLAGS@
 
-pyexec_LTLIBRARIES = pyfwps.la
+am_pyfwps_la_rpath = -rpath $(pyexecdir3)
 
-pyfwps_la_SOURCES = \
+BUILT_SOURCES = \
 	pyfwps.c pyfwps.h \
 	pyfwps_codepage.c pyfwps_codepage.h \
 	pyfwps_error.c pyfwps_error.h \
@@ -26,6 +32,10 @@ pyfwps_la_SOURCES = \
 	pyfwps_storage.c pyfwps_storage.h \
 	pyfwps_unused.h
 
+pyexec_LTLIBRARIES = pyfwps.la
+
+nodist_pyfwps_la_SOURCES = $(BUILT_SOURCES)
+
 pyfwps_la_LIBADD = \
 	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
@@ -35,13 +45,19 @@ pyfwps_la_LIBADD = \
 	@LIBUNA_LIBADD@ \
 	@LIBFGUID_LIBADD@
 
-pyfwps_la_CPPFLAGS = $(PYTHON_CPPFLAGS)
-pyfwps_la_LDFLAGS  = -module -avoid-version $(PYTHON_LDFLAGS)
+pyfwps_la_CPPFLAGS = $(PYTHON3_CPPFLAGS)
+pyfwps_la_LDFLAGS  = -module -avoid-version $(PYTHON3_LDFLAGS)
+
+$(BUILT_SOURCES):
+	/bin/cp -f $(top_srcdir)/pyfwps/$@ $@
 
 endif
 
 MAINTAINERCLEANFILES = \
 	Makefile.in
+
+clean-local:
+	/bin/rm -f pyfwps*.[ch]
 
 distclean: clean
 	/bin/rm -f Makefile

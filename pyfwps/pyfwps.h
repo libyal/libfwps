@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYFWSI_H )
-#define _PYFWSI_H
+#if !defined( _PYFWPS_H )
+#define _PYFWPS_H
 
 #include <common.h>
 #include <types.h>
@@ -35,8 +35,13 @@ PyObject *pyfwps_get_version(
            PyObject *self,
            PyObject *arguments );
 
+#if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC PyInit_pyfwps(
+                void );
+#else
 PyMODINIT_FUNC initpyfwps(
                 void );
+#endif
 
 #if defined( __cplusplus )
 }

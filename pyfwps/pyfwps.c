@@ -32,6 +32,7 @@
 #include "pyfwps_libcstring.h"
 #include "pyfwps_libfwps.h"
 #include "pyfwps_python.h"
+#include "pyfwps_storage.h"
 #include "pyfwps_unused.h"
 
 /* The pyfwps module methods
@@ -55,15 +56,15 @@ PyMethodDef pyfwps_module_methods[] = {
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyfwps_get_version(
-           PyObject *self PYFWSI_ATTRIBUTE_UNUSED,
-           PyObject *arguments PYFWSI_ATTRIBUTE_UNUSED )
+           PyObject *self PYFWPS_ATTRIBUTE_UNUSED,
+           PyObject *arguments PYFWPS_ATTRIBUTE_UNUSED )
 {
 	const char *errors           = NULL;
 	const char *version_string   = NULL;
 	size_t version_string_length = 0;
 
-	PYFWSI_UNREFERENCED_PARAMETER( self )
-	PYFWSI_UNREFERENCED_PARAMETER( arguments )
+	PYFWPS_UNREFERENCED_PARAMETER( self )
+	PYFWPS_UNREFERENCED_PARAMETER( arguments )
 
 	Py_BEGIN_ALLOW_THREADS
 
@@ -84,59 +85,116 @@ PyObject *pyfwps_get_version(
 	         errors ) );
 }
 
-/* Declarations for DLL import/export
+#if PY_MAJOR_VERSION >= 3
+
+/* The pyfwps module definition
  */
-#ifndef PyMODINIT_FUNC
-#define PyMODINIT_FUNC void
-#endif
+PyModuleDef pyfwps_module_definition = {
+	PyModuleDef_HEAD_INIT,
+
+	/* m_name */
+	"pyfwps",
+	/* m_doc */
+	"Python libfwps module (pyfwps).",
+	/* m_size */
+	-1,
+	/* m_methods */
+	pyfwps_module_methods,
+	/* m_reload */
+	NULL,
+	/* m_traverse */
+	NULL,
+	/* m_clear */
+	NULL,
+	/* m_free */
+	NULL,
+};
+
+#endif /* PY_MAJOR_VERSION >= 3 */
 
 /* Initializes the pyfwps module
  */
+#if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC PyInit_pyfwps(
+                void )
+#else
 PyMODINIT_FUNC initpyfwps(
                 void )
-{
-	PyObject *module                 = NULL;
-#ifdef TODO
-	PyTypeObject *volume_type_object = NULL;
 #endif
-	PyGILState_STATE gil_state       = 0;
+{
+	PyObject *module                  = NULL;
+	PyTypeObject *storage_type_object = NULL;
+	PyGILState_STATE gil_state        = 0;
+
+#if defined( HAVE_DEBUG_OUTPUT )
+	libfwps_notify_set_stream(
+	 stderr,
+	 NULL );
+	libfwps_notify_set_verbose(
+	 1 );
+#endif
 
 	/* Create the module
 	 * This function must be called before grabbing the GIL
 	 * otherwise the module will segfault on a version mismatch
 	 */
+#if PY_MAJOR_VERSION >= 3
+	module = PyModule_Create(
+	          &pyfwps_module_definition );
+#else
 	module = Py_InitModule3(
 	          "pyfwps",
 	          pyfwps_module_methods,
 	          "Python libfwps module (pyfwps)." );
-
+#endif
+	if( module == NULL )
+	{
+#if PY_MAJOR_VERSION >= 3
+		return( NULL );
+#else
+		return;
+#endif
+	}
 	PyEval_InitThreads();
 
 	gil_state = PyGILState_Ensure();
 
-#ifdef TODO
-	/* Setup the volume type object
+	/* Setup the storage type object
 	 */
-	pyfwps_volume_type_object.tp_new = PyType_GenericNew;
+	pyfwps_storage_type_object.tp_new = PyType_GenericNew;
 
 	if( PyType_Ready(
-	     &pyfwps_volume_type_object ) < 0 )
+	     &pyfwps_storage_type_object ) < 0 )
 	{
 		goto on_error;
 	}
 	Py_IncRef(
-	 (PyObject *) &pyfwps_volume_type_object );
+	 (PyObject *) &pyfwps_storage_type_object );
 
-	volume_type_object = &pyfwps_volume_type_object;
+	storage_type_object = &pyfwps_storage_type_object;
 
 	PyModule_AddObject(
 	 module,
-	 "volume",
-	 (PyObject *) volume_type_object );
+	 "storage",
+	 (PyObject *) storage_type_object );
+
+	PyGILState_Release(
+	 gil_state );
+
+#if PY_MAJOR_VERSION >= 3
+	return( module );
+#else
+	return;
 #endif
 
 on_error:
 	PyGILState_Release(
 	 gil_state );
+
+#if PY_MAJOR_VERSION >= 3
+	return( NULL );
+#else
+	return;
+#endif
 }
 
