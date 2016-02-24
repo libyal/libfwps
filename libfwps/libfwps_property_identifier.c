@@ -84,7 +84,7 @@ libfwps_property_identifier_t libfwps_summary_information_properties[ ] = {
 	{ 0x000f, 0x0003, "PIDSI_WORDCOUNT", 	"Number of words" },
 	{ 0x0010, 0x0003, "PIDSI_CHARCOUNT", 	"Number of characters" },
 	{ 0x0011, 0x0047, "PIDSI_THUMBNAIL",	"Thumbnail" },
-	{ 0x0012, 0x001e, "PIDSI_APPNAME", 	"Creating application nmae" },
+	{ 0x0012, 0x001e, "PIDSI_APPNAME", 	"Creating application name" },
 	{ 0x0013, 0x0003, "PIDSI_SECURITY",	"Security" },
 
 	{ (uint32_t) -1, (uint32_t) -1, "_UNKNOWN_", "Unknown" } };

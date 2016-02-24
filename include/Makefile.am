@@ -1,13 +1,13 @@
 include_HEADERS = \
-        libfwps.h
+	libfwps.h
 
 pkginclude_HEADERS = \
-        libfwps/codepage.h \
-        libfwps/definitions.h \
-        libfwps/error.h \
-        libfwps/extern.h \
-        libfwps/features.h \
-        libfwps/types.h
+	libfwps/codepage.h \
+	libfwps/definitions.h \
+	libfwps/error.h \
+	libfwps/extern.h \
+	libfwps/features.h \
+	libfwps/types.h
 
 EXTRA_DIST = \
 	libfwps.h.in \
