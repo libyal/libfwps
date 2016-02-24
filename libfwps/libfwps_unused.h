@@ -40,5 +40,5 @@
 	/* parameter */
 #endif
 
-#endif
+#endif /* !defined( _LIBFWPS_INTERNAL_UNUSED_H ) */
 

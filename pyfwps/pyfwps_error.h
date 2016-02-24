@@ -28,7 +28,7 @@
 #include "pyfwps_libcerror.h"
 #include "pyfwps_python.h"
 
-#define PYFWPS_ERROR_STRING_SIZE		2048
+#define PYFWPS_ERROR_STRING_SIZE	2048
 
 #if defined( __cplusplus )
 extern "C" {
@@ -56,5 +56,5 @@ void pyfwps_error_raise(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYFWPS_ERROR_H ) */
 

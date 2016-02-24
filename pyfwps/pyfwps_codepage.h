@@ -38,5 +38,5 @@ const char *pyfwps_codepage_to_string(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYFWPS_CODEPAGE_H */
 

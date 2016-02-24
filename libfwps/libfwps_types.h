@@ -41,9 +41,9 @@ typedef struct libfwps_value {}		libfwps_value_t;
 typedef intptr_t libfwps_storage_t;
 typedef intptr_t libfwps_value_t;
 
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) && !defined( WINAPI ) */
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBFWPS ) */
 
-#endif
+#endif /* !defined( _LIBFWPS_INTERNAL_TYPES_H ) */
 
