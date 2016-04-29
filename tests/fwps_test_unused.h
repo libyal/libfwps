@@ -1,5 +1,5 @@
 /*
- * The internal libfguid header
+ * The unused definition
  *
  * Copyright (C) 2013-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,31 +19,32 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYFWPS_LIBFGUID_H )
-#define _PYFWPS_LIBFGUID_H
+#if !defined( _FWPS_TEST_UNUSED_H )
+#define _FWPS_TEST_UNUSED_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBFGUID for local use of libfguid
- */
-#if defined( HAVE_LOCAL_LIBFGUID )
+#if !defined( FWPS_TEST_ATTRIBUTE_UNUSED )
 
-#include <libfguid_definitions.h>
-#include <libfguid_identifier.h>
-#include <libfguid_types.h>
+#if defined( __GNUC__ ) && __GNUC__ >= 3
+#define FWPS_TEST_ATTRIBUTE_UNUSED	__attribute__ ((__unused__))
 
 #else
+#define FWPS_TEST_ATTRIBUTE_UNUSED
 
-/* If libtool DLL support is enabled set LIBFGUID_DLL_IMPORT
- * before including libfguid.h
- */
-#if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBFGUID_DLL_IMPORT
-#endif
+#endif /* defined( __GNUC__ ) && __GNUC__ >= 3 */
 
-#include <libfguid.h>
+#endif /* !defined( FWPS_TEST_ATTRIBUTE_UNUSED ) */
 
-#endif
+#if defined( _MSC_VER )
+#define FWPS_TEST_UNREFERENCED_PARAMETER( parameter ) \
+	UNREFERENCED_PARAMETER( parameter );
 
-#endif /* !defined( _PYFWPS_LIBFGUID_H ) */
+#else
+#define FWPS_TEST_UNREFERENCED_PARAMETER( parameter ) \
+	/* parameter */
+
+#endif /* defined( _MSC_VER ) */
+
+#endif /* !defined( _FWPS_TEST_UNUSED_H ) */
 

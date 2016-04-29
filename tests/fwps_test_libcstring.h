@@ -1,5 +1,5 @@
 /*
- * The internal libfguid header
+ * The internal libcstring header
  *
  * Copyright (C) 2013-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,31 +19,33 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYFWPS_LIBFGUID_H )
-#define _PYFWPS_LIBFGUID_H
+#if !defined( _FWPS_TEST_LIBCSTRING_H )
+#define _FWPS_TEST_LIBCSTRING_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBFGUID for local use of libfguid
+/* Define HAVE_LOCAL_LIBCSTRING for local use of libcstring
  */
-#if defined( HAVE_LOCAL_LIBFGUID )
+#if defined( HAVE_LOCAL_LIBCSTRING )
 
-#include <libfguid_definitions.h>
-#include <libfguid_identifier.h>
-#include <libfguid_types.h>
+#include <libcstring_definitions.h>
+#include <libcstring_narrow_string.h>
+#include <libcstring_system_string.h>
+#include <libcstring_types.h>
+#include <libcstring_wide_string.h>
 
 #else
 
-/* If libtool DLL support is enabled set LIBFGUID_DLL_IMPORT
- * before including libfguid.h
+/* If libtool DLL support is enabled set LIBCSTRING_DLL_IMPORT
+ * before including libcstring.h
  */
 #if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBFGUID_DLL_IMPORT
+#define LIBCSTRING_DLL_IMPORT
 #endif
 
-#include <libfguid.h>
+#include <libcstring.h>
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBCSTRING ) */
 
-#endif /* !defined( _PYFWPS_LIBFGUID_H ) */
+#endif /* !defined( _FWPS_TEST_LIBCSTRING_H ) */
 

@@ -1,5 +1,5 @@
 /*
- * The internal libfguid header
+ * The internal libfwps header
  *
  * Copyright (C) 2013-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,31 +19,19 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYFWPS_LIBFGUID_H )
-#define _PYFWPS_LIBFGUID_H
+#if !defined( _FWPS_TEST_LIBFWPS_H )
+#define _FWPS_TEST_LIBFWPS_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBFGUID for local use of libfguid
+/* If Cygwin libtool DLL support is enabled and do not want to create static
+ * executables set LIBFWPS_DLL_IMPORT before including libfwps.h
  */
-#if defined( HAVE_LOCAL_LIBFGUID )
-
-#include <libfguid_definitions.h>
-#include <libfguid_identifier.h>
-#include <libfguid_types.h>
-
-#else
-
-/* If libtool DLL support is enabled set LIBFGUID_DLL_IMPORT
- * before including libfguid.h
- */
-#if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBFGUID_DLL_IMPORT
+#if defined( _WIN32 ) && defined( DLL_EXPORT ) && !defined( HAVE_STATIC_EXECUTABLES )
+#define LIBFWPS_DLL_IMPORT
 #endif
 
-#include <libfguid.h>
+#include <libfwps.h>
 
-#endif
-
-#endif /* !defined( _PYFWPS_LIBFGUID_H ) */
+#endif /* !defined( _FWPS_TEST_LIBFWPS_H ) */
 

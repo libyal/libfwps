@@ -5,18 +5,28 @@ AM_CPPFLAGS = \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBFWPS_DLL_IMPORT@
 
-if HAVE_PYTHON_TESTS
-TESTS_PYFWPS =
-endif
-
 TESTS = \
-	$(TESTS_PYFWPS)
+	test_api_functions.sh
 
 check_SCRIPTS = \
+	test_api_functions.sh \
 	test_runner.sh
 
 EXTRA_DIST = \
 	$(check_SCRIPTS)
+
+check_PROGRAMS = \
+	fwps_test_get_version
+
+fwps_test_get_version_SOURCES = \
+	fwps_test_get_version.c \
+	fwps_test_libcstring.h \
+	fwps_test_libfwps.h \
+	fwps_test_unused.h
+
+fwps_test_get_version_LDADD = \
+	../libfwps/libfwps.la \
+	@LIBCSTRING_LIBADD@
 
 MAINTAINERCLEANFILES = \
 	Makefile.in
