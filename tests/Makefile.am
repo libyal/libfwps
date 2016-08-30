@@ -16,12 +16,25 @@ EXTRA_DIST = \
 	$(check_SCRIPTS)
 
 check_PROGRAMS = \
+	fwps_test_error \
 	fwps_test_get_version
+
+fwps_test_error_SOURCES = \
+	fwps_test_error.c \
+	fwps_test_libcstring.h \
+	fwps_test_libfwps.h \
+	fwps_test_macros.h \
+	fwps_test_unused.h
+
+fwps_test_error_LDADD = \
+	../libfwps/libfwps.la \
+	@LIBCSTRING_LIBADD@
 
 fwps_test_get_version_SOURCES = \
 	fwps_test_get_version.c \
 	fwps_test_libcstring.h \
 	fwps_test_libfwps.h \
+	fwps_test_macros.h \
 	fwps_test_unused.h
 
 fwps_test_get_version_LDADD = \
