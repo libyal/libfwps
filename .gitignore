@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20160507
+# Version: 20161030
 
 # Generic auto-generated build files
 *~
@@ -57,6 +57,7 @@ stamp-h[1-9]
 /test-driver
 /ylwrap
 /m4/codeset.m4
+/m4/extern-inline.m4
 /m4/fcntl-o.m4
 /m4/gettext.m4
 /m4/glibc2.m4
@@ -121,7 +122,9 @@ stamp-h[1-9]
 /libfwps/libfwps_definitions.h
 /pyfwps-python[23]/*.[ch]
 /tests/fwps_test_error
-/tests/fwps_test_get_version
+/tests/fwps_test_storage
+/tests/fwps_test_support
+/tests/fwps_test_value
 /tests/tmp*
 
 # Local library dependencies specific files

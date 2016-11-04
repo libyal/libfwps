@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="fwps_test_get_version"
-	ProjectGUID="{12D5615B-6AC9-4056-9162-35C84D07A672}"
-	RootNamespace="fwps_test_get_version"
+	Name="fwps_test_support"
+	ProjectGUID="{92FD2873-6A72-423C-9F8F-A44E4E8F8466}"
+	RootNamespace="fwps_test_support"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -176,7 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\tests\fwps_test_get_version.c"
+				RelativePath="..\..\tests\fwps_test_support.c"
 				>
 			</File>
 		</Filter>

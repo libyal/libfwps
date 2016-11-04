@@ -46,5 +46,5 @@ enum LIBFWPS_VALUE_TYPES
 	LIBFWPS_VALUE_TYPE_NUMERIC		= 2
 };
 
-#endif
+#endif /* !defined( _LIBFWPS_DEFINITIONS_H ) */
 

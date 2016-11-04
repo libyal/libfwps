@@ -208,5 +208,5 @@ typedef intptr_t libfwps_value_t;
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFWPS_TYPES_H ) */
 

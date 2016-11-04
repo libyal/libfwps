@@ -123,23 +123,23 @@ int main(
 
 	FWPS_TEST_RUN(
 	 "libfwps_error_free",
-	 fwps_test_error_free() )
+	 fwps_test_error_free );
 
 	FWPS_TEST_RUN(
 	 "libfwps_error_fprint",
-	 fwps_test_error_fprint() )
+	 fwps_test_error_fprint );
 
 	FWPS_TEST_RUN(
 	 "libfwps_error_sprint",
-	 fwps_test_error_sprint() )
+	 fwps_test_error_sprint );
 
 	FWPS_TEST_RUN(
 	 "libfwps_error_backtrace_fprint",
-	 fwps_test_error_backtrace_fprint() )
+	 fwps_test_error_backtrace_fprint );
 
 	FWPS_TEST_RUN(
 	 "libfwps_error_backtrace_sprint",
-	 fwps_test_error_backtrace_sprint() )
+	 fwps_test_error_backtrace_sprint );
 
 	return( EXIT_SUCCESS );
 

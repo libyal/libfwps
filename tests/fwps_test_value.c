@@ -1,5 +1,5 @@
 /*
- * Library get version test program
+ * Library value type testing program
  *
  * Copyright (C) 2013-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -20,42 +20,19 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
+#include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
+#include "fwps_test_libcerror.h"
 #include "fwps_test_libcstring.h"
 #include "fwps_test_libfwps.h"
 #include "fwps_test_macros.h"
+#include "fwps_test_memory.h"
 #include "fwps_test_unused.h"
-
-/* Tests retrieving the library version
- * Returns 1 if successful or 0 if not
- */
-int fwps_test_get_version(
-     void )
-{
-	const char *version_string = NULL;
-	int result                 = 0;
-
-	version_string = libfwps_get_version();
-
-	result = libcstring_narrow_string_compare(
-	          version_string,
-	          LIBFWPS_VERSION_STRING,
-	          9 );
-
-	FWPS_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 0 );
-
-	return( 1 );
-
-on_error:
-	return( 0 );
-}
 
 /* The main program
  */
@@ -71,10 +48,6 @@ int main(
 {
 	FWPS_TEST_UNREFERENCED_PARAMETER( argc )
 	FWPS_TEST_UNREFERENCED_PARAMETER( argv )
-
-	FWPS_TEST_RUN(
-	 "libfwps_get_version",
-	 fwps_test_get_version() )
 
 	return( EXIT_SUCCESS );
 

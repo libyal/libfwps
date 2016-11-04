@@ -38,10 +38,9 @@
 #include <libfwps/extern.h>
 
 #else
-
 #define LIBFWPS_EXTERN	extern
 
 #endif
 
-#endif
+#endif /* !defined( _LIBFWPS_INTERNAL_EXTERN_H ) */
 
