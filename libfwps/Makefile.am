@@ -15,6 +15,7 @@ lib_LTLIBRARIES = libfwps.la
 
 libfwps_la_SOURCES = \
 	libfwps.c \
+	libfwps_codepage.h \
 	libfwps_definitions.h \
 	libfwps_extern.h \
 	libfwps_error.c libfwps_error.h \
