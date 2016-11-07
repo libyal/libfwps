@@ -1,7 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBFWPS_DLL_IMPORT@
 
@@ -25,18 +24,15 @@ check_PROGRAMS = \
 
 fwps_test_error_SOURCES = \
 	fwps_test_error.c \
-	fwps_test_libcstring.h \
 	fwps_test_libfwps.h \
 	fwps_test_macros.h \
 	fwps_test_unused.h
 
 fwps_test_error_LDADD = \
-	../libfwps/libfwps.la \
-	@LIBCSTRING_LIBADD@
+	../libfwps/libfwps.la
 
 fwps_test_storage_SOURCES = \
 	fwps_test_libcerror.h \
-	fwps_test_libcstring.h \
 	fwps_test_libfwps.h \
 	fwps_test_macros.h \
 	fwps_test_memory.c fwps_test_memory.h \
@@ -45,23 +41,19 @@ fwps_test_storage_SOURCES = \
 
 fwps_test_storage_LDADD = \
 	../libfwps/libfwps.la \
-	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCERROR_LIBADD@
 
 fwps_test_support_SOURCES = \
 	fwps_test_support.c \
-	fwps_test_libcstring.h \
 	fwps_test_libfwps.h \
 	fwps_test_macros.h \
 	fwps_test_unused.h
 
 fwps_test_support_LDADD = \
-	../libfwps/libfwps.la \
-	@LIBCSTRING_LIBADD@
+	../libfwps/libfwps.la
 
 fwps_test_value_SOURCES = \
 	fwps_test_libcerror.h \
-	fwps_test_libcstring.h \
 	fwps_test_libfwps.h \
 	fwps_test_macros.h \
 	fwps_test_memory.c fwps_test_memory.h \
@@ -70,8 +62,7 @@ fwps_test_value_SOURCES = \
 
 fwps_test_value_LDADD = \
 	../libfwps/libfwps.la \
-	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCERROR_LIBADD@
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

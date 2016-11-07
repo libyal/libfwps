@@ -1,7 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCTHREADS_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
@@ -22,7 +21,6 @@ libfwps_la_SOURCES = \
 	libfwps_format_class_identifier.c libfwps_format_class_identifier.h \
 	libfwps_libcerror.h \
 	libfwps_libcnotify.h \
-	libfwps_libcstring.h \
 	libfwps_libfguid.h \
 	libfwps_libfole.h \
 	libfwps_libuna.h \
@@ -34,7 +32,6 @@ libfwps_la_SOURCES = \
 	libfwps_value.c libfwps_value.h
 
 libfwps_la_LIBADD = \
-	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	@LIBCTHREADS_LIBADD@ \
 	@LIBCDATA_LIBADD@ \

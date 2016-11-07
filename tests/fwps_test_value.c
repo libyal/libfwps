@@ -28,7 +28,6 @@
 #endif
 
 #include "fwps_test_libcerror.h"
-#include "fwps_test_libcstring.h"
 #include "fwps_test_libfwps.h"
 #include "fwps_test_macros.h"
 #include "fwps_test_memory.h"
@@ -36,7 +35,7 @@
 
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain(
      int argc FWPS_TEST_ATTRIBUTE_UNUSED,
      wchar_t * const argv[] FWPS_TEST_ATTRIBUTE_UNUSED )

@@ -8,7 +8,6 @@ if HAVE_PYTHON2
 AM_CFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
 	@LIBCLOCALE_CPPFLAGS@ \
@@ -25,7 +24,6 @@ BUILT_SOURCES = \
 	pyfwps_integer.c pyfwps_integer.h \
 	pyfwps_libcerror.h \
 	pyfwps_libclocale.h \
-	pyfwps_libcstring.h \
 	pyfwps_libfguid.h \
 	pyfwps_libfwps.h \
 	pyfwps_python.h \
@@ -37,7 +35,6 @@ pyexec_LTLIBRARIES = pyfwps.la
 nodist_pyfwps_la_SOURCES = $(BUILT_SOURCES)
 
 pyfwps_la_LIBADD = \
-	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	../libfwps/libfwps.la \
 	@LIBCDATA_LIBADD@ \

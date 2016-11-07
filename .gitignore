@@ -132,7 +132,6 @@ stamp-h[1-9]
 /libcerror
 /libclocale
 /libcnotify
-/libcstring
 /libcthreads
 /libfdatetime
 /libfguid

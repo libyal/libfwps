@@ -20,6 +20,7 @@
  */
 
 #include <common.h>
+#include <narrow_string.h>
 #include <types.h>
 
 #if defined( HAVE_STDLIB_H )
@@ -29,7 +30,6 @@
 #include "pyfwps.h"
 #include "pyfwps_error.h"
 #include "pyfwps_libcerror.h"
-#include "pyfwps_libcstring.h"
 #include "pyfwps_libfwps.h"
 #include "pyfwps_python.h"
 #include "pyfwps_storage.h"
@@ -72,7 +72,7 @@ PyObject *pyfwps_get_version(
 
 	Py_END_ALLOW_THREADS
 
-	version_string_length = libcstring_narrow_string_length(
+	version_string_length = narrow_string_length(
 	                         version_string );
 
 	/* Pass the string length to PyUnicode_DecodeUTF8
