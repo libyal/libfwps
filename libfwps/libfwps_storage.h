@@ -64,5 +64,5 @@ int libfwps_storage_copy_from_byte_stream(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFWPS_INTERNAL_STORAGE_H ) */
 

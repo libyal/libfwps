@@ -2,11 +2,24 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
 	@LIBCERROR_CPPFLAGS@ \
+	@LIBCTHREADS_CPPFLAGS@ \
+	@LIBCDATA_CPPFLAGS@ \
+	@LIBCNOTIFY_CPPFLAGS@ \
+	@LIBUNA_CPPFLAGS@ \
+	@LIBFDATETIME_CPPFLAGS@ \
+	@LIBFGUID_CPPFLAGS@ \
+	@LIBFOLE_CPPFLAGS@ \
+	@PTHREAD_CPPFLAGS@ \
 	@LIBFWPS_DLL_IMPORT@
+
+if HAVE_PYTHON_TESTS
+TESTS_PYFWPS =
+endif
 
 TESTS = \
 	test_api_functions.sh \
-	test_api_types.sh
+	test_api_types.sh \
+	$(TESTS_PYFWPS)
 
 check_SCRIPTS = \
 	test_api_functions.sh \
@@ -44,9 +57,9 @@ fwps_test_storage_LDADD = \
 	@LIBCERROR_LIBADD@
 
 fwps_test_support_SOURCES = \
-	fwps_test_support.c \
 	fwps_test_libfwps.h \
 	fwps_test_macros.h \
+	fwps_test_support.c \
 	fwps_test_unused.h
 
 fwps_test_support_LDADD = \

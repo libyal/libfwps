@@ -72,5 +72,5 @@ int libfwps_value_copy_from_byte_stream(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFWPS_INTERNAL_VALUE_H ) */
 

@@ -47,5 +47,5 @@ PyMODINIT_FUNC initpyfwps(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYFWPS_H ) */
 

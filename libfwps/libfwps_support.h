@@ -43,5 +43,5 @@ const char *libfwps_get_version(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFWPS_SUPPORT_H ) */
 

@@ -66,5 +66,5 @@ const char *libfwps_format_class_identifier_get_description(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFWPS_FORMAT_CLASS_IDENTIFIER_H ) */
 

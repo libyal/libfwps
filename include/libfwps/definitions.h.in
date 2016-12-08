@@ -24,26 +24,26 @@
 
 #include <libfwps/types.h>
 
-#define LIBFWPS_VERSION				@VERSION@
+#define LIBFWPS_VERSION			@VERSION@
 
 /* The version string
  */
-#define LIBFWPS_VERSION_STRING			"@VERSION@"
+#define LIBFWPS_VERSION_STRING		"@VERSION@"
 
 /* The byte order definitions
  */
 enum LIBFWPS_ENDIAN
 {
-	LIBFWPS_ENDIAN_BIG			= (int) 'b',
-	LIBFWPS_ENDIAN_LITTLE			= (int) 'l'
+	LIBFWPS_ENDIAN_BIG		= (int) 'b',
+	LIBFWPS_ENDIAN_LITTLE		= (int) 'l'
 };
 
 /* The property value types
  */
 enum LIBFWPS_VALUE_TYPES
 {
-	LIBFWPS_VALUE_TYPE_NAMED		= 1,
-	LIBFWPS_VALUE_TYPE_NUMERIC		= 2
+	LIBFWPS_VALUE_TYPE_NAMED	= 1,
+	LIBFWPS_VALUE_TYPE_NUMERIC	= 2
 };
 
 #endif /* !defined( _LIBFWPS_DEFINITIONS_H ) */

@@ -39,11 +39,17 @@
 int fwps_test_storage_initialize(
      void )
 {
-	libcerror_error_t *error   = NULL;
-	libfwps_storage_t *storage = NULL;
-	int result                 = 0;
+	libcerror_error_t *error        = NULL;
+	libfwps_storage_t *storage      = NULL;
+	int result                      = 0;
 
-	/* Test libfwps_storage_initialize
+#if defined( HAVE_FWPS_TEST_MEMORY )
+	int number_of_malloc_fail_tests = 1;
+	int number_of_memset_fail_tests = 1;
+	int test_number                 = 0;
+#endif
+
+	/* Test regular cases
 	 */
 	result = libfwps_storage_initialize(
 	          &storage,
@@ -119,79 +125,89 @@ int fwps_test_storage_initialize(
 
 #if defined( HAVE_FWPS_TEST_MEMORY )
 
-	/* Test libfwps_storage_initialize with malloc failing
-	 */
-	fwps_test_malloc_attempts_before_fail = 0;
-
-	result = libfwps_storage_initialize(
-	          &storage,
-	          &error );
-
-	if( fwps_test_malloc_attempts_before_fail != -1 )
+	for( test_number = 0;
+	     test_number < number_of_malloc_fail_tests;
+	     test_number++ )
 	{
-		fwps_test_malloc_attempts_before_fail = -1;
+		/* Test libfwps_storage_initialize with malloc failing
+		 */
+		fwps_test_malloc_attempts_before_fail = test_number;
 
-		if( storage != NULL )
+		result = libfwps_storage_initialize(
+		          &storage,
+		          &error );
+
+		if( fwps_test_malloc_attempts_before_fail != -1 )
 		{
-			libfwps_storage_free(
-			 &storage,
-			 NULL );
+			fwps_test_malloc_attempts_before_fail = -1;
+
+			if( storage != NULL )
+			{
+				libfwps_storage_free(
+				 &storage,
+				 NULL );
+			}
+		}
+		else
+		{
+			FWPS_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			FWPS_TEST_ASSERT_IS_NULL(
+			 "storage",
+			 storage );
+
+			FWPS_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
 		}
 	}
-	else
+	for( test_number = 0;
+	     test_number < number_of_memset_fail_tests;
+	     test_number++ )
 	{
-		FWPS_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		/* Test libfwps_storage_initialize with memset failing
+		 */
+		fwps_test_memset_attempts_before_fail = test_number;
 
-		FWPS_TEST_ASSERT_IS_NULL(
-		 "storage",
-		 storage );
+		result = libfwps_storage_initialize(
+		          &storage,
+		          &error );
 
-		FWPS_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	/* Test libfwps_storage_initialize with memset failing
-	 */
-	fwps_test_memset_attempts_before_fail = 0;
-
-	result = libfwps_storage_initialize(
-	          &storage,
-	          &error );
-
-	if( fwps_test_memset_attempts_before_fail != -1 )
-	{
-		fwps_test_memset_attempts_before_fail = -1;
-
-		if( storage != NULL )
+		if( fwps_test_memset_attempts_before_fail != -1 )
 		{
-			libfwps_storage_free(
-			 &storage,
-			 NULL );
+			fwps_test_memset_attempts_before_fail = -1;
+
+			if( storage != NULL )
+			{
+				libfwps_storage_free(
+				 &storage,
+				 NULL );
+			}
 		}
-	}
-	else
-	{
-		FWPS_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		else
+		{
+			FWPS_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
 
-		FWPS_TEST_ASSERT_IS_NULL(
-		 "storage",
-		 storage );
+			FWPS_TEST_ASSERT_IS_NULL(
+			 "storage",
+			 storage );
 
-		FWPS_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+			FWPS_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
 
-		libcerror_error_free(
-		 &error );
+			libcerror_error_free(
+			 &error );
+		}
 	}
 #endif /* defined( HAVE_FWPS_TEST_MEMORY ) */
 
@@ -272,6 +288,8 @@ int main(
 	FWPS_TEST_RUN(
 	 "libfwps_storage_free",
 	 fwps_test_storage_free );
+
+	/* TODO: add tests for libfwps_storage_copy_from_byte_stream */
 
 	return( EXIT_SUCCESS );
 

@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libfwps storage
+ * Python object wrapper of libfwps_storage_t
  *
  * Copyright (C) 2013-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -25,7 +25,6 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyfwps_libcerror.h"
 #include "pyfwps_libfwps.h"
 #include "pyfwps_python.h"
 
@@ -58,9 +57,14 @@ int pyfwps_storage_init(
 void pyfwps_storage_free(
       pyfwps_storage_t *pyfwps_storage );
 
+PyObject *pyfwps_storage_copy_from_byte_stream(
+           pyfwps_storage_t *pyfwps_storage,
+           PyObject *arguments,
+           PyObject *keywords );
+
 #if defined( __cplusplus )
 }
 #endif
 
-#endif
+#endif /* !defined( _PYFWPS_STORAGE_H ) */
 

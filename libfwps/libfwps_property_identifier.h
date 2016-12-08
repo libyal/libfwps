@@ -78,5 +78,5 @@ const char *libfwps_property_identifier_get_description(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFWPS_PROPERTY_IDENTIFIER_H ) */
 

@@ -33,6 +33,50 @@
 #include "fwps_test_memory.h"
 #include "fwps_test_unused.h"
 
+#include "../libfwps/libfwps_value.h"
+
+/* Tests the libfwps_value_free function
+ * Returns 1 if successful or 0 if not
+ */
+int fwps_test_value_free(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libfwps_value_free(
+	          NULL,
+	          &error );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        FWPS_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+#if defined( __GNUC__ )
+
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -47,6 +91,22 @@ int main(
 {
 	FWPS_TEST_UNREFERENCED_PARAMETER( argc )
 	FWPS_TEST_UNREFERENCED_PARAMETER( argv )
+
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libfwps_value_initialize */
+
+#endif /* defined( __GNUC__ ) */
+
+	FWPS_TEST_RUN(
+	 "libfwps_value_free",
+	 fwps_test_value_free );
+
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libfwps_value_copy_from_byte_stream */
+
+#endif /* defined( __GNUC__ ) */
 
 	return( EXIT_SUCCESS );
 

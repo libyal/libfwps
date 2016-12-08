@@ -39,5 +39,5 @@ PyObject *pyfwps_string_new_from_guid(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYFWPS_GUID_H ) */
 
