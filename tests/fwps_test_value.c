@@ -1,7 +1,7 @@
 /*
- * Library value type testing program
+ * Library value type test program
  *
- * Copyright (C) 2013-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2013-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *

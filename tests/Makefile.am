@@ -13,17 +13,17 @@ AM_CPPFLAGS = \
 	@LIBFWPS_DLL_IMPORT@
 
 if HAVE_PYTHON_TESTS
-TESTS_PYFWPS =
+TESTS_PYFWPS = \
+	test_python_module.sh
 endif
 
 TESTS = \
-	test_api_functions.sh \
-	test_api_types.sh \
+	test_library.sh \
 	$(TESTS_PYFWPS)
 
 check_SCRIPTS = \
-	test_api_functions.sh \
-	test_api_types.sh \
+	pyfwps_test_support.py \
+	test_library.sh \
 	test_runner.sh
 
 EXTRA_DIST = \
