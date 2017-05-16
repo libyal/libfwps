@@ -27,12 +27,11 @@ DPKG_FILES = \
 	dpkg/compat \
 	dpkg/control \
 	dpkg/copyright \
-	dpkg/copyright.in \
 	dpkg/rules \
-	dpkg/libfwps.docs \
-	dpkg/libfwps-dev.docs \
-	dpkg/libfwps-python.docs \
-	dpkg/libfwps-python3.docs \
+	dpkg/libfwps.install \
+	dpkg/libfwps-dev.install \
+	dpkg/libfwps-python.install \
+	dpkg/libfwps-python3.install \
 	dpkg/source/format
 
 GETTEXT_FILES = \
