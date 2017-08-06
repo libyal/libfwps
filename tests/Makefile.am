@@ -22,6 +22,7 @@ TESTS = \
 	$(TESTS_PYFWPS)
 
 check_SCRIPTS = \
+	pyfwps_test_storage.py \
 	pyfwps_test_support.py \
 	test_library.sh \
 	test_runner.sh
