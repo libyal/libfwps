@@ -73,9 +73,9 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFWPS_DLL_IMPORT )
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFWPS_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -92,21 +92,21 @@ int main(
 	FWPS_TEST_UNREFERENCED_PARAMETER( argc )
 	FWPS_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFWPS_DLL_IMPORT )
 
 	/* TODO: add tests for libfwps_value_initialize */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFWPS_DLL_IMPORT ) */
 
 	FWPS_TEST_RUN(
 	 "libfwps_value_free",
 	 fwps_test_value_free );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFWPS_DLL_IMPORT )
 
 	/* TODO: add tests for libfwps_value_copy_from_byte_stream */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFWPS_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 
