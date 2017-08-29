@@ -60,13 +60,13 @@ int fwps_test_storage_initialize(
 	 result,
 	 1 );
 
-        FWPS_TEST_ASSERT_IS_NOT_NULL(
-         "storage",
-         storage );
+	FWPS_TEST_ASSERT_IS_NOT_NULL(
+	 "storage",
+	 storage );
 
-        FWPS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libfwps_storage_free(
 	          &storage,
@@ -77,13 +77,13 @@ int fwps_test_storage_initialize(
 	 result,
 	 1 );
 
-        FWPS_TEST_ASSERT_IS_NULL(
-         "storage",
-         storage );
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "storage",
+	 storage );
 
-        FWPS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -96,9 +96,9 @@ int fwps_test_storage_initialize(
 	 result,
 	 -1 );
 
-        FWPS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FWPS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -114,9 +114,9 @@ int fwps_test_storage_initialize(
 	 result,
 	 -1 );
 
-        FWPS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FWPS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -248,9 +248,9 @@ int fwps_test_storage_free(
 	 result,
 	 -1 );
 
-        FWPS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FWPS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
