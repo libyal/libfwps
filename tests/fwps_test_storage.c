@@ -383,6 +383,25 @@ int fwps_test_storage_copy_from_byte_stream(
 	libcerror_error_free(
 	 &error );
 
+	result = libfwps_storage_copy_from_byte_stream(
+	          storage,
+	          fwps_test_storage_data1,
+	          0,
+	          LIBFWPS_CODEPAGE_WINDOWS_1252,
+	          &error );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	FWPS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
 	/* TODO: test with invalid codepage */
 
 	/* Clean up
