@@ -1,7 +1,7 @@
 /*
  * Python bindings for libfwps (pyfwps)
  *
- * Copyright (C) 2013-2017, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2013-2018, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
