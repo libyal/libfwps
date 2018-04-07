@@ -1,5 +1,5 @@
 /*
- * Python bindings for libfwps (pyfwps)
+ * Python bindings module for libfwps (pyfwps)
  *
  * Copyright (C) 2013-2018, Joachim Metz <joachim.metz@gmail.com>
  *

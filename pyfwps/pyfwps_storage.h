@@ -48,9 +48,6 @@ struct pyfwps_storage
 extern PyMethodDef pyfwps_storage_object_methods[];
 extern PyTypeObject pyfwps_storage_type_object;
 
-PyObject *pyfwps_storage_new(
-           void );
-
 int pyfwps_storage_init(
      pyfwps_storage_t *pyfwps_storage );
 

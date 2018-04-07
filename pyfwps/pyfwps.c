@@ -23,7 +23,7 @@
 #include <narrow_string.h>
 #include <types.h>
 
-#if defined( HAVE_STDLIB_H )
+#if defined( HAVE_STDLIB_H ) || defined( HAVE_WINAPI )
 #include <stdlib.h>
 #endif
 
@@ -122,9 +122,8 @@ PyMODINIT_FUNC initpyfwps(
                 void )
 #endif
 {
-	PyObject *module                  = NULL;
-	PyTypeObject *storage_type_object = NULL;
-	PyGILState_STATE gil_state        = 0;
+	PyObject *module           = NULL;
+	PyGILState_STATE gil_state = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	libfwps_notify_set_stream(
@@ -169,14 +168,12 @@ PyMODINIT_FUNC initpyfwps(
 		goto on_error;
 	}
 	Py_IncRef(
-	 (PyObject *) &pyfwps_storage_type_object );
-
-	storage_type_object = &pyfwps_storage_type_object;
+	 (PyObject * ) &pyfwps_storage_type_object );
 
 	PyModule_AddObject(
 	 module,
 	 "storage",
-	 (PyObject *) storage_type_object );
+	 (PyObject *) &pyfwps_storage_type_object );
 
 	PyGILState_Release(
 	 gil_state );

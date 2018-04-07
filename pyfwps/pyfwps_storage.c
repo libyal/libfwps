@@ -38,9 +38,9 @@ PyMethodDef pyfwps_storage_object_methods[] = {
 	{ "copy_from_byte_stream",
 	  (PyCFunction) pyfwps_storage_copy_from_byte_stream,
 	  METH_VARARGS | METH_KEYWORDS,
-	  "copy_from_byte_stream(*byte_stream) -> Binary string or None\n"
+	  "copy_from_byte_stream(byte_stream)\n"
 	  "\n"
-	  "Copies the the storage from the byte stream" },
+	  "Copies the storage from the byte stream." },
 
 	/* Sentinel */
 	{ NULL, NULL, 0, NULL }
@@ -147,49 +147,6 @@ PyTypeObject pyfwps_storage_type_object = {
 	0
 };
 
-/* Creates a new storage object
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyfwps_storage_new(
-           void )
-{
-	pyfwps_storage_t *pyfwps_storage = NULL;
-	static char *function            = "pyfwps_storage_new";
-
-	pyfwps_storage = PyObject_New(
-	                  struct pyfwps_storage,
-	                  &pyfwps_storage_type_object );
-
-	if( pyfwps_storage == NULL )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to initialize storage.",
-		 function );
-
-		goto on_error;
-	}
-	if( pyfwps_storage_init(
-	     pyfwps_storage ) != 0 )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to initialize storage.",
-		 function );
-
-		goto on_error;
-	}
-	return( (PyObject *) pyfwps_storage );
-
-on_error:
-	if( pyfwps_storage != NULL )
-	{
-		Py_DecRef(
-		 (PyObject *) pyfwps_storage );
-	}
-	return( NULL );
-}
-
 /* Intializes a storage object
  * Returns 0 if successful or -1 on error
  */
@@ -208,6 +165,8 @@ int pyfwps_storage_init(
 
 		return( -1 );
 	}
+	/* Make sure libfwps storage is set to NULL
+	 */
 	pyfwps_storage->storage = NULL;
 
 	if( libfwps_storage_initialize(
@@ -247,15 +206,6 @@ void pyfwps_storage_free(
 
 		return;
 	}
-	if( pyfwps_storage->storage == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid storage - missing libfwps storage.",
-		 function );
-
-		return;
-	}
 	ob_type = Py_TYPE(
 	           pyfwps_storage );
 
@@ -277,24 +227,27 @@ void pyfwps_storage_free(
 
 		return;
 	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libfwps_storage_free(
-	          &( pyfwps_storage->storage ),
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
+	if( pyfwps_storage->storage != NULL )
 	{
-		pyfwps_error_raise(
-		 error,
-		 PyExc_MemoryError,
-		 "%s: unable to free libfwps storage.",
-		 function );
+		Py_BEGIN_ALLOW_THREADS
 
-		libcerror_error_free(
-		 &error );
+		result = libfwps_storage_free(
+		          &( pyfwps_storage->storage ),
+		          &error );
+
+		Py_END_ALLOW_THREADS
+
+		if( result != 1 )
+		{
+			pyfwps_error_raise(
+			 error,
+			 PyExc_MemoryError,
+			 "%s: unable to free libfwps storage.",
+			 function );
+
+			libcerror_error_free(
+			 &error );
+		}
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyfwps_storage );
