@@ -168,7 +168,7 @@ PyMODINIT_FUNC initpyfwps(
 		goto on_error;
 	}
 	Py_IncRef(
-	 (PyObject * ) &pyfwps_storage_type_object );
+	 (PyObject *) &pyfwps_storage_type_object );
 
 	PyModule_AddObject(
 	 module,

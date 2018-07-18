@@ -37,8 +37,11 @@
 
 #include <libfwps/extern.h>
 
+#define LIBFWPS_EXTERN_VARIABLE	LIBFWPS_EXTERN
+
 #else
-#define LIBFWPS_EXTERN	/* extern */
+#define LIBFWPS_EXTERN		/* extern */
+#define LIBFWPS_EXTERN_VARIABLE	extern
 
 #endif /* !defined( HAVE_LOCAL_LIBFWPS ) */
 
