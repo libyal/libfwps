@@ -28,13 +28,6 @@
  */
 #if !defined( HAVE_LOCAL_LIBFWPS )
 
-/* If libtool DLL support is enabled set LIBFWPS_DLL_EXPORT
- * before including libfwps/extern.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
-#define LIBFWPS_DLL_EXPORT
-#endif
-
 #include <libfwps/extern.h>
 
 #define LIBFWPS_EXTERN_VARIABLE	LIBFWPS_EXTERN

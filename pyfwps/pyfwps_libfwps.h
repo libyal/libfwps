@@ -24,14 +24,7 @@
 
 #include <common.h>
 
-/* If Cygwin libtool DLL support is enabled set LIBFWPS_DLL_IMPORT
- * before including libfwps.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
-#define LIBFWPS_DLL_IMPORT
-#endif
-
 #include <libfwps.h>
 
-#endif
+#endif /* !defined( _PYFWPS_LIBFWPS_H ) */
 

@@ -24,13 +24,6 @@
 
 #include <common.h>
 
-/* If Cygwin libtool DLL support is enabled and do not want to create static
- * executables set LIBFWPS_DLL_IMPORT before including libfwps.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT ) && !defined( HAVE_STATIC_EXECUTABLES )
-#define LIBFWPS_DLL_IMPORT
-#endif
-
 #include <libfwps.h>
 
 #endif /* !defined( _FWPS_TEST_LIBFWPS_H ) */
