@@ -9,6 +9,8 @@ Homepage: https://github.com/libyal/libfwps
 Package: libfwps
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libfwps1
+Replaces: libfwps1
 Suggests: libfwps-dbg
 Description: Library to access the Windows Property Store format
  libfwps is a library to access the Windows Property Store format.
@@ -31,6 +33,8 @@ Package: libfwps-python
 Section: python
 Architecture: any
 Depends: libfwps (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: python-libfwps
+Replaces: python-libfwps
 Suggests: libfwps-python-dbg
 Description: Python 2 bindings for libfwps
  Python 2 bindings for libfwps.
@@ -46,6 +50,8 @@ Package: libfwps-python3
 Section: python
 Architecture: any
 Depends: libfwps (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: python3-libfwps
+Replaces: python3-libfwps
 Suggests: libfwps-python3-dbg
 Description: Python 3 bindings for libfwps
  Python 3 bindings for libfwps.
