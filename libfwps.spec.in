@@ -13,6 +13,14 @@ BuildRequires: gcc @ax_libcdata_spec_build_requires@ @ax_libcerror_spec_build_re
 %description -n libfwps
 Library to access the Windows Property Store format
 
+%package -n libfwps-static
+Summary: Library to access the Windows Property Store format
+Group: Development/Libraries
+Requires: libfwps = %{version}-%{release}
+
+%description -n libfwps-static
+Static library version of libfwps.
+
 %package -n libfwps-devel
 Summary: Header files and libraries for developing applications for libfwps
 Group: Development/Libraries
@@ -65,11 +73,16 @@ rm -rf %{buildroot}
 %doc AUTHORS README
 %attr(755,root,root) %{_libdir}/*.so.*
 
+%files -n libfwps-static
+%defattr(644,root,root,755)
+%license COPYING
+%doc AUTHORS README
+%attr(755,root,root) %{_libdir}/*.a
+
 %files -n libfwps-devel
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
-%{_libdir}/*.a
 %{_libdir}/*.la
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/libfwps.pc
