@@ -45,17 +45,6 @@ matrix:
     dist: xenial
     sudo: required
     group: edge
-  - name: "Linux with gcc on PowerPC 64-bit"
-    env:
-    - CONFIGURE_OPTIONS=""
-    - CFLAGS="--coverage"
-    - LDFLAGS="--coverage"
-    - TARGET="linux-gcc"
-    compiler: gcc
-    os: linux-ppc64le
-    dist: xenial
-    sudo: required
-    group: edge
   - name: "Linux with gcc on s390x (Docker)"
     env:
     - DOCKERHUB_REPO="s390x/ubuntu"
@@ -176,12 +165,19 @@ matrix:
     compiler: gcc
     os: osx
     osx_image: xcode8.3
-  - name: "Mac OS with gcc and Python 2 module (setup.py)"
+  - name: "Mac OS 10.12 with gcc and Python 2 module (setup.py)"
     env:
     - TARGET="macos-gcc-python-setup-py"
     compiler: gcc
     os: osx
     osx_image: xcode8.3
+  - name: "Mac OS 10.14 with gcc and Python 3.7 module (setup.py)"
+    env:
+    - TARGET="macos-gcc-python-setup-py37"
+    compiler: gcc
+    os: osx
+    osx_image: xcode11
+    language: shell
   - name: "Mac OS gcc and Python module and pkgbuild"
     env:
     - CONFIGURE_OPTIONS="--disable-dependency-tracking --prefix=/usr/local --enable-python --with-pyprefix"
