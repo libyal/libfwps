@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #endif
 
-#include "fwps_test_libcerror.h"
 #include "fwps_test_libfwps.h"
 #include "fwps_test_macros.h"
 #include "fwps_test_unused.h"
