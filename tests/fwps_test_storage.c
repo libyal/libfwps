@@ -120,6 +120,8 @@ int fwps_test_storage_initialize(
 	          &storage,
 	          &error );
 
+	storage = NULL;
+
 	FWPS_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -131,8 +133,6 @@ int fwps_test_storage_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	storage = NULL;
 
 #if defined( HAVE_FWPS_TEST_MEMORY )
 

@@ -34,6 +34,7 @@ EXTRA_DIST = \
 
 check_PROGRAMS = \
 	fwps_test_error \
+	fwps_test_property_identifier \
 	fwps_test_storage \
 	fwps_test_support \
 	fwps_test_value
@@ -46,6 +47,18 @@ fwps_test_error_SOURCES = \
 
 fwps_test_error_LDADD = \
 	../libfwps/libfwps.la
+
+fwps_test_property_identifier_SOURCES = \
+	fwps_test_libcerror.h \
+	fwps_test_libfwps.h \
+	fwps_test_macros.h \
+	fwps_test_memory.c fwps_test_memory.h \
+	fwps_test_property_identifier.c \
+	fwps_test_unused.h
+
+fwps_test_property_identifier_LDADD = \
+	../libfwps/libfwps.la \
+	@LIBCERROR_LIBADD@
 
 fwps_test_storage_SOURCES = \
 	fwps_test_libcerror.h \

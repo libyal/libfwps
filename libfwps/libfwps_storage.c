@@ -195,24 +195,14 @@ int libfwps_storage_copy_from_byte_stream(
 
 		return( -1 );
 	}
-	if( byte_stream_size < 4 )
+	if( ( byte_stream_size < 4 )
+	 || ( byte_stream_size > (size_t) SSIZE_MAX ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-		 "%s: byte stream too small.",
-		 function );
-
-		return( -1 );
-	}
-	if( byte_stream_size > (size_t) SSIZE_MAX )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: byte stream size exceeds maximum.",
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid byte stream size value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -235,7 +225,7 @@ int libfwps_storage_copy_from_byte_stream(
 		return( 1 );
 	}
 	if( ( internal_storage->size < 4 )
-	 && ( (size_t) internal_storage->size > byte_stream_size ) )
+	 || ( (size_t) internal_storage->size > byte_stream_size ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -248,6 +238,17 @@ int libfwps_storage_copy_from_byte_stream(
 	}
 	byte_stream_offset += 4;
 
+	if( ( internal_storage->size - byte_stream_offset ) < 4 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+		 "%s: invalid byte stream size value to small.",
+		 function );
+
+		goto on_error;
+	}
 	if( memory_compare(
 	     &( byte_stream[ byte_stream_offset ] ),
 	     libfwps_serialized_property_storage_signature,
@@ -276,8 +277,17 @@ int libfwps_storage_copy_from_byte_stream(
 #endif
 	byte_stream_offset += 4;
 
-/* TODO add bounds check */
+	if( ( internal_storage->size - byte_stream_offset ) < 16 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+		 "%s: invalid byte stream size value to small.",
+		 function );
 
+		goto on_error;
+	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -355,7 +365,8 @@ int libfwps_storage_copy_from_byte_stream(
 			goto on_error;
 		}
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	if( memory_compare(
 	     &( byte_stream[ byte_stream_offset ] ),
 	     libfwsp_format_class_identifier_named_properties,
@@ -369,7 +380,7 @@ int libfwps_storage_copy_from_byte_stream(
 	}
 	byte_stream_offset += 16;
 
-	while( byte_stream_offset < byte_stream_size )
+	while( byte_stream_offset < internal_storage->size )
 	{
 		if( libfwps_value_initialize(
 		     &property_value,
@@ -424,6 +435,7 @@ int libfwps_storage_copy_from_byte_stream(
 		byte_stream_offset += property_value_size;
 	}
 /* TODO print trailing data */
+
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{

@@ -227,24 +227,14 @@ int libfwps_value_copy_from_byte_stream(
 
 		return( -1 );
 	}
-	if( byte_stream_size < 4 )
+	if( ( byte_stream_size < 4 )
+	 || ( byte_stream_size > (size_t) SSIZE_MAX ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-		 "%s: byte stream too small.",
-		 function );
-
-		return( -1 );
-	}
-	if( byte_stream_size > (size_t) SSIZE_MAX )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: byte stream size exceeds maximum.",
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid byte stream size value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -253,6 +243,34 @@ int libfwps_value_copy_from_byte_stream(
 	 byte_stream,
 	 internal_value->size );
 
+	if( ( internal_value->size < 4 )
+	 || ( (size_t) internal_value->size > byte_stream_size ) )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libcnotify_verbose != 0 )
+		{
+			libcnotify_printf(
+			 "%s: size\t\t\t\t: %" PRIu32 "\n",
+			 function,
+			 internal_value->size );
+
+			libcnotify_printf(
+			 "\n" );
+		}
+#endif
+		if( internal_value->size == 0 )
+		{
+			return( 1 );
+		}
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid property value size value out of bounds.",
+		 function );
+
+		goto on_error;
+	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -274,24 +292,19 @@ int libfwps_value_copy_from_byte_stream(
 		 internal_value->size );
 	}
 #endif
-	if( internal_value->size == 0 )
-	{
-		return( 1 );
-	}
-	if( ( internal_value->size < 4 )
-	 && ( (size_t) internal_value->size > byte_stream_size ) )
+	byte_stream_offset += 4;
+
+	if( ( internal_value->size - byte_stream_offset ) < 4 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-		 "%s: invalid property value size value out of bounds.",
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+		 "%s: invalid byte stream size value too small.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
-	byte_stream_offset += 4;
-
 	if( internal_value->type == LIBFWPS_VALUE_TYPE_NAMED )
 	{
 		byte_stream_copy_to_uint32_little_endian(
@@ -325,6 +338,17 @@ int libfwps_value_copy_from_byte_stream(
 	}
 	byte_stream_offset += 4;
 
+	if( ( internal_value->size - byte_stream_offset ) < 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+		 "%s: invalid byte stream size value too small.",
+		 function );
+
+		return( -1 );
+	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -336,6 +360,17 @@ int libfwps_value_copy_from_byte_stream(
 #endif
 	byte_stream_offset += 1;
 
+	if( name_size > ( internal_value->size - byte_stream_offset ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid name size value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
 	if( internal_value->type == LIBFWPS_VALUE_TYPE_NAMED )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
@@ -434,20 +469,22 @@ int libfwps_value_copy_from_byte_stream(
 #endif
 		byte_stream_offset += name_size;
 	}
-
-/* TODO read value */
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
+	if( byte_stream_offset < internal_value->size )
 	{
-		libcnotify_printf(
-		 "%s: value data:\n",
-		 function );
-		libcnotify_print_data(
-		 &( byte_stream[ byte_stream_offset ] ),
-		 internal_value->size - byte_stream_offset,
-		 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
-	}
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libcnotify_verbose != 0 )
+		{
+			libcnotify_printf(
+			 "%s: value data:\n",
+			 function );
+			libcnotify_print_data(
+			 &( byte_stream[ byte_stream_offset ] ),
+			 internal_value->size - byte_stream_offset,
+			 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
+		}
 #endif
+		/* TODO read value */
+	}
 
 /* TODO print trailing data */
 

@@ -125,6 +125,7 @@ stamp-h[1-9]
 /pyfwps-python[23]/*.[ch]
 /tests/*.exe
 /tests/fwps_test_error
+/tests/fwps_test_property_identifier
 /tests/fwps_test_storage
 /tests/fwps_test_support
 /tests/fwps_test_value

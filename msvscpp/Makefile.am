@@ -1,5 +1,6 @@
 MSVSCPP_FILES = \
 	fwps_test_error/fwps_test_error.vcproj \
+	fwps_test_property_identifier/fwps_test_property_identifier.vcproj \
 	fwps_test_storage/fwps_test_storage.vcproj \
 	fwps_test_support/fwps_test_support.vcproj \
 	fwps_test_value/fwps_test_value.vcproj \
