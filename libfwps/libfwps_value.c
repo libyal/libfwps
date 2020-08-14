@@ -294,7 +294,7 @@ int libfwps_value_copy_from_byte_stream(
 #endif
 	byte_stream_offset += 4;
 
-	if( ( internal_value->size - byte_stream_offset ) < 4 )
+	if( byte_stream_offset > ( internal_value->size - 4 ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -338,7 +338,7 @@ int libfwps_value_copy_from_byte_stream(
 	}
 	byte_stream_offset += 4;
 
-	if( ( internal_value->size - byte_stream_offset ) < 1 )
+	if( byte_stream_offset > ( internal_value->size - 1 ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -360,7 +360,8 @@ int libfwps_value_copy_from_byte_stream(
 #endif
 	byte_stream_offset += 1;
 
-	if( name_size > ( internal_value->size - byte_stream_offset ) )
+	if( ( name_size > internal_value->size )
+	 || ( byte_stream_offset > ( internal_value->size - name_size ) ) )
 	{
 		libcerror_error_set(
 		 error,

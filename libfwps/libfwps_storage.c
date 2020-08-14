@@ -399,7 +399,7 @@ int libfwps_storage_copy_from_byte_stream(
 		if( libfwps_value_copy_from_byte_stream(
 		     property_value,
 		     &( byte_stream[ byte_stream_offset ] ),
-		     byte_stream_size,
+		     byte_stream_size - byte_stream_offset,
 		     ascii_codepage,
 		     error ) != 1 )
 		{
