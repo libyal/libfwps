@@ -30,7 +30,11 @@
 
 #include <libfwps/extern.h>
 
+#if defined( __CYGWIN__ )
+#define LIBFWPS_EXTERN_VARIABLE	extern
+#else
 #define LIBFWPS_EXTERN_VARIABLE	LIBFWPS_EXTERN
+#endif
 
 #else
 #define LIBFWPS_EXTERN		/* extern */

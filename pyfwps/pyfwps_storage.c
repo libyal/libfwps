@@ -147,7 +147,7 @@ PyTypeObject pyfwps_storage_type_object = {
 	0
 };
 
-/* Intializes a storage object
+/* Initializes a storage object
  * Returns 0 if successful or -1 on error
  */
 int pyfwps_storage_init(
