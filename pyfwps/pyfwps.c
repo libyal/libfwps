@@ -46,10 +46,7 @@ PyMethodDef pyfwps_module_methods[] = {
 	  "Retrieves the version." },
 
 	/* Sentinel */
-	{ NULL,
-	  NULL,
-	  0,
-	  NULL}
+	{ NULL, NULL, 0, NULL }
 };
 
 /* Retrieves the pyfwps/libfwps version
@@ -154,8 +151,9 @@ PyMODINIT_FUNC initpyfwps(
 		return;
 #endif
 	}
+#if PY_VERSION_HEX < 0x03070000
 	PyEval_InitThreads();
-
+#endif
 	gil_state = PyGILState_Ensure();
 
 	/* Setup the storage type object
