@@ -24,7 +24,7 @@ BEGIN
       VALUE "FileDescription",		"Library to access the Windows Property Store format\0"
       VALUE "FileVersion",		"@VERSION@" "\0"
       VALUE "InternalName",		"libfwps.dll\0"
-      VALUE "LegalCopyright",		"(C) 2013-2020, Joachim Metz <joachim.metz@gmail.com>\0"
+      VALUE "LegalCopyright",		"(C) 2013-2021, Joachim Metz <joachim.metz@gmail.com>\0"
       VALUE "OriginalFilename",		"libfwps.dll\0"
       VALUE "ProductName",		"libfwps\0"
       VALUE "ProductVersion",		"@VERSION@" "\0"

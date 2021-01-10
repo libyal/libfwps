@@ -1,7 +1,7 @@
 /*
  * The internal extern definition
  *
- * Copyright (C) 2013-2020, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2013-2021, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -30,7 +30,7 @@
 
 #include <libfwps/extern.h>
 
-#if defined( __CYGWIN__ )
+#if defined( __CYGWIN__ ) || defined( __MINGW32__ )
 #define LIBFWPS_EXTERN_VARIABLE	extern
 #else
 #define LIBFWPS_EXTERN_VARIABLE	LIBFWPS_EXTERN
