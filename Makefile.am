@@ -31,7 +31,6 @@ DPKG_FILES = \
 	dpkg/rules \
 	dpkg/libfwps.install \
 	dpkg/libfwps-dev.install \
-	dpkg/libfwps-python.install \
 	dpkg/libfwps-python3.install \
 	dpkg/source/format
 
