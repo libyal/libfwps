@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Python-bindings storage type test script
+# Python-bindings set type test script
 #
 # Copyright (C) 2013-2023, Joachim Metz <joachim.metz@gmail.com>
 #
@@ -28,14 +28,14 @@ import pyfwps
 
 
 class StorageTypeTests(unittest.TestCase):
-  """Tests the storage type."""
+  """Tests the set type."""
 
 
 if __name__ == "__main__":
   argument_parser = argparse.ArgumentParser()
 
   argument_parser.add_argument(
-      "source", nargs="?", action="store", metavar="PATH",
+      "source", nargs="?", action="set", metavar="PATH",
       default=None, help="The path of the source file.")
 
   options, unknown_options = argument_parser.parse_known_args()

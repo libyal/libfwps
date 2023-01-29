@@ -32,7 +32,9 @@
 #include "pyfwps_libcerror.h"
 #include "pyfwps_libfwps.h"
 #include "pyfwps_python.h"
+#include "pyfwps_set.h"
 #include "pyfwps_storage.h"
+#include "pyfwps_store.h"
 #include "pyfwps_unused.h"
 
 /* The pyfwps module methods
@@ -156,6 +158,23 @@ PyMODINIT_FUNC initpyfwps(
 #endif
 	gil_state = PyGILState_Ensure();
 
+	/* Setup the set type object
+	 */
+	pyfwps_set_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyfwps_set_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyfwps_set_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "set",
+	 (PyObject *) &pyfwps_set_type_object );
+
 	/* Setup the storage type object
 	 */
 	pyfwps_storage_type_object.tp_new = PyType_GenericNew;
@@ -172,6 +191,23 @@ PyMODINIT_FUNC initpyfwps(
 	 module,
 	 "storage",
 	 (PyObject *) &pyfwps_storage_type_object );
+
+	/* Setup the store type object
+	 */
+	pyfwps_store_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyfwps_store_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyfwps_store_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "store",
+	 (PyObject *) &pyfwps_store_type_object );
 
 	PyGILState_Release(
 	 gil_state );

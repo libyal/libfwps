@@ -729,7 +729,6 @@ int libfwps_record_get_data_as_boolean(
 {
 	libfwps_internal_record_t *internal_record = NULL;
 	static char *function                      = "libfwps_record_get_data_as_boolean";
-	uint16_t value_16bit                       = 0;
 
 	if( record == NULL )
 	{

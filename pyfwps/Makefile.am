@@ -22,7 +22,9 @@ pyfwps_la_SOURCES = \
 	pyfwps_libfguid.h \
 	pyfwps_libfwps.h \
 	pyfwps_python.h \
+	pyfwps_set.c pyfwps_set.h \
 	pyfwps_storage.c pyfwps_storage.h \
+	pyfwps_store.c pyfwps_store.h \
 	pyfwps_unused.h
 
 pyfwps_la_LIBADD = \

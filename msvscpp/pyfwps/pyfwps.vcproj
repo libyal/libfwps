@@ -190,7 +190,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\pyfwps\pyfwps_set.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\pyfwps\pyfwps_storage.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyfwps\pyfwps_store.c"
 				>
 			</File>
 		</Filter>
@@ -240,7 +248,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\pyfwps\pyfwps_set.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\pyfwps\pyfwps_storage.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyfwps\pyfwps_store.h"
 				>
 			</File>
 			<File
