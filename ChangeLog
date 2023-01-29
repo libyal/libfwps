@@ -1,35 +1,10 @@
-20160830
-* worked on tests
-
-20160110
-* worked on Python 3 support
-
-20160106
-* 2016 update
-
-20150822
-* worked on setup.py
-
-20150608
-* fixes in format class identifier
-
-20150104
-* 2015 update
-
-20141021
-* worked on stand-alone version
-
-20141018
-* changes for deployment
-
-20141012
-* worked on utility scripts
-
-20141005
-* added format working document
-* small changes
+TODO:
+* update Python bindings for set and store types and deprecate storage type
+* remove storage and value types
+* add record fuzz target
 
 20140921
+* see `git log' for more recent change log
 * changes for project site move
 
 20140810

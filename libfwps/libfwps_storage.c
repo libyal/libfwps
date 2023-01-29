@@ -29,16 +29,16 @@
 #include "libfwps_libcerror.h"
 #include "libfwps_libcnotify.h"
 #include "libfwps_libfguid.h"
+#include "libfwps_record.h"
 #include "libfwps_storage.h"
-#include "libfwps_value.h"
 #include "libfwps_types.h"
 
 const char *libfwps_serialized_property_storage_signature = "1SPS";
 
-uint8_t libfwsp_format_class_identifier_named_properties[ 16 ] = {
+uint8_t libfwps_storage_format_class_identifier_named_properties[ 16 ] = {
 	0x05, 0xd5, 0xcd, 0xd5, 0x9c, 0x2e, 0x1b, 0x10, 0x93, 0x97, 0x08, 0x00, 0x2b, 0x2c, 0xf9, 0xae };
 
-uint8_t libfwsp_format_class_identifier_unknown1[ 16 ] = {
+uint8_t libfwps_storage_format_class_identifier_unknown1[ 16 ] = {
 	0x30, 0xf1, 0x25, 0xb7, 0xef, 0x47, 0x1a, 0x10, 0xa5, 0xf1, 0x02, 0x60, 0x8c, 0x9e, 0xeb, 0xac };
 
 /* Creates a storage
@@ -158,11 +158,11 @@ int libfwps_storage_copy_from_byte_stream(
      libcerror_error_t **error )
 {
 	libfwps_internal_storage_t *internal_storage = NULL;
-	libfwps_value_t *property_value              = NULL;
+	libfwps_record_t *property_record            = NULL;
 	static char *function                        = "libfwps_storage_copy_from_byte_stream";
 	size_t byte_stream_offset                    = 0;
-	uint32_t property_value_size                 = 0;
-	uint8_t property_value_type                  = 0;
+	uint32_t property_record_size                = 0;
+	uint8_t property_record_type                 = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
         system_character_t guid_string[ 48 ];
@@ -369,35 +369,75 @@ int libfwps_storage_copy_from_byte_stream(
 
 	if( memory_compare(
 	     &( byte_stream[ byte_stream_offset ] ),
-	     libfwsp_format_class_identifier_named_properties,
+	     libfwps_storage_format_class_identifier_named_properties,
 	     16 ) == 0 )
 	{
-		property_value_type = LIBFWPS_VALUE_TYPE_NAMED;
+		property_record_type = LIBFWPS_RECORD_TYPE_NAMED;
 	}
 	else
 	{
-		property_value_type = LIBFWPS_VALUE_TYPE_NUMERIC;
+		property_record_type = LIBFWPS_RECORD_TYPE_NUMERIC;
 	}
 	byte_stream_offset += 16;
 
-	while( byte_stream_offset < internal_storage->size )
+	while( byte_stream_offset < byte_stream_size )
 	{
-		if( libfwps_value_initialize(
-		     &property_value,
-		     property_value_type,
+		if( byte_stream_offset > ( byte_stream_size - 4 ) )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+			 "%s: invalid byte stream size value too small.",
+			 function );
+
+			goto on_error;
+		}
+		byte_stream_copy_to_uint32_little_endian(
+		 &( byte_stream[ byte_stream_offset ] ),
+		 property_record_size );
+
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libcnotify_verbose != 0 )
+		{
+			libcnotify_printf(
+			 "%s: record data size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 property_record_size );
+		}
+#endif
+		if( property_record_size == 0 )
+		{
+			break;
+		}
+		if( ( property_record_size > byte_stream_size )
+		 || ( byte_stream_offset > ( byte_stream_size - property_record_size ) ) )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid value data size value out of bounds.",
+			 function );
+
+			goto on_error;
+		}
+		if( libfwps_record_initialize(
+		     &property_record,
+		     property_record_type,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create property value.",
+			 "%s: unable to create property record.",
 			 function );
 
 			goto on_error;
 		}
-		if( libfwps_value_copy_from_byte_stream(
-		     property_value,
+		if( libfwps_record_copy_from_byte_stream(
+		     property_record,
 		     &( byte_stream[ byte_stream_offset ] ),
 		     byte_stream_size - byte_stream_offset,
 		     ascii_codepage,
@@ -407,32 +447,30 @@ int libfwps_storage_copy_from_byte_stream(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-			 "%s: unable to copy byte stream to property value.",
+			 "%s: unable to copy byte stream to property record.",
 			 function );
 
 			goto on_error;
 		}
-		property_value_size = ( (libfwps_internal_value_t *) property_value )->size;
-
 /* TODO store value array if size != 0 */
-		if( libfwps_internal_value_free(
-		     (libfwps_internal_value_t **) &property_value,
+		if( libfwps_internal_record_free(
+		     (libfwps_internal_record_t **) &property_record,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free property value.",
+			 "%s: unable to free property record.",
 			 function );
 
 			goto on_error;
 		}
-		if( property_value_size == 0 )
+		if( property_record_size == 0 )
 		{
 			break;
 		}
-		byte_stream_offset += property_value_size;
+		byte_stream_offset += property_record_size;
 	}
 /* TODO print trailing data */
 
@@ -454,10 +492,10 @@ on_error:
 		 NULL );
 	}
 #endif
-	if( property_value != NULL )
+	if( property_record != NULL )
 	{
-		libfwps_internal_value_free(
-		 (libfwps_internal_value_t **) &property_value,
+		libfwps_internal_record_free(
+		 (libfwps_internal_record_t **) &property_record,
 		 NULL );
 	}
 	return( -1 );

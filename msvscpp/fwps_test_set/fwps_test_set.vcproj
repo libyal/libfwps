@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="fwps_test_value"
-	ProjectGUID="{04A4B25B-42D8-447F-9E12-1C8F6FA001A7}"
-	RootNamespace="fwps_test_value"
+	Name="fwps_test_set"
+	ProjectGUID="{17FE939E-6C74-4C2F-BA57-70C2E48CD8EB}"
+	RootNamespace="fwps_test_set"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -180,7 +180,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\tests\fwps_test_value.c"
+				RelativePath="..\..\tests\fwps_test_set.c"
 				>
 			</File>
 		</Filter>

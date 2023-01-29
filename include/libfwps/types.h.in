@@ -201,6 +201,10 @@ typedef int64_t off64_t;
 
 /* The following type definitions hide internal data structures
  */
+typedef intptr_t libfwps_record_t;
+typedef intptr_t libfwps_set_t;
+typedef intptr_t libfwps_store_t;
+
 typedef intptr_t libfwps_storage_t;
 typedef intptr_t libfwps_value_t;
 

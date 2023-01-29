@@ -21,13 +21,17 @@ libfwps_la_SOURCES = \
 	libfwps_extern.h \
 	libfwps_error.c libfwps_error.h \
 	libfwps_format_class_identifier.c libfwps_format_class_identifier.h \
+	libfwps_libcdata.h \
 	libfwps_libcerror.h \
 	libfwps_libcnotify.h \
 	libfwps_libfguid.h \
 	libfwps_libfole.h \
 	libfwps_libuna.h \
 	libfwps_property_identifier.c libfwps_property_identifier.h \
+	libfwps_record.c libfwps_record.h \
+	libfwps_set.c libfwps_set.h \
 	libfwps_storage.c libfwps_storage.h \
+	libfwps_store.c libfwps_store.h \
 	libfwps_support.c libfwps_support.h \
 	libfwps_types.h \
 	libfwps_unused.h \

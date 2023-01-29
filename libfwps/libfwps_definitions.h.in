@@ -47,15 +47,15 @@
 #define LIBFWPS_ENDIAN_BIG			_BYTE_STREAM_ENDIAN_BIG
 #define LIBFWPS_ENDIAN_LITTLE			_BYTE_STREAM_ENDIAN_LITTLE
 
-/* The property value types
+#endif /* !defined( HAVE_LOCAL_LIBFWPS ) */
+
+/* The property record types
  */
-enum LIBFWPS_VALUE_TYPES
+enum LIBFWPS_RECORD_TYPES
 {
-	LIBFWPS_VALUE_TYPE_NAMED		= 1,
-	LIBFWPS_VALUE_TYPE_NUMERIC		= 2
+	LIBFWPS_RECORD_TYPE_NAMED		= 1,
+	LIBFWPS_RECORD_TYPE_NUMERIC		= 2
 };
 
-#endif
-
-#endif
+#endif /* !defined( LIBFWPS_INTERNAL_DEFINITIONS_H ) */
 

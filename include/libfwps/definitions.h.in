@@ -38,13 +38,5 @@ enum LIBFWPS_ENDIAN
 	LIBFWPS_ENDIAN_LITTLE		= (int) 'l'
 };
 
-/* The property value types
- */
-enum LIBFWPS_VALUE_TYPES
-{
-	LIBFWPS_VALUE_TYPE_NAMED	= 1,
-	LIBFWPS_VALUE_TYPE_NUMERIC	= 2
-};
-
 #endif /* !defined( _LIBFWPS_DEFINITIONS_H ) */
 

@@ -34,10 +34,18 @@
 /* The following type definitions hide internal data structures
  */
 #if defined( HAVE_DEBUG_OUTPUT ) && !defined( WINAPI )
+typedef struct libfwps_record {}	libfwps_record_t;
+typedef struct libfwps_set {}		libfwps_set_t;
+typedef struct libfwps_store {}		libfwps_store_t;
+
 typedef struct libfwps_storage {}	libfwps_storage_t;
 typedef struct libfwps_value {}		libfwps_value_t;
 
 #else
+typedef intptr_t libfwps_record_t;
+typedef intptr_t libfwps_set_t;
+typedef intptr_t libfwps_store_t;
+
 typedef intptr_t libfwps_storage_t;
 typedef intptr_t libfwps_value_t;
 

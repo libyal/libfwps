@@ -1,5 +1,5 @@
 /*
- * OSS-Fuzz target for libfwps storage type
+ * OSS-Fuzz target for libfwps store type
  *
  * Copyright (C) 2013-2023, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -32,23 +32,23 @@ int LLVMFuzzerTestOneInput(
      const uint8_t *data,
      size_t size )
 {
-	libfwps_storage_t *storage = NULL;
+	libfwps_store_t *store = NULL;
 
-	if( libfwps_storage_initialize(
-	     &storage,
+	if( libfwps_store_initialize(
+	     &store,
 	     NULL ) != 1 )
 	{
 		return( 0 );
 	}
-	libfwps_storage_copy_from_byte_stream(
-	 storage,
+	libfwps_store_copy_from_byte_stream(
+	 store,
 	 data,
 	 size,
 	 LIBFWPS_CODEPAGE_WINDOWS_1252,
 	 NULL );
 
-	libfwps_storage_free(
-	 &storage,
+	libfwps_store_free(
+	 &store,
 	 NULL );
 
 	return( 0 );

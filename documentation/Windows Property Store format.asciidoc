@@ -7,6 +7,7 @@ Analysis of the Windows Serialized Property Store (SPS) format
 :numbered!:
 [abstract]
 == Summary
+
 The Property store format is used by various Windows file formats like the 
 Windows Shortcut File (LNK) and in the Windows Shell Items. This specification 
 is based on earlier work on the format and was complimented by reverse 
@@ -18,6 +19,7 @@ able to process this file type.
 
 [preface]
 == Document information
+
 [cols="1,5"]
 |===
 | Author(s): | Joachim Metz <joachim.metz@gmail.com>
@@ -28,8 +30,9 @@ able to process this file type.
 
 [preface]
 == License
+
 ....
-Copyright (C) 2013-2015, Joachim Metz <joachim.metz@gmail.com>.
+Copyright (C) 2013-2023, Joachim Metz <joachim.metz@gmail.com>.
 Permission is granted to copy, distribute and/or modify this document under the 
 terms of the GNU Free Documentation License, Version 1.3 or any later version 
 published by the Free Software Foundation; with no Invariant Sections, no 
@@ -39,6 +42,7 @@ in the section entitled "GNU Free Documentation License".
 
 [preface]
 == Revision history
+
 [cols="1,1,1,5",options="header"]
 |===
 | Version | Author | Date | Comments
@@ -48,10 +52,12 @@ in the section entitled "GNU Free Documentation License".
 | 0.0.4 | J.B. Metz | August 2014 | Additional information.
 | 0.0.5 | J.B. Metz | October 2014 | Switched to asccidoc format.
 | 0.0.6 | J.B. Metz | June 2015 | Additional information.
+| 0.0.7 | J.B. Metz | January 2023 | Changes to formatting.
 |===
 
 :numbered:
 == Overview
+
 The Property store format is used by various Windows file formats like the 
 Windows Shortcut File (LNK) and in the Windows Shell Items.
 
@@ -65,7 +71,8 @@ Though technically maybe incorrect, this document will use term (extended) ASCII
 Unicode strings are stored in UTF-16 little-endian without the byte order mark (BOM).
 |===
 
-== Property store (aka shell property sheet list)
+== Property store (or shell property sheet list)
+
 The property store is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -73,38 +80,37 @@ The property store is variable of size and consists of:
 | Offset | Size | Value | Description
 | 0 | 4 | | Size of the property store +
 [yellow-background]*Includes the 4 bytes of the size itself*
-| 4 | ... | | The serialized property storage
+| 4 | ... | | Zero or more property sets
 | ... | 4 | 0 | Terminal identifier +
 Signifies the end of the property store
 |===
 
-The last serialized property storage should be of size 0 to terminate the 
-property store.
+The last property set should be of size 0 to terminate the property store.
 
 [NOTE]
 In Windows Shell items the size of the property store is not necessarily stored 
-directly before the first serialized property storage.
+directly before the first property set.
 
-=== Serialized property storage (aka Shell property sheet)
-The serialized property storage is variable of size and consists of:
+=== Property set (or Property storage or Shell property sheet)
+
+The property set is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
 | Offset | Size | Value | Description
-| 0 | 4 | | Size of the serialized property storage +
+| 0 | 4 | | Size of the property set +
 [yellow-background]*Includes the 4 bytes of the size itself*
 | 4 | 4 | "1SPS" | Version +
 (Serialized property storage version 1)
 | 8 | 16 | | Format class (or property set) identifier +
 GUID +
-See section: xref:format_class_identifiers[Format class (or property set) identifiers]
-| 24 | ...  | | Serialized property value
-| ...  | 4 | 0 | Terminal identifier +
-Signifies the end of the serialized property storage
+See section: <<format_class_identifiers,Format class (or property set) identifiers>>
+| 24 | ... | | Zero or more property records
+| ... | 4 | 0 | Terminal identifier +
+Signifies the end of the property set
 |===
 
-The last serialized property value should be of size 0 to terminate the 
-serialized property storage.
+The last property record should be of size 0 to terminate the property set.
 
 [NOTE]
 `[MS-PROPSTORE]` uses the term format class identifier, which can also seen in 
@@ -113,35 +119,38 @@ that of the property set class identifiers used in the property set streams of
 OLE compound files they are considered equivalent in this document.
 Also see `[LIBOLECF]`.
 
-=== Serialized numeric property value (aka numeric shell property)
-The serialized numeric property value is variable of size and consists of:
+=== Numeric property record (or numeric shell property or numeric property value)
+
+The numeric property record is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
 | Offset | Size | Value | Description
-| 0 | 4 | | Size of the serialized property value +
+| 0 | 4 | | Size of the property record +
 [yellow-background]*Includes the 4 bytes of the size itself*
-| 4 | 4 | | Identifier
+| 4 | 4 | | Entry type (or property identifier)
 | 8 | 1 | 0x00 | Reserved
-| 9 | ...  | | Typed property value
+| 9 | ... | | Typed property value
 |===
 
-=== Serialized name property value (aka named shell property)
-The serialized name property value is variable of size and consists of:
+=== Name property record (or named shell property or name property value)
+
+The name property record is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
 | Offset | Size | Value | Description
-| 0 | 4 | | Size of the serialized property value +
+| 0 | 4 | | Size of the property record +
 [yellow-background]*Includes the 4 bytes of the size itself*
 | 4 | 4 | | Name size
 | 8 | 1 | 0x00 | Reserved
 | 9 | ... | | Name string +
-UTF-16 little-endian string terminated by an end-of-string character
+UTF-16 little-endian string with an end-of-string character
 | ... | ... | | Typed property value
 |===
 
 === Typed property value
+
 The typed property value (TypedPropertyValue) is variable in size and consist 
 of:
 
@@ -152,22 +161,24 @@ of:
 Contains an OLE defines property (variant) types. +
 Also see `[LIBFOLE]`
 | 2 | 2 | 0x00 | Padding
-| 4 | ...  | | Property value data
+| 4 | ... | | Property value data
 |===
 
 [NOTE]
 The padding is sometimes considered part of the property value type.
 
 == Property sets
+
 [NOTE]
-In the MSDN document the property values are sometimes indicated as a 
+In the MSDN document the property records are sometimes indicated as a 
 combination of the the property set identifier and the value identifier e.g.
 `b725f130-47ef-101a-a5f1-02608c9eebac/10`
 
-=== anchor:format_class_identifiers[Format class (or property set) identifiers]
+=== [[format_class_identifiers]]Format class (or property set) identifiers
+
 [NOTE]
 The User defined properties: d5cdd505-2e9c-101b-9397-08002b2cf9ae use named 
-property values where all other property sets should be numeric.
+property records where all other property sets should be numeric.
 
 [cols="1,1",options="header"]
 |===
@@ -175,6 +186,7 @@ property values where all other property sets should be numeric.
 | 000214a1-0000-0000-c000-000000000046 | [yellow-background]*Internet site* +
 [yellow-background]*(FMTID_InternetSite)*
 | 01a3057a-74d6-4e80-bea7-dc4c212ce50a | [yellow-background]*WPD_STORAGE_OBJECT_PROPERTIES_V1*
+| 446d16b1-8dad-4870-a748-402ea43d788c | [yellow-background]*Unknown (System related)*
 | 46588ae2-4cbc-4338-bbfc-139326986dce | [yellow-background]*Unknown*
 | 4d545058-4fce-4578-95c8-8698a9bc0f49 | [yellow-background]*Unknown*
 | [yellow-background]*56a3372e-ce9c-11d2-9f0e-006097c686f6* | [yellow-background]*Music* +
@@ -188,7 +200,8 @@ property values where all other property sets should be numeric.
 | 64440492-4c8b-11d1-8b70-080036b11a03 | Media file +
 (FMTID_MediaFile)
 | 8f052d93-abca-4fc5-a5ac-b01df4dbe598 | [yellow-background]*WPD_FUNCTIONAL_OBJECT_PROPERTIES_V1*
-| b725f130-47ef-101a-a5f1-02608c9eebac | [yellow-background]*Unknown (Windows Search related?)*
+| 9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3 | [yellow-background]*Unknown (System.AppUserModel related)*
+| b725f130-47ef-101a-a5f1-02608c9eebac | [yellow-background]*Unknown (System related)*
 | d5cdd502-2e9c-101b-9397-08002b2cf9ae | Document summary information +
 (FMTID_DocSummaryInformation)
 | d5cdd505-2e9c-101b-9397-08002b2cf9ae | User defined +
@@ -199,73 +212,78 @@ property values where all other property sets should be numeric.
 |===
 
 === Property set: 000214a1-0000-0000-c000-000000000046
+
 The property storage with identifier 000214a1-0000-0000-c000-000000000046 
 contains [yellow-background]*TODO* related properties and known to contain the 
-following property values:
+following property records:
 
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 9 | VT_UI4 +
-0x0013 |  [yellow-background]System.status*
+| 9 | VT_UI4 (0x0013) | [yellow-background]System.status*
 |===
 
 === Property set: 01a3057a-74d6-4e80-bea7-dc4c212ce50a
+
 The property storage with identifier 01a3057a-74d6-4e80-bea7-dc4c212ce50a 
 contains [yellow-background]*TODO* related properties and known to contain the 
-following property values:
+following property records:
 
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 2 | VT_UI4 +
-0x0013 | [yellow-background]*Unknown*
-| 3 | VT_LPWSTR +
-0x001f | File system
-| 4 | VT_UI8 +
-0x0015 | [yellow-background]*Unknown*
-| 5 | VT_UI8 +
-0x0015 | [yellow-background]*Unknown*
-| 6 | VT_ERROR +
-0x000a | [yellow-background]*Unknown*
-| 6 | VT_UI8 +
-0x0015 | [yellow-background]*Unknown*
-| 7 | VT_LPWSTR +
-0x001f | Storage name
-| 8 | VT_LPWSTR +
-0x001f | Serial number?
+| 2 | VT_UI4 (0x0013) | [yellow-background]*Unknown*
+| 3 | VT_LPWSTR (0x001f) | File system
+| 4 | VT_UI8 (0x0015) | [yellow-background]*Unknown*
+| 5 | VT_UI8 (0x0015) | [yellow-background]*Unknown*
+| 6 | VT_ERROR (0x000a) | [yellow-background]*Unknown*
+| 6 | VT_UI8 (0x0015) | [yellow-background]*Unknown*
+| 7 | VT_LPWSTR (0x001f) | Storage name
+| 8 | VT_LPWSTR (0x001f) | Serial number?
 | | | 
-| 11 | VT_UI4 +
-0x0013 | [yellow-background]*Unknown*
+| 11 | VT_UI4 (0x0013) | [yellow-background]*Unknown*
+|===
+
+=== Property set: 446d16b1-8dad-4870-a748-402ea43d788c
+
+The property storage with identifier 446d16b1-8dad-4870-a748-402ea43d788c
+contains [yellow-background]*TODO* related properties and known to contain the 
+following property records:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 104 | VT_CLSID (0x0048) | NTFS volume identifier (System.VolumeId or PKEY_VolumeId)
 |===
 
 === Property set: 46588ae2-4cbc-4338-bbfc-139326986dce
+
 The property storage with identifier 46588ae2-4cbc-4338-bbfc-139326986dce 
 contains [yellow-background]*TODO* related properties and known to contain the 
-following property values:
+following property records:
 
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 0 | VT_UI4 +
-0x0013 | [yellow-background]*Unknown*
+| 0 | VT_UI4 (0x0013) | [yellow-background]*Unknown*
 |===
 
 === Property set: 4d545058-4fce-4578-95c8-8698a9bc0f49
+
 The property storage with identifier 4d545058-4fce-4578-95c8-8698a9bc0f49 
 contains [yellow-background]*TODO* related properties and known to contain the 
-following property values:
+following property records:
 
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 56325 | VT_UI2 +
-0x0012 | [yellow-background]*Unknown*
+| 56325 | VT_UI2 (0x0012) | [yellow-background]*Unknown*
 |===
 
 === Music properties: 56a3372e-ce9c-11d2-9f0e-006097c686f6
+
 The property storage with identifier 56a3372e-ce9c-11d2-9f0e-006097c686f6 
-contains music properties and is known to contain the following property values:
+contains music properties and is known to contain the following property records:
 
 [NOTE]
 These that properties have not been confirmed yet.
@@ -285,9 +303,10 @@ These that properties have not been confirmed yet.
 |===
 
 === Image summary information properties: 6444048f-4c8b-11d1-8b70-080036b11a03
+
 The property storage with identifier 6444048f-4c8b-11d1-8b70-080036b11a03 
 contains image summary information properties and is known to contain the 
-following property values:
+following property records:
 
 [NOTE]
 These that properties have not been confirmed yet.
@@ -310,9 +329,10 @@ These that properties have not been confirmed yet.
 |===
 
 === Audio summary information properties: 64440490-4c8b-11d1-8b70-080036b11a03
+
 The property storage with identifier 64440490-4c8b-11d1-8b70-080036b11a03 
 contains audio summary information properties and is known to contain the 
-following property values:
+following property records:
 
 [NOTE]
 These that properties have not been confirmed yet.
@@ -332,8 +352,9 @@ These that properties have not been confirmed yet.
 |===
 
 === Video properties: 64440491-4c8b-11d1-8b70-080036b11a03
+
 The property storage with identifier 64440491-4c8b-11d1-8b70-080036b11a03 
-contains video properties and is known to contain the following property values:
+contains video properties and is known to contain the following property records:
 
 [NOTE]
 These that properties have not been confirmed yet.
@@ -357,34 +378,51 @@ Value in bytes per milliseconds
 |===
 
 === Property set: 8f052d93-abca-4fc5-a5ac-b01df4dbe598
+
 The property storage with identifier 8f052d93-abca-4fc5-a5ac-b01df4dbe598 
 contains [yellow-background]*TODO* related properties and known to contain the 
-following property values:
+following property records:
 
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 2 | VT_CLSID +
-0x0048 | [yellow-background]*Unknown*
+| 2 | VT_CLSID (0x0048) | [yellow-background]*Unknown*
+|===
+
+=== Property set: 9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3
+
+The property storage with identifier 9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3
+contains [yellow-background]*TODO* related properties and known to contain the 
+following property records:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 14 | VT_UI4 (0x0013) | [yellow-background]*Unknown (System.AppUserModel.HostEnvironment)*
+| | | 
+| 18 | VT_UI4 (0x0013) | [yellow-background]*Unknown (System.AppUserModel.InstalledBy)*
+| | | 
+| 23 | VT_BOOLEAN (0x000b) | [yellow-background]*Unknown (System.AppUserModel.ExcludedFromLauncher)*
 |===
 
 === Property set: b725f130-47ef-101a-a5f1-02608c9eebac
+
 The property storage with identifier b725f130-47ef-101a-a5f1-02608c9eebac 
-contains  [yellow-background]*Windows Search?* related properties and known to 
-contain the following property values:
+contains [yellow-background]*TODO* related properties and known to contain the
+following property records:
 
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 10 | VT_LPWSTR +
-0x001f | Filename +
+| 10 | VT_LPWSTR (0x001f) | Filename (System.ItemNameDisplay or PKEY_ItemNameDisplay) +
 Contains an UTF-16 little-endian string
 |===
 
 === Document Summary Information properties: d5cdd502-2e9c-101b-9397-08002b2cf9ae
+
 The property storage with identifier d5cdd502-2e9c-101b-9397-08002b2cf9ae 
 contains document summary information properties and is known to contain the 
-following property values:
+following property records:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -491,6 +529,7 @@ used interchangeably. Other known variants are GKPIDDSI_CATEGORY.
 |===
 
 ==== Notes
+
 [yellow-background]*TODO*
 ....
 GKPIDDSI_HEADINGPAIR
@@ -525,6 +564,7 @@ digital signature (2) or if the project is absent. MAY be ignored.
 ....
 
 === User defined properties: d5cdd505-2e9c-101b-9397-08002b2cf9ae
+
 The property storage with identifier d5cdd505-2e9c-101b-9397-08002b2cf9ae 
 contains user defined properties and is known to contain the following property 
 values:
@@ -548,48 +588,39 @@ Contains an UTF-16 little-endian string
 |===
 
 === Property set: ef6b490d-5cd8-437a-affc-da8b60ee4a3c
+
 The property storage with identifier ef6b490d-5cd8-437a-affc-da8b60ee4a3c 
 contains [yellow-background]*TODO* related properties and known to contain the 
-following property values:
+following property records:
 
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 4 | VT_LPWSTR +
-0x001f | [yellow-background]*Storage name*
-| 5 | VT_LPWSTR +
-0x001f | [yellow-background]*Storage identifier*
-| 6 | VT_CLSID +
-0x0048 | [yellow-background]*Unknown*
-| 7 | VT_CLSID +
-0x0048 | [yellow-background]*Unknown*
+| 4 | VT_LPWSTR (0x001f) | [yellow-background]*Storage name*
+| 5 | VT_LPWSTR (0x001f) | [yellow-background]*Storage identifier*
+| 6 | VT_CLSID (0x0048) | [yellow-background]*Unknown*
+| 7 | VT_CLSID (0x0048) | [yellow-background]*Unknown*
 | | | 
-| 12 | VT_LPWSTR +
-0x001f | [yellow-background]*Folder name*
-| 13 | VT_BOOLEAN +
-0x000b | [yellow-background]*Unknown* +
+| 12 | VT_LPWSTR (0x001f) | [yellow-background]*Folder name*
+| 13 | VT_BOOLEAN (0x000b) | [yellow-background]*Unknown* +
 stored as 2 bytes
 | | | 
-| 17 | VT_BOOLEAN +
-0x000b | [yellow-background]*Unknown* +
+| 17 | VT_BOOLEAN (0x000b) | [yellow-background]*Unknown* +
 stored as 2 bytes
-| 18 | VT_DATE +
-0x0007 | [yellow-background]*Unknown*
-| 19 | VT_DATE +
-0x0007 | [yellow-background]*Unknown*
+| 18 | VT_DATE (0x0007) | [yellow-background]*Unknown*
+| 19 | VT_DATE (0x0007) | [yellow-background]*Unknown*
 | | | 
-| 23 | VT_LPWSTR +
-0x001f | [yellow-background]*Storage partition identifier?*
+| 23 | VT_LPWSTR (0x001f) | [yellow-background]*Storage partition identifier?*
 | | | 
-| 26 | VT_BOOLEAN +
-0x000b | [yellow-background]*Unknown* +
+| 26 | VT_BOOLEAN (0x000b) | [yellow-background]*Unknown* +
 stored as 2 bytes, 0xffff or 0x0000
 |===
 
 === Summary Information properties: f29f85e0-4ff9-1068-ab91-08002b27b3d9
+
 The property storage with identifier f29f85e0-4ff9-1068-ab91-08002b27b3d9 
 contains summary information properties and is known to contain the following 
-property values:
+property records:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -670,6 +701,7 @@ The document is always opened read-only except for annotations
 |===
 
 == Notes
+
 References for DocumentSummaryInformation stream: 
 
 * http://msdn.microsoft.com/en-us/library/dd945671%28v=office.12%29.aspx 
@@ -677,12 +709,14 @@ References for DocumentSummaryInformation stream:
 * https://github.com/alexbevi/redmine_msg_preview/blob/master/data/FileInfo.pas
 
 === Format identifiers
+
 DEFINE_SHLGUID(FMTID_Intshcut,0x000214A0L,0,0);
 DEFINE_SHLGUID(FMTID_InternetSite,0x000214A1L,0,0);
 
 :numbered!:
 [appendix]
 == References
+
 `[LIBFOLE]`
 
 [cols="1,5",options="header"]
@@ -722,6 +756,7 @@ DEFINE_SHLGUID(FMTID_InternetSite,0x000214A1L,0,0);
 
 [appendix]
 == GNU Free Documentation License
+
 Version 1.3, 3 November 2008
 Copyright © 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc. 
 <http://fsf.org/>
@@ -730,6 +765,7 @@ Everyone is permitted to copy and distribute verbatim copies of this license
 document, but changing it is not allowed.
 
 === 0. PREAMBLE
+
 The purpose of this License is to make a manual, textbook, or other functional 
 and useful document "free" in the sense of freedom: to assure everyone the 
 effective freedom to copy and redistribute it, with or without modifying it, 
@@ -750,6 +786,7 @@ recommend this License principally for works whose purpose is instruction or
 reference.
 
 === 1. APPLICABILITY AND DEFINITIONS
+
 This License applies to any manual or other work, in any medium, that contains 
 a notice placed by the copyright holder saying it can be distributed under the 
 terms of this License. Such a notice grants a world-wide, royalty-free license, 
@@ -828,6 +865,7 @@ disclaiming warranties: any other implication that these Warranty Disclaimers
 may have is void and has no effect on the meaning of this License.
 
 === 2. VERBATIM COPYING
+
 You may copy and distribute the Document in any medium, either commercially or 
 noncommercially, provided that this License, the copyright notices, and the 
 license notice saying this License applies to the Document are reproduced in 
@@ -841,6 +879,7 @@ You may also lend copies, under the same conditions stated above, and you may
 publicly display copies.
 
 === 3. COPYING IN QUANTITY
+
 If you publish printed copies (or copies in media that commonly have printed 
 covers) of the Document, numbering more than 100, and the Document's license 
 notice requires Cover Texts, you must enclose the copies in covers that carry, 
@@ -874,6 +913,7 @@ well before redistributing any large number of copies, to give them a chance to
 provide you with an updated version of the Document.
 
 === 4. MODIFICATIONS
+
 You may copy and distribute a Modified Version of the Document under the 
 conditions of sections 2 and 3 above, provided that you release the Modified 
 Version under precisely this License, with the Modified Version filling the 
@@ -966,6 +1006,7 @@ permission to use their names for publicity for or to assert or imply
 endorsement of any Modified Version.
 
 === 5. COMBINING DOCUMENTS
+
 You may combine the Document with other documents released under this License, 
 under the terms defined in section 4 above for modified versions, provided that 
 you include in the combination all of the Invariant Sections of all of the 
@@ -987,6 +1028,7 @@ combine any sections Entitled "Acknowledgements", and any sections Entitled
 "Dedications". You must delete all sections Entitled "Endorsements".
 
 === 6. COLLECTIONS OF DOCUMENTS
+
 You may make a collection consisting of the Document and other documents 
 released under this License, and replace the individual copies of this License 
 in the various documents with a single copy that is included in the collection, 
@@ -999,6 +1041,7 @@ into the extracted document, and follow this License in all other respects
 regarding verbatim copying of that document.
 
 === 7. AGGREGATION WITH INDEPENDENT WORKS
+
 A compilation of the Document or its derivatives with other separate and 
 independent documents or works, in or on a volume of a storage or distribution 
 medium, is called an "aggregate" if the copyright resulting from the 
@@ -1015,6 +1058,7 @@ in electronic form. Otherwise they must appear on printed covers that bracket
 the whole aggregate.
 
 === 8. TRANSLATION
+
 Translation is considered a kind of modification, so you may distribute 
 translations of the Document under the terms of section 4. Replacing Invariant 
 Sections with translations requires special permission from their copyright 
@@ -1032,6 +1076,7 @@ If a section in the Document is Entitled "Acknowledgements", "Dedications", or
 typically require changing the actual title.
 
 === 9. TERMINATION
+
 You may not copy, modify, sublicense, or distribute the Document except as 
 expressly provided under this License. Any attempt otherwise to copy, modify, 
 sublicense, or distribute it is void, and will automatically terminate your 
@@ -1055,6 +1100,7 @@ your rights have been terminated and not permanently reinstated, receipt of a
 copy of some or all of the same material does not give you any rights to use it.
 
 === 10. FUTURE REVISIONS OF THIS LICENSE
+
 The Free Software Foundation may publish new, revised versions of the GNU Free 
 Documentation License from time to time. Such new versions will be similar in 
 spirit to the present version, but may differ in detail to address new problems 
@@ -1072,6 +1118,7 @@ License can be used, that proxy's public statement of acceptance of a version
 permanently authorizes you to choose that version for the Document.
 
 === 11. RELICENSING
+
 "Massive Multiauthor Collaboration Site" (or "MMC Site") means any World Wide 
 Web server that publishes copyrightable works and also provides prominent 
 facilities for anybody to edit those works. A public wiki that anybody can edit 

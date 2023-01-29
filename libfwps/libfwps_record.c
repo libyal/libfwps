@@ -1,5 +1,5 @@
 /*
- * Windows Serialized Property Value functions
+ * Windows Serialized Property Record functions
  *
  * Copyright (C) 2013-2023, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -32,189 +32,188 @@
 #include "libfwps_libcnotify.h"
 #include "libfwps_libfole.h"
 #include "libfwps_libuna.h"
+#include "libfwps_record.h"
 #include "libfwps_types.h"
-#include "libfwps_value.h"
 
-/* Creates a value
- * Make sure the value value is referencing, is set to NULL
+/* Creates a record
+ * Make sure the record value is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
-int libfwps_value_initialize(
-     libfwps_value_t **value,
-     uint8_t value_type,
+int libfwps_record_initialize(
+     libfwps_record_t **record,
+     uint8_t record_type,
      libcerror_error_t **error )
 {
-	libfwps_internal_value_t *internal_value = NULL;
-	static char *function                    = "libfwps_value_initialize";
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_initialize";
 
-	if( value == NULL )
+	if( record == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid value.",
+		 "%s: invalid record.",
 		 function );
 
 		return( -1 );
 	}
-	if( *value != NULL )
+	if( *record != NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
-		 "%s: invalid value value already set.",
+		 "%s: invalid record value already set.",
 		 function );
 
 		return( -1 );
 	}
-	if( ( value_type != LIBFWPS_RECORD_TYPE_NAMED )
-	 && ( value_type != LIBFWPS_RECORD_TYPE_NUMERIC ) )
+	if( ( record_type != LIBFWPS_RECORD_TYPE_NAMED )
+	 && ( record_type != LIBFWPS_RECORD_TYPE_NUMERIC ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: unsupported value type.",
+		 "%s: unsupported record type.",
 		 function );
 
 		return( -1 );
 	}
-	internal_value = memory_allocate_structure(
-	                  libfwps_internal_value_t );
+	internal_record = memory_allocate_structure(
+	                   libfwps_internal_record_t );
 
-	if( internal_value == NULL )
+	if( internal_record == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_MEMORY,
 		 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-		 "%s: unable to create value.",
+		 "%s: unable to create record.",
 		 function );
 
 		goto on_error;
 	}
 	if( memory_set(
-	     internal_value,
+	     internal_record,
 	     0,
-	     sizeof( libfwps_internal_value_t ) ) == NULL )
+	     sizeof( libfwps_internal_record_t ) ) == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_MEMORY,
 		 LIBCERROR_MEMORY_ERROR_SET_FAILED,
-		 "%s: unable to clear value.",
+		 "%s: unable to clear record.",
 		 function );
 
 		goto on_error;
 	}
-	internal_value->type = value_type;
+	internal_record->type = record_type;
 
-	*value = (libfwps_value_t *) internal_value;
+	*record = (libfwps_record_t *) internal_record;
 
 	return( 1 );
 
 on_error:
-	if( internal_value != NULL )
+	if( internal_record != NULL )
 	{
 		memory_free(
-		 internal_value );
+		 internal_record );
 	}
 	return( -1 );
 }
 
-/* Frees a value
+/* Frees a record
  * Returns 1 if successful or -1 on error
  */
-int libfwps_value_free(
-     libfwps_value_t **value,
+int libfwps_record_free(
+     libfwps_record_t **record,
      libcerror_error_t **error )
 {
-	static char *function = "libfwps_value_free";
+	static char *function = "libfwps_record_free";
 
-	if( value == NULL )
+	if( record == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid value.",
+		 "%s: invalid record.",
 		 function );
 
 		return( -1 );
 	}
-	if( *value != NULL )
+	if( *record != NULL )
 	{
-		*value = NULL;
+		*record = NULL;
 	}
 	return( 1 );
 }
 
-/* Frees a value
+/* Frees a record
  * Returns 1 if successful or -1 on error
  */
-int libfwps_internal_value_free(
-     libfwps_internal_value_t **internal_value,
+int libfwps_internal_record_free(
+     libfwps_internal_record_t **internal_record,
      libcerror_error_t **error )
 {
-	static char *function = "libfwps_internal_value_free";
+	static char *function = "libfwps_internal_record_free";
 
-	if( internal_value == NULL )
+	if( internal_record == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid internal value.",
+		 "%s: invalid internal record.",
 		 function );
 
 		return( -1 );
 	}
-	if( *internal_value != NULL )
+	if( *internal_record != NULL )
 	{
 		memory_free(
-		 *internal_value );
+		 *internal_record );
 
-		*internal_value = NULL;
+		*internal_record = NULL;
 	}
 	return( 1 );
 }
 
-/* Copies a serialized property value from a byte stream
+/* Copies a record from a byte stream
  * Returns 1 if successful or -1 on error
  */
-int libfwps_value_copy_from_byte_stream(
-     libfwps_value_t *value,
+int libfwps_record_copy_from_byte_stream(
+     libfwps_record_t *record,
      const uint8_t *byte_stream,
      size_t byte_stream_size,
      int ascii_codepage,
      libcerror_error_t **error )
 {
-	libfwps_internal_value_t *internal_value = NULL;
-	static char *function                    = "libfwps_value_copy_from_byte_stream";
-	size_t byte_stream_offset                = 0;
-	uint32_t name_size                       = 0;
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_copy_from_byte_stream";
+	size_t byte_stream_offset                  = 0;
+	uint32_t name_size                         = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	system_character_t *value_string         = NULL;
-	size_t value_string_size                 = 0;
-	uint32_t value_32bit                     = 0;
-	int result                               = 0;
+	system_character_t *value_string           = NULL;
+	size_t value_string_size                   = 0;
+	int result                                 = 0;
 #endif
 
-	if( value == NULL )
+	if( record == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid value.",
+		 "%s: invalid record.",
 		 function );
 
 		return( -1 );
 	}
-	internal_value = (libfwps_internal_value_t *) value;
+	internal_record = (libfwps_internal_record_t *) record;
 
 	if( byte_stream == NULL )
 	{
@@ -227,7 +226,7 @@ int libfwps_value_copy_from_byte_stream(
 
 		return( -1 );
 	}
-	if( ( byte_stream_size < 4 )
+	if( ( byte_stream_size < 9 )
 	 || ( byte_stream_size > (size_t) SSIZE_MAX ) )
 	{
 		libcerror_error_set(
@@ -241,32 +240,16 @@ int libfwps_value_copy_from_byte_stream(
 	}
 	byte_stream_copy_to_uint32_little_endian(
 	 byte_stream,
-	 internal_value->size );
+	 internal_record->size );
 
-	if( ( internal_value->size < 4 )
-	 || ( (size_t) internal_value->size > byte_stream_size ) )
+	if( ( internal_record->size < 9 )
+	 || ( (size_t) internal_record->size > byte_stream_size ) )
 	{
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: size\t\t\t\t: %" PRIu32 "\n",
-			 function,
-			 internal_value->size );
-
-			libcnotify_printf(
-			 "\n" );
-		}
-#endif
-		if( internal_value->size == 0 )
-		{
-			return( 1 );
-		}
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-		 "%s: invalid property value size value out of bounds.",
+		 "%s: invalid record - size value out of bounds.",
 		 function );
 
 		goto on_error;
@@ -275,105 +258,71 @@ int libfwps_value_copy_from_byte_stream(
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
-		 "%s: property value data:\n",
+		 "%s: property record data:\n",
 		 function );
 		libcnotify_print_data(
 		 byte_stream,
-		 internal_value->size,
+		 internal_record->size,
 		 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
 	}
 #endif
+	if( internal_record->type == LIBFWPS_RECORD_TYPE_NAMED )
+	{
+		byte_stream_copy_to_uint32_little_endian(
+		 &( byte_stream[ byte_stream_offset + 4 ] ),
+		 name_size );
+	}
+	else if( internal_record->type == LIBFWPS_RECORD_TYPE_NUMERIC )
+	{
+		byte_stream_copy_to_uint32_little_endian(
+		 &( byte_stream[ byte_stream_offset + 4 ] ),
+		 internal_record->entry_type );
+	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
 		 "%s: size\t\t\t\t: %" PRIu32 "\n",
 		 function,
-		 internal_value->size );
-	}
-#endif
-	byte_stream_offset += 4;
+		 internal_record->size );
 
-	if( byte_stream_offset > ( internal_value->size - 4 ) )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-		 "%s: invalid byte stream size value too small.",
-		 function );
-
-		return( -1 );
-	}
-	if( internal_value->type == LIBFWPS_RECORD_TYPE_NAMED )
-	{
-		byte_stream_copy_to_uint32_little_endian(
-		 &( byte_stream[ byte_stream_offset ] ),
-		 name_size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
+		if( internal_record->type == LIBFWPS_RECORD_TYPE_NAMED )
 		{
 			libcnotify_printf(
 			 "%s: name size\t\t\t\t: %" PRIu32 "\n",
 			 function,
 			 name_size );
 		}
-#endif
-	}
-	else if( internal_value->type == LIBFWPS_RECORD_TYPE_NUMERIC )
-	{
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
+		else
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 &( byte_stream[ byte_stream_offset ] ),
-			 value_32bit );
 			libcnotify_printf(
-			 "%s: identifier\t\t\t\t: %" PRIu32 "\n",
+			 "%s: entry type\t\t\t: %" PRIu32 "\n",
 			 function,
-			 value_32bit );
+			 internal_record->entry_type );
 		}
-#endif
-	}
-	byte_stream_offset += 4;
-
-	if( byte_stream_offset > ( internal_value->size - 1 ) )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-		 "%s: invalid byte stream size value too small.",
-		 function );
-
-		return( -1 );
-	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
 		libcnotify_printf(
-		 "%s: unknown1\t\t\t\t: 0x%" PRIx8 "\n",
+		 "%s: unknown1\t\t\t\t: 0x%02" PRIx8 "\n",
 		 function,
-		 byte_stream[ byte_stream_offset ] );
+		 byte_stream[ byte_stream_offset + 8 ] );
 	}
-#endif
-	byte_stream_offset += 1;
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
 
-	if( ( name_size > internal_value->size )
-	 || ( byte_stream_offset > ( internal_value->size - name_size ) ) )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
-		 "%s: invalid name size value out of bounds.",
-		 function );
+	byte_stream_offset += 9;
 
-		return( -1 );
-	}
-	if( internal_value->type == LIBFWPS_RECORD_TYPE_NAMED )
+	if( internal_record->type == LIBFWPS_RECORD_TYPE_NAMED )
 	{
+		if( ( name_size > internal_record->size )
+		 || ( byte_stream_offset > ( internal_record->size - name_size ) ) )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid name size value out of bounds.",
+			 function );
+
+			return( -1 );
+		}
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
@@ -467,10 +416,11 @@ int libfwps_value_copy_from_byte_stream(
 
 			value_string = NULL;
 		}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 		byte_stream_offset += name_size;
 	}
-	if( byte_stream_offset < internal_value->size )
+	if( byte_stream_offset < internal_record->size )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
@@ -480,10 +430,11 @@ int libfwps_value_copy_from_byte_stream(
 			 function );
 			libcnotify_print_data(
 			 &( byte_stream[ byte_stream_offset ] ),
-			 internal_value->size - byte_stream_offset,
+			 internal_record->size - byte_stream_offset,
 			 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
 		}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 		/* TODO read value */
 	}
 
@@ -507,5 +458,49 @@ on_error:
 	}
 #endif
 	return( -1 );
+}
+
+/* Retrieves the entry type
+ * Returns 1 if successful, 0 if not available or -1 on error
+ */
+int libfwps_record_get_entry_type(
+     libfwps_record_t *record,
+     uint32_t *entry_type,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_entry_type";
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( entry_type == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid entry type.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_record->type == LIBFWPS_RECORD_TYPE_NAMED )
+	{
+		return( 0 );
+	}
+	*entry_type = internal_record->entry_type;
+
+	return( 1 );
 }
 

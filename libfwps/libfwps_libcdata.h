@@ -1,5 +1,5 @@
 /*
- * OSS-Fuzz target for libfwps storage type
+ * The libcdata header wrapper
  *
  * Copyright (C) 2013-2023, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,40 +19,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#if !defined( _LIBFWPS_LIBCDATA_H )
+#define _LIBFWPS_LIBCDATA_H
 
-/* Note that some of the OSS-Fuzz engines use C++
+#include <common.h>
+
+/* Define HAVE_LOCAL_LIBCDATA for local use of libcdata
  */
-extern "C" {
+#if defined( HAVE_LOCAL_LIBCDATA )
 
-#include "ossfuzz_libfwps.h"
+#include <libcdata_array.h>
+#include <libcdata_btree.h>
+#include <libcdata_definitions.h>
+#include <libcdata_list.h>
+#include <libcdata_list_element.h>
+#include <libcdata_range_list.h>
+#include <libcdata_tree_node.h>
+#include <libcdata_types.h>
 
-int LLVMFuzzerTestOneInput(
-     const uint8_t *data,
-     size_t size )
-{
-	libfwps_storage_t *storage = NULL;
+#else
 
-	if( libfwps_storage_initialize(
-	     &storage,
-	     NULL ) != 1 )
-	{
-		return( 0 );
-	}
-	libfwps_storage_copy_from_byte_stream(
-	 storage,
-	 data,
-	 size,
-	 LIBFWPS_CODEPAGE_WINDOWS_1252,
-	 NULL );
+/* If libtool DLL support is enabled set LIBCDATA_DLL_IMPORT
+ * before including libcdata.h
+ */
+#if defined( _WIN32 ) && defined( DLL_IMPORT )
+#define LIBCDATA_DLL_IMPORT
+#endif
 
-	libfwps_storage_free(
-	 &storage,
-	 NULL );
+#include <libcdata.h>
 
-	return( 0 );
-}
+#endif /* defined( HAVE_LOCAL_LIBCDATA ) */
 
-} /* extern "C" */
+#endif /* !defined( _LIBFWPS_LIBCDATA_H ) */
 
