@@ -186,6 +186,7 @@ property records where all other property sets should be numeric.
 | 000214a1-0000-0000-c000-000000000046 | [yellow-background]*Internet site* +
 [yellow-background]*(FMTID_InternetSite)*
 | 01a3057a-74d6-4e80-bea7-dc4c212ce50a | [yellow-background]*WPD_STORAGE_OBJECT_PROPERTIES_V1*
+| 0ded77b3-c614-456c-ae5b-285b38d7b01b | [yellow-background]*Unknown*
 | 446d16b1-8dad-4870-a748-402ea43d788c | [yellow-background]*Unknown (System related)*
 | 46588ae2-4cbc-4338-bbfc-139326986dce | [yellow-background]*Unknown*
 | 4d545058-4fce-4578-95c8-8698a9bc0f49 | [yellow-background]*Unknown*
@@ -199,6 +200,8 @@ property records where all other property sets should be numeric.
 (FMTID_Video)
 | 64440492-4c8b-11d1-8b70-080036b11a03 | Media file +
 (FMTID_MediaFile)
+| 841e4f90-ff59-4d16-8947-e81bbffab36d | [yellow-background]*Unknown*
+| 86d40b4d-9069-443c-819a-2a54090dccec | [yellow-background]*Unknown (Tile related)*
 | 8f052d93-abca-4fc5-a5ac-b01df4dbe598 | [yellow-background]*WPD_FUNCTIONAL_OBJECT_PROPERTIES_V1*
 | 9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3 | [yellow-background]*Unknown (System.AppUserModel related)*
 | b725f130-47ef-101a-a5f1-02608c9eebac | [yellow-background]*Unknown (System related)*
@@ -244,6 +247,18 @@ following property records:
 | 11 | VT_UI4 (0x0013) | [yellow-background]*Unknown*
 |===
 
+=== Property set: 0ded77b3-c614-456c-ae5b-285b38d7b01b
+
+The property storage with identifier 0ded77b3-c614-456c-ae5b-285b38d7b01b
+contains [yellow-background]*TODO* related properties and known to contain the 
+following property records:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 21 | VT_UI4 (0x0013) | [yellow-background]*Unknown*
+|===
+
 === Property set: 446d16b1-8dad-4870-a748-402ea43d788c
 
 The property storage with identifier 446d16b1-8dad-4870-a748-402ea43d788c
@@ -253,7 +268,8 @@ following property records:
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 104 | VT_CLSID (0x0048) | NTFS volume identifier (System.VolumeId or PKEY_VolumeId)
+| 104 | VT_CLSID (0x0048) | System.VolumeId (or PKEY_VolumeId) +
+Contains a NTFS volume identifier
 |===
 
 === Property set: 46588ae2-4cbc-4338-bbfc-139326986dce
@@ -314,18 +330,18 @@ These that properties have not been confirmed yet.
 [cols="1,1,1,5",options="header"]
 |===
 | Identifier | Type | Property identifier | Description
-| 0x0002 | 0x001f | PIDISI_FILETYPE | File type
-| 0x0003 | 0x0013 | PIDISI_CX | Width
-| 0x0004 | 0x0013 | PIDISI_CY | Height
-| 0x0005 | 0x0013 | PIDISI_RESOLUTIONX | Horizontal resolution
-| 0x0006 | 0x0013 | PIDISI_RESOLUTIONY | Vertical resolution
-| 0x0007 | 0x0013 | PIDISI_BITDEPTH | Bit depth
-| 0x0008 | 0x001f | PIDISI_COLORSPACE | Color space
-| 0x0009 | 0x001f | PIDISI_COMPRESSION | Compression
-| 0x000a | 0x0013 | PIDISI_TRANSPARENCY | Transparency
-| 0x000b | 0x0013 | PIDISI_GAMMAVALUE | Gamma value
-| 0x000c | 0x0013 | PIDISI_FRAMECOUNT | Frame count
-| 0x000d | 0x001f | PIDISI_DIMENSIONS | Dimensions
+| 0x0002 | VT_LPWSTR (0x001f) | PIDISI_FILETYPE | File type
+| 0x0003 | VT_UI4 (0x0013) | PIDISI_CX | Width
+| 0x0004 | VT_UI4 (0x0013) | PIDISI_CY | Height
+| 0x0005 | VT_UI4 (0x0013) | PIDISI_RESOLUTIONX | Horizontal resolution
+| 0x0006 | VT_UI4 (0x0013) | PIDISI_RESOLUTIONY | Vertical resolution
+| 0x0007 | VT_UI4 (0x0013) | PIDISI_BITDEPTH | Bit depth
+| 0x0008 | VT_LPWSTR (0x001f) | PIDISI_COLORSPACE | Color space
+| 0x0009 | VT_LPWSTR (0x001f) | PIDISI_COMPRESSION | Compression
+| 0x000a | VT_UI4 (0x0013) | PIDISI_TRANSPARENCY | Transparency
+| 0x000b | VT_UI4 (0x0013) | PIDISI_GAMMAVALUE | Gamma value
+| 0x000c | VT_UI4 (0x0013) | PIDISI_FRAMECOUNT | Frame count
+| 0x000d | VT_LPWSTR (0x001f) | PIDISI_DIMENSIONS | Dimensions
 |===
 
 === Audio summary information properties: 64440490-4c8b-11d1-8b70-080036b11a03
@@ -341,14 +357,14 @@ These that properties have not been confirmed yet.
 |===
 | Identifier | Type | Property identifier | Description
 | 0x0002 | 0x0008 | PIDASI_FORMAT | 
-| 0x0003 | 0x0013 | PIDASI_TIMELENGTH | Value in milliseconds
-| 0x0004 | 0x0013 | PIDASI_AVG_DATA_RATE | Value in Hz
-| 0x0005 | 0x0013 | PIDASI_SAMPLE_RATE | Value in bits
-| 0x0006 | 0x0013 | PIDASI_SAMPLE_SIZE | Value in bits
-| 0x0007 | 0x0013 | PIDASI_CHANNEL_COUNT | 
-| 0x0008 | 0x0012 | PIDASI_STREAM_NUMBER | 
-| 0x0009 | 0x001f | PIDASI_STREAM_NAME | 
-| 0x000a | 0x001f | PIDASI_COMPRESSION |
+| 0x0003 | VT_UI4 (0x0013) | PIDASI_TIMELENGTH | Value in milliseconds
+| 0x0004 | VT_UI4 (0x0013) | PIDASI_AVG_DATA_RATE | Value in Hz
+| 0x0005 | VT_UI4 (0x0013) | PIDASI_SAMPLE_RATE | Value in bits
+| 0x0006 | VT_UI4 (0x0013) | PIDASI_SAMPLE_SIZE | Value in bits
+| 0x0007 | VT_UI4 (0x0013) | PIDASI_CHANNEL_COUNT | 
+| 0x0008 | VT_UI2 (0x0012) | PIDASI_STREAM_NUMBER | 
+| 0x0009 | VT_LPWSTR (0x001f) | PIDASI_STREAM_NAME | 
+| 0x000a | VT_LPWSTR (0x001f) | PIDASI_COMPRESSION |
 |===
 
 === Video properties: 64440491-4c8b-11d1-8b70-080036b11a03
@@ -362,19 +378,62 @@ These that properties have not been confirmed yet.
 [cols="1,1,1,5",options="header"]
 |===
 | Identifier | Type | Property identifier | Description
-| 0x0002 | 0x001f | PIDVSI_STREAM_NAME | Stream name
-| 0x0003 | 0x0013 | PIDVSI_FRAME_WIDTH | Frame width
-| 0x0004 | 0x0013 | PIDVSI_FRAME_HEIGHT | Frame height
-| 0x0005 | 0x0013 | PIDVSI_FRAME_COUNT | Number of frames
-| 0x0006 | 0x0013 | PIDVSI_FRAME_RATE | Frame rate +
+| 0x0002 | VT_LPWSTR (0x001f) | PIDVSI_STREAM_NAME | Stream name
+| 0x0003 | VT_UI4 (0x0013) | PIDVSI_FRAME_WIDTH | Frame width
+| 0x0004 | VT_UI4 (0x0013) | PIDVSI_FRAME_HEIGHT | Frame height
+| 0x0005 | VT_UI4 (0x0013) | PIDVSI_FRAME_COUNT | Number of frames
+| 0x0006 | VT_UI4 (0x0013) | PIDVSI_FRAME_RATE | Frame rate +
 Value in frames per milliseconds
-| 0x0007 | 0x0013 | PIDVSI_TIMELENGTH | Time length +
+| 0x0007 | VT_UI4 (0x0013) | PIDVSI_TIMELENGTH | Time length +
 Value in milliseconds
-| 0x0008 | 0x0013 | | Data rate +
+| 0x0008 | VT_UI4 (0x0013) | | Data rate +
 Value in bytes per milliseconds
-| 0x0009 | 0x0013 | | Sample size
-| 0x000a | 0x001f | | Compression
-| 0x000b | 0x0012 | | Stream number
+| 0x0009 | VT_UI4 (0x0013) | | Sample size
+| 0x000a | VT_LPWSTR (0x001f) | | Compression
+| 0x000b | VT_UI2 (0x0012) | | Stream number
+|===
+
+=== Property set: 841e4f90-ff59-4d16-8947-e81bbffab36d
+
+The property storage with identifier 841e4f90-ff59-4d16-8947-e81bbffab36d
+contains [yellow-background]*TODO* related properties and known to contain the 
+following property records:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 2 | VT_LPWSTR (0x001f) | [yellow-background]*Unknown*
+| | |
+| 16 | [yellow-background]*Unknown* | PKEY_Software_DateLastUsed
+|===
+
+=== Property set: 86d40b4d-9069-443c-819a-2a54090dccec
+
+The property storage with identifier 86d40b4d-9069-443c-819a-2a54090dccec
+contains [yellow-background]*TODO* related properties and known to contain the 
+following property records:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 2 | VT_LPWSTR (0x001f) | PKEY_Tile_SmallLogoPath
+| | |
+| 4 | VT_UI4 (0x0013) | PKEY_Tile_Background
+| 5 | VT_UI4 (0x0013) | PKEY_Tile_Foreground
+| | |
+| 11 | VT_LPWSTR (0x001f) | PKEY_Tile_LongDisplayName
+| 12 | VT_LPWSTR (0x001f) | PKEY_Tile_Square150x150LogoPath
+| 13 | [yellow-background]*Unknown* | PKEY_Tile_Wide310x150LogoPath
+| 14 | VT_UI4 (0x0013) | PKEY_Tile_Flags
+| 15 | [yellow-background]*Unknown* | PKEY_Tile_BadgeLogoPath
+| 16 | [yellow-background]*Unknown* | PKEY_Tile_SuiteDisplayName
+| 17 | [yellow-background]*Unknown* | PKEY_Tile_SuiteSortName
+| 18 | [yellow-background]*Unknown* | PKEY_Tile_DisplayNameLanguage
+| 19 | [yellow-background]*Unknown* | PKEY_Tile_Square310x310LogoPath
+| 20 | VT_LPWSTR (0x001f) | PKEY_Tile_Square70x70LogoPath
+| 21 | [yellow-background]*Unknown* | PKEY_Tile_FencePost
+| 22 | [yellow-background]*Unknown* | PKEY_Tile_InstallProgress
+| 23 | [yellow-background]*Unknown* | PKEY_Tile_EncodedTargetPath
 |===
 
 === Property set: 8f052d93-abca-4fc5-a5ac-b01df4dbe598
@@ -398,11 +457,36 @@ following property records:
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 14 | VT_UI4 (0x0013) | [yellow-background]*Unknown (System.AppUserModel.HostEnvironment)*
+| 2 | [yellow-background]*Unknown* | System.AppUserModel.RelaunchCommand (or PKEY_AppUserModel_RelaunchCommand)
+| 3 | [yellow-background]*Unknown* | System.AppUserModel.RelaunchIconResource (or PKEY_AppUserModel_RelaunchIconResource)
+| 4 | [yellow-background]*Unknown* | System.AppUserModel.RelaunchDisplayNameResource (or PKEY_AppUserModel_RelaunchDisplayNameResource)
+| 5 | VT_LPWSTR (0x001f) | System.AppUserModel.ID (or PKEY_AppUserModel_ID)
+| 6 | [yellow-background]*Unknown* | System.AppUserModel.IsDestListSeparator (or PKEY_AppUserModel_IsDestListSeparator)
+| 7 | [yellow-background]*Unknown* | PKEY_AppUserModel_IsDestListLink
+| 8 | [yellow-background]*Unknown* | System.AppUserModel.ExcludeFromShowInNewInstall (or PKEY_AppUserModel_ExcludeFromShowInNewInstall)
+| 9 | [yellow-background]*Unknown* | System.AppUserModel.PreventPinning (or PKEY_AppUserModel_PreventPinning)
+| 10 | [yellow-background]*Unknown* | PKEY_AppUserModel_BestShortcut
+| 11 | [yellow-background]*Unknown* | System.AppUserModel.IsDualMode (or PKEY_AppUserModel_IsDualMode)
+| 12 | [yellow-background]*Unknown* | System.AppUserModel.StartPinOption (or PKEY_AppUserModel_StartPinOption)
+| 13 | [yellow-background]*Unknown* | PKEY_AppUserModel_Relevance
+| 14 | VT_UI4 (0x0013) | System.AppUserModel.HostEnvironment
+| 15 | VT_LPWSTR (0x001f) | [yellow-background]*Unknown*
+| 16 | [yellow-background]*Unknown* | PKEY_AppUserModel_RecordState
 | | | 
-| 18 | VT_UI4 (0x0013) | [yellow-background]*Unknown (System.AppUserModel.InstalledBy)*
+| 17 | VT_LPWSTR (0x001f) | [yellow-background]*Unknown*
+| 18 | VT_UI4 (0x0013) | System.AppUserModel.InstalledBy (or PKEY_AppUserModel_InstalledBy)
 | | | 
-| 23 | VT_BOOLEAN (0x000b) | [yellow-background]*Unknown (System.AppUserModel.ExcludedFromLauncher)*
+| 20 | [yellow-background]*Unknown* | PKEY_AppUserModel_ActivationContext
+| 21 | VT_LPWSTR (0x001f) | [yellow-background]*Unknown*
+| 22 | [yellow-background]*Unknown* | PKEY_AppUserModel_PackageRelativeApplicationID
+| 23 | VT_BOOLEAN (0x000b) | System.AppUserModel.ExcludedFromLauncher (or PKEY_AppUserModel_ExcludedFromLauncher)
+| | |
+| 25 | [yellow-background]*Unknown* | PKEY_AppUserModel_RunFlags
+| 26 | [yellow-background]*Unknown* | System.AppUserModel.ToastActivatorCLSID (or PKEY_AppUserModel_ToastActivatorCLSID)
+| 27 | [yellow-background]*Unknown* | PKEY_AppUserModel_DestListProvidedTitle
+| 28 | [yellow-background]*Unknown* | PKEY_AppUserModel_DestListProvidedDescription
+| 29 | [yellow-background]*Unknown* | PKEY_AppUserModel_DestListLogoUri
+| 30 | [yellow-background]*Unknown* | PKEY_AppUserModel_DestListProvidedGroupName
 |===
 
 === Property set: b725f130-47ef-101a-a5f1-02608c9eebac

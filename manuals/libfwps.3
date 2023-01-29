@@ -34,6 +34,32 @@ Record functions
 .Fn libfwps_record_free "libfwps_record_t **record" "libfwps_error_t **error"
 .Ft int
 .Fn libfwps_record_get_entry_type "libfwps_record_t *record" "uint32_t *entry_type" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_value_type "libfwps_record_t *record" "uint32_t *value_type" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_boolean "libfwps_record_t *record" "uint8_t *value_boolean" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_8bit_integer "libfwps_record_t *record" "uint8_t *value_8bit" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_16bit_integer "libfwps_record_t *record" "uint16_t *value_16bit" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_32bit_integer "libfwps_record_t *record" "uint32_t *value_32bit" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_64bit_integer "libfwps_record_t *record" "uint64_t *value_64bit" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_filetime "libfwps_record_t *record" "uint64_t *filetime" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_floating_point "libfwps_record_t *record" "double *value_floating_point" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_utf8_string_size "libfwps_record_t *record" "size_t *utf8_string_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_utf8_string "libfwps_record_t *record" "uint8_t *utf8_string" "size_t utf8_string_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_utf16_string_size "libfwps_record_t *record" "size_t *utf16_string_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_utf16_string "libfwps_record_t *record" "uint16_t *utf16_string" "size_t utf16_string_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_guid "libfwps_record_t *record" "uint8_t *guid_data" "size_t guid_data_size" "libfwps_error_t **error"
 .Pp
 Set functions
 .Ft int

@@ -52,6 +52,18 @@ struct libfwps_internal_record
 	/* The value type
 	 */
 	uint32_t value_type;
+
+	/* The value data
+	 */
+	uint8_t *value_data;
+
+	/* The value data size
+	 */
+	size_t value_data_size;
+
+	/* The codepage of the extended ASCII strings
+	 */
+	int ascii_codepage;
 };
 
 int libfwps_record_initialize(
@@ -76,9 +88,84 @@ int libfwps_record_copy_from_byte_stream(
      libcerror_error_t **error );
 
 LIBFWPS_EXTERN \
-int libfwps_record_get_identifier(
+int libfwps_record_get_entry_type(
      libfwps_record_t *record,
-     uint32_t *identifier,
+     uint32_t *entry_type,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_value_type(
+     libfwps_record_t *record,
+     uint32_t *value_type,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_boolean(
+     libfwps_record_t *record,
+     uint8_t *value_boolean,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_8bit_integer(
+     libfwps_record_t *record,
+     uint8_t *value_8bit,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_16bit_integer(
+     libfwps_record_t *record,
+     uint16_t *value_16bit,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_32bit_integer(
+     libfwps_record_t *record,
+     uint32_t *value_32bit,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_64bit_integer(
+     libfwps_record_t *record,
+     uint64_t *value_64bit,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_floating_point(
+     libfwps_record_t *record,
+     double *value_floating_point,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_utf8_string_size(
+     libfwps_record_t *record,
+     size_t *utf8_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_utf8_string(
+     libfwps_record_t *record,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_utf16_string_size(
+     libfwps_record_t *record,
+     size_t *utf16_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_utf16_string(
+     libfwps_record_t *record,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_guid(
+     libfwps_record_t *record,
+     uint8_t *guid_data,
+     size_t guid_data_size,
      libcerror_error_t **error );
 
 #if defined( __cplusplus )
