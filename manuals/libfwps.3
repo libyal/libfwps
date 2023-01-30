@@ -1,4 +1,4 @@
-.Dd January 29, 2023
+.Dd January 30, 2023
 .Dt libfwps 3
 .Os libfwps
 .Sh NAME
@@ -71,7 +71,7 @@ Set functions
 .Ft int
 .Fn libfwps_set_get_identifier "libfwps_set_t *set" "uint8_t *guid_data" "size_t guid_data_size" "libfwps_error_t **error"
 .Ft int
-.Fn libfwps_set_get_number_of_records "libfwps_set_t *set" "int number_of_records" "libfwps_error_t **error"
+.Fn libfwps_set_get_number_of_records "libfwps_set_t *set" "int *number_of_records" "libfwps_error_t **error"
 .Ft int
 .Fn libfwps_set_get_record_by_index "libfwps_set_t *set" "int record_index" "libfwps_record_t **record" "libfwps_error_t **error"
 .Pp
@@ -83,7 +83,7 @@ Store functions
 .Ft int
 .Fn libfwps_store_copy_from_byte_stream "libfwps_store_t *store" "const uint8_t *byte_stream" "size_t byte_stream_size" "int ascii_codepage" "libfwps_error_t **error"
 .Ft int
-.Fn libfwps_store_get_number_of_sets "libfwps_store_t *store" "int number_of_sets" "libfwps_error_t **error"
+.Fn libfwps_store_get_number_of_sets "libfwps_store_t *store" "int *number_of_sets" "libfwps_error_t **error"
 .Ft int
 .Fn libfwps_store_get_set_by_index "libfwps_store_t *store" "int set_index" "libfwps_set_t **set" "libfwps_error_t **error"
 .Sh DESCRIPTION

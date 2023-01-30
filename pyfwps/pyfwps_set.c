@@ -27,9 +27,12 @@
 #endif
 
 #include "pyfwps_error.h"
+#include "pyfwps_guid.h"
 #include "pyfwps_libcerror.h"
 #include "pyfwps_libfwps.h"
 #include "pyfwps_python.h"
+#include "pyfwps_record.h"
+#include "pyfwps_records.h"
 #include "pyfwps_set.h"
 #include "pyfwps_unused.h"
 
@@ -42,11 +45,50 @@ PyMethodDef pyfwps_set_object_methods[] = {
 	  "\n"
 	  "Copies the set from the byte stream." },
 
+	{ "get_identifier",
+	  (PyCFunction) pyfwps_set_get_identifier,
+	  METH_NOARGS,
+	  "get_identifier() -> Unicode string\n"
+	  "\n"
+	  "Retrieves the identifier." },
+
+	{ "get_number_of_records",
+	  (PyCFunction) pyfwps_set_get_number_of_records,
+	  METH_NOARGS,
+	  "get_number_of_records() -> Integer\n"
+	  "\n"
+	  "Retrieves the number of records." },
+
+	{ "get_record",
+	  (PyCFunction) pyfwps_set_get_record,
+	  METH_VARARGS | METH_KEYWORDS,
+	  "get_record(record_index) -> Object\n"
+	  "\n"
+	  "Retrieves the record specified by the index." },
+
 	/* Sentinel */
 	{ NULL, NULL, 0, NULL }
 };
 
 PyGetSetDef pyfwps_set_object_get_set_definitions[] = {
+
+	{ "identifier",
+	  (getter) pyfwps_set_get_identifier,
+	  (setter) 0,
+	  "The identifier.",
+	  NULL },
+
+	{ "number_of_records",
+	  (getter) pyfwps_set_get_number_of_records,
+	  (setter) 0,
+	  "The number of records.",
+	  NULL },
+
+	{ "records",
+	  (getter) pyfwps_set_get_records,
+	  (setter) 0,
+	  "The records.",
+	  NULL },
 
 	/* Sentinel */
 	{ NULL, NULL, NULL, NULL, NULL }
@@ -146,6 +188,59 @@ PyTypeObject pyfwps_set_type_object = {
 	/* tp_del */
 	0
 };
+
+/* Creates a new set object
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyfwps_set_new(
+           libfwps_set_t *set,
+           PyObject *parent_object )
+{
+	pyfwps_set_t *pyfwps_set = NULL;
+	static char *function    = "pyfwps_set_new";
+
+	if( set == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid set.",
+		 function );
+
+		return( NULL );
+	}
+	/* PyObject_New does not invoke tp_init
+	 */
+	pyfwps_set = PyObject_New(
+	              struct pyfwps_set,
+	              &pyfwps_set_type_object );
+
+	if( pyfwps_set == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to initialize set.",
+		 function );
+
+		goto on_error;
+	}
+	pyfwps_set->set           = set;
+	pyfwps_set->parent_object = parent_object;
+
+	if( pyfwps_set->parent_object != NULL )
+	{
+		Py_IncRef(
+		 pyfwps_set->parent_object );
+	}
+	return( (PyObject *) pyfwps_set );
+
+on_error:
+	if( pyfwps_set != NULL )
+	{
+		Py_DecRef(
+		 (PyObject *) pyfwps_set );
+	}
+	return( NULL );
+}
 
 /* Initializes a set object
  * Returns 0 if successful or -1 on error
@@ -248,6 +343,11 @@ void pyfwps_set_free(
 			libcerror_error_free(
 			 &error );
 		}
+	}
+	if( pyfwps_set->parent_object != NULL )
+	{
+		Py_DecRef(
+		 pyfwps_set->parent_object );
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyfwps_set );
@@ -369,5 +469,288 @@ PyObject *pyfwps_set_copy_from_byte_stream(
 	 Py_None );
 
 	return( Py_None );
+}
+
+/* Retrieves the identifier
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyfwps_set_get_identifier(
+           pyfwps_set_t *pyfwps_set,
+           PyObject *arguments PYFWPS_ATTRIBUTE_UNUSED )
+{
+	uint8_t guid_data[ 16 ];
+
+	PyObject *string_object  = NULL;
+	libcerror_error_t *error = NULL;
+	static char *function    = "pyfwps_set_get_identifier";
+	int result               = 0;
+
+	PYFWPS_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyfwps_set == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid set.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_set_get_identifier(
+	          pyfwps_set->set,
+	          guid_data,
+	          16,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve identifier.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		return( NULL );
+	}
+	string_object = pyfwps_string_new_from_guid(
+	                 guid_data,
+	                 16 );
+
+	if( string_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to convert GUID into Unicode object.",
+		 function );
+
+		return( NULL );
+	}
+	return( string_object );
+}
+
+/* Retrieves the number of records
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyfwps_set_get_number_of_records(
+           pyfwps_set_t *pyfwps_set,
+           PyObject *arguments PYFWPS_ATTRIBUTE_UNUSED )
+{
+	PyObject *integer_object = NULL;
+	libcerror_error_t *error = NULL;
+	static char *function    = "pyfwps_set_get_number_of_records";
+	int number_of_records    = 0;
+	int result               = 0;
+
+	PYFWPS_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyfwps_set == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid set.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_set_get_number_of_records(
+	          pyfwps_set->set,
+	          &number_of_records,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve number of records.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		return( NULL );
+	}
+#if PY_MAJOR_VERSION >= 3
+	integer_object = PyLong_FromLong(
+	                  (long) number_of_records );
+#else
+	integer_object = PyInt_FromLong(
+	                  (long) number_of_records );
+#endif
+	return( integer_object );
+}
+
+/* Retrieves a specific record by index
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyfwps_set_get_record_by_index(
+           PyObject *pyfwps_set,
+           int record_index )
+{
+	PyObject *record_object  = NULL;
+	libcerror_error_t *error = NULL;
+	libfwps_record_t *record = NULL;
+	static char *function    = "pyfwps_set_get_record_by_index";
+	int result               = 0;
+
+	if( pyfwps_set == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid set.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_set_get_record_by_index(
+	          ( (pyfwps_set_t *) pyfwps_set )->set,
+	          record_index,
+	          &record,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve record: %d.",
+		 function,
+		 record_index );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	record_object = pyfwps_record_new(
+	                 record,
+	                 pyfwps_set );
+
+	if( record_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to create record object.",
+		 function );
+
+		goto on_error;
+	}
+	return( record_object );
+
+on_error:
+	if( record != NULL )
+	{
+		libfwps_record_free(
+		 &record,
+		 NULL );
+	}
+	return( NULL );
+}
+
+/* Retrieves a specific record
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyfwps_set_get_record(
+           pyfwps_set_t *pyfwps_set,
+           PyObject *arguments,
+           PyObject *keywords )
+{
+	PyObject *record_object     = NULL;
+	static char *keyword_list[] = { "record_index", NULL };
+	int record_index            = 0;
+
+	if( PyArg_ParseTupleAndKeywords(
+	     arguments,
+	     keywords,
+	     "i",
+	     keyword_list,
+	     &record_index ) == 0 )
+	{
+		return( NULL );
+	}
+	record_object = pyfwps_set_get_record_by_index(
+	                 (PyObject *) pyfwps_set,
+	                 record_index );
+
+	return( record_object );
+}
+
+/* Retrieves a sequence and iterator object for the records
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyfwps_set_get_records(
+           pyfwps_set_t *pyfwps_set,
+           PyObject *arguments PYFWPS_ATTRIBUTE_UNUSED )
+{
+	PyObject *sequence_object = NULL;
+	libcerror_error_t *error  = NULL;
+	static char *function     = "pyfwps_set_get_records";
+	int number_of_records     = 0;
+	int result                = 0;
+
+	PYFWPS_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyfwps_set == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid set.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_set_get_number_of_records(
+	          pyfwps_set->set,
+	          &number_of_records,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve number of records.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		return( NULL );
+	}
+	sequence_object = pyfwps_records_new(
+	                   (PyObject *) pyfwps_set,
+	                   &pyfwps_set_get_record_by_index,
+	                   number_of_records );
+
+	if( sequence_object == NULL )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_MemoryError,
+		 "%s: unable to create sequence object.",
+		 function );
+
+		return( NULL );
+	}
+	return( sequence_object );
 }
 

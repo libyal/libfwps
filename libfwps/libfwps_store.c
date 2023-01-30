@@ -380,7 +380,7 @@ int libfwps_store_get_number_of_sets(
 	return( 1 );
 }
 
-/* Retrieves a specific data block
+/* Retrieves a specific set
  * Returns 1 if successful or -1 on error
  */
 int libfwps_store_get_set_by_index(

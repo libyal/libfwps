@@ -190,7 +190,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\pyfwps\pyfwps_record.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyfwps\pyfwps_records.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\pyfwps\pyfwps_set.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyfwps\pyfwps_sets.c"
 				>
 			</File>
 			<File
@@ -248,7 +260,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\pyfwps\pyfwps_record.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyfwps\pyfwps_records.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\pyfwps\pyfwps_set.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyfwps\pyfwps_sets.h"
 				>
 			</File>
 			<File

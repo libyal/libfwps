@@ -681,7 +681,7 @@ int libfwps_set_get_number_of_records(
 	return( 1 );
 }
 
-/* Retrieves a specific data block
+/* Retrieves a specific record
  * Returns 1 if successful or -1 on error
  */
 int libfwps_set_get_record_by_index(

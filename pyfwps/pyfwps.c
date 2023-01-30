@@ -32,7 +32,10 @@
 #include "pyfwps_libcerror.h"
 #include "pyfwps_libfwps.h"
 #include "pyfwps_python.h"
+#include "pyfwps_record.h"
+#include "pyfwps_records.h"
 #include "pyfwps_set.h"
+#include "pyfwps_sets.h"
 #include "pyfwps_storage.h"
 #include "pyfwps_store.h"
 #include "pyfwps_unused.h"
@@ -158,6 +161,40 @@ PyMODINIT_FUNC initpyfwps(
 #endif
 	gil_state = PyGILState_Ensure();
 
+	/* Setup the record type object
+	 */
+	pyfwps_record_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyfwps_record_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyfwps_record_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "record",
+	 (PyObject *) &pyfwps_record_type_object );
+
+	/* Setup the records type object
+	 */
+	pyfwps_records_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyfwps_records_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyfwps_records_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "records",
+	 (PyObject *) &pyfwps_records_type_object );
+
 	/* Setup the set type object
 	 */
 	pyfwps_set_type_object.tp_new = PyType_GenericNew;
@@ -174,6 +211,23 @@ PyMODINIT_FUNC initpyfwps(
 	 module,
 	 "set",
 	 (PyObject *) &pyfwps_set_type_object );
+
+	/* Setup the sets type object
+	 */
+	pyfwps_sets_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyfwps_sets_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyfwps_sets_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "sets",
+	 (PyObject *) &pyfwps_sets_type_object );
 
 	/* Setup the storage type object
 	 */

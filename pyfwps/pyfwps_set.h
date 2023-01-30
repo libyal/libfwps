@@ -43,10 +43,18 @@ struct pyfwps_set
 	/* The libfwps set
 	 */
 	libfwps_set_t *set;
+
+	/* The parent object
+	 */
+	PyObject *parent_object;
 };
 
 extern PyMethodDef pyfwps_set_object_methods[];
 extern PyTypeObject pyfwps_set_type_object;
+
+PyObject *pyfwps_set_new(
+           libfwps_set_t *set,
+           PyObject *parent_object );
 
 int pyfwps_set_init(
      pyfwps_set_t *pyfwps_set );
@@ -58,6 +66,27 @@ PyObject *pyfwps_set_copy_from_byte_stream(
            pyfwps_set_t *pyfwps_set,
            PyObject *arguments,
            PyObject *keywords );
+
+PyObject *pyfwps_set_get_identifier(
+           pyfwps_set_t *pyfwps_set,
+           PyObject *arguments );
+
+PyObject *pyfwps_set_get_number_of_records(
+           pyfwps_set_t *pyfwps_set,
+           PyObject *arguments );
+
+PyObject *pyfwps_set_get_record_by_index(
+           PyObject *pyfwps_set,
+           int record_index );
+
+PyObject *pyfwps_set_get_record(
+           pyfwps_set_t *pyfwps_set,
+           PyObject *arguments,
+           PyObject *keywords );
+
+PyObject *pyfwps_set_get_records(
+           pyfwps_set_t *pyfwps_set,
+           PyObject *arguments );
 
 #if defined( __cplusplus )
 }

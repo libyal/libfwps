@@ -27,15 +27,32 @@ import unittest
 import pyfwps
 
 
-class StorageTypeTests(unittest.TestCase):
+class SetTypeTests(unittest.TestCase):
   """Tests the set type."""
+
+  def test_get_number_of_records(self):
+    """Tests the get_number_of_records function and number_of_records property."""
+    test_source = unittest.source
+    if not test_source:
+      raise unittest.SkipTest("missing source")
+
+    fwps_set = pyfwps.set()
+
+    fwps_set.open(test_source)
+
+    number_of_records = fwps_set.get_number_of_records()
+    self.assertIsNotNone(number_of_records)
+
+    self.assertIsNotNone(fwps_set.number_of_records)
+
+    fwps_set.close()
 
 
 if __name__ == "__main__":
   argument_parser = argparse.ArgumentParser()
 
   argument_parser.add_argument(
-      "source", nargs="?", action="set", metavar="PATH",
+      "source", nargs="?", action="store", metavar="PATH",
       default=None, help="The path of the source file.")
 
   options, unknown_options = argument_parser.parse_known_args()

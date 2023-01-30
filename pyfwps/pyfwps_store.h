@@ -59,6 +59,23 @@ PyObject *pyfwps_store_copy_from_byte_stream(
            PyObject *arguments,
            PyObject *keywords );
 
+PyObject *pyfwps_store_get_number_of_sets(
+           pyfwps_store_t *pyfwps_store,
+           PyObject *arguments );
+
+PyObject *pyfwps_store_get_set_by_index(
+           PyObject *pyfwps_store,
+           int set_index );
+
+PyObject *pyfwps_store_get_set(
+           pyfwps_store_t *pyfwps_store,
+           PyObject *arguments,
+           PyObject *keywords );
+
+PyObject *pyfwps_store_get_sets(
+           pyfwps_store_t *pyfwps_store,
+           PyObject *arguments );
+
 #if defined( __cplusplus )
 }
 #endif

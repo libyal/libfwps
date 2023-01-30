@@ -27,8 +27,25 @@ import unittest
 import pyfwps
 
 
-class StorageTypeTests(unittest.TestCase):
+class StoreTypeTests(unittest.TestCase):
   """Tests the store type."""
+
+  def test_get_number_of_sets(self):
+    """Tests the get_number_of_sets function and number_of_sets property."""
+    test_source = unittest.source
+    if not test_source:
+      raise unittest.SkipTest("missing source")
+
+    fwps_store = pyfwps.store()
+
+    fwps_store.open(test_source)
+
+    number_of_sets = fwps_store.get_number_of_sets()
+    self.assertIsNotNone(number_of_sets)
+
+    self.assertIsNotNone(fwps_store.number_of_sets)
+
+    fwps_store.close()
 
 
 if __name__ == "__main__":
