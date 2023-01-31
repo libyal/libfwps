@@ -130,6 +130,12 @@ int libfwps_record_get_data_as_64bit_integer(
      libcerror_error_t **error );
 
 LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_filetime(
+     libfwps_record_t *record,
+     uint64_t *filetime,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
 int libfwps_record_get_data_as_floating_point(
      libfwps_record_t *record,
      double *value_floating_point,

@@ -36,7 +36,6 @@
 #include "pyfwps_records.h"
 #include "pyfwps_set.h"
 #include "pyfwps_sets.h"
-#include "pyfwps_storage.h"
 #include "pyfwps_store.h"
 #include "pyfwps_unused.h"
 
@@ -228,23 +227,6 @@ PyMODINIT_FUNC initpyfwps(
 	 module,
 	 "sets",
 	 (PyObject *) &pyfwps_sets_type_object );
-
-	/* Setup the storage type object
-	 */
-	pyfwps_storage_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyfwps_storage_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyfwps_storage_type_object );
-
-	PyModule_AddObject(
-	 module,
-	 "storage",
-	 (PyObject *) &pyfwps_storage_type_object );
 
 	/* Setup the store type object
 	 */

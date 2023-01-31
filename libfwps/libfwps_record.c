@@ -537,7 +537,7 @@ int libfwps_record_copy_from_byte_stream(
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
-		 "%s: value data size\t\t: %" PRIu32 "\n",
+		 "%s: value data size\t\t\t: %" PRIu32 "\n",
 		 function,
 		 internal_record->value_data_size );
 	}
@@ -595,6 +595,7 @@ int libfwps_record_copy_from_byte_stream(
 
 			goto on_error;
 		}
+		byte_stream_offset += internal_record->value_data_size;
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )

@@ -32,7 +32,6 @@ BUILT_SOURCES = \
 	pyfwps_records.c pyfwps_records.h \
 	pyfwps_set.c pyfwps_set.h \
 	pyfwps_sets.c pyfwps_sets.h \
-	pyfwps_storage.c pyfwps_storage.h \
 	pyfwps_store.c pyfwps_store.h \
 	pyfwps_unused.h
 
