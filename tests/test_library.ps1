@@ -6,7 +6,7 @@ $ExitSuccess = 0
 $ExitFailure = 1
 $ExitIgnore = 77
 
-$LibraryTests = "error property_identifier record set storage store support"
+$LibraryTests = "error property_identifier record set store support"
 $LibraryTestsWithInput = ""
 $OptionSets = ""
 

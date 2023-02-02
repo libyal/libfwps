@@ -3,7 +3,6 @@ MSVSCPP_FILES = \
 	fwps_test_property_identifier/fwps_test_property_identifier.vcproj \
 	fwps_test_record/fwps_test_record.vcproj \
 	fwps_test_set/fwps_test_set.vcproj \
-	fwps_test_storage/fwps_test_storage.vcproj \
 	fwps_test_store/fwps_test_store.vcproj \
 	fwps_test_support/fwps_test_support.vcproj \
 	libcdata/libcdata.vcproj \

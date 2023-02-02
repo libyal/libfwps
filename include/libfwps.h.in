@@ -317,50 +317,6 @@ int libfwps_set_get_record_by_index(
      libfwps_error_t **error );
 
 /* -------------------------------------------------------------------------
- * Storage functions
- * ------------------------------------------------------------------------- */
-
-/* Creates a storage
- * Make sure the value storage is referencing, is set to NULL
- *
- * This function is deprecated use libfwps_set_initialize instead
- *
- * Returns 1 if successful or -1 on error
- */
-LIBFWPS_DEPRECATED \
-LIBFWPS_EXTERN \
-int libfwps_storage_initialize(
-     libfwps_storage_t **storage,
-     libfwps_error_t **error );
-
-/* Frees a storage
- *
- * This function is deprecated use libfwps_set_free instead
- *
- * Returns 1 if successful or -1 on error
- */
-LIBFWPS_DEPRECATED \
-LIBFWPS_EXTERN \
-int libfwps_storage_free(
-     libfwps_storage_t **storage,
-     libfwps_error_t **error );
-
-/* Copies a serialized property storage from a byte stream
- *
- * This function is deprecated use libfwps_set_copy_from_byte_stream instead
- *
- * Returns 1 if successful or -1 on error
- */
-LIBFWPS_DEPRECATED \
-LIBFWPS_EXTERN \
-int libfwps_storage_copy_from_byte_stream(
-     libfwps_storage_t *storage,
-     const uint8_t *byte_stream,
-     size_t byte_stream_size,
-     int ascii_codepage,
-     libfwps_error_t **error );
-
-/* -------------------------------------------------------------------------
  * Store functions
  * ------------------------------------------------------------------------- */
 

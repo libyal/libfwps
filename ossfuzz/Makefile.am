@@ -4,8 +4,17 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/common
 
 bin_PROGRAMS = \
+	record_fuzzer \
 	set_fuzzer \
 	store_fuzzer
+
+record_fuzzer_SOURCES = \
+	ossfuzz_libfwps.h \
+	record_fuzzer.cc
+
+record_fuzzer_LDADD = \
+	@LIB_FUZZING_ENGINE@ \
+	../libfwps/libfwps.la
 
 set_fuzzer_SOURCES = \
 	ossfuzz_libfwps.h \
@@ -31,6 +40,8 @@ distclean: clean
 	/bin/rm -f Makefile
 
 splint:
+	@echo "Running splint on record_fuzzer ..."
+	-splint -preproc -redef $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(record_fuzzer_SOURCES)
 	@echo "Running splint on set_fuzzer ..."
 	-splint -preproc -redef $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(set_fuzzer_SOURCES)
 	@echo "Running splint on store_fuzzer ..."

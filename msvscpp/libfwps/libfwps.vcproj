@@ -194,19 +194,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\libfwps\libfwps_storage.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\libfwps\libfwps_store.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\libfwps\libfwps_support.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\libfwps\libfwps_value.c"
 				>
 			</File>
 		</Filter>
@@ -272,10 +264,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\libfwps\libfwps_storage.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\libfwps\libfwps_store.h"
 				>
 			</File>
@@ -289,10 +277,6 @@
 			</File>
 			<File
 				RelativePath="..\..\libfwps\libfwps_unused.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\libfwps\libfwps_value.h"
 				>
 			</File>
 		</Filter>

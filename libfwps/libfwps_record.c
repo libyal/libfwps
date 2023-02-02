@@ -544,6 +544,18 @@ int libfwps_record_copy_from_byte_stream(
 #endif
 	if( internal_record->value_data_size > 0 )
 	{
+		if( ( internal_record->value_data_size > byte_stream_size )
+		 || ( byte_stream_offset > ( byte_stream_size - internal_record->value_data_size ) ) )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid valud data size value out of bounds.",
+			 function );
+
+			goto on_error;
+		}
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
@@ -1293,7 +1305,8 @@ int libfwps_record_get_data_as_utf8_string_size(
 	}
 	internal_record = (libfwps_internal_record_t *) record;
 
-	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_BINARY_STRING )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
 	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_UNICODE ) )
 	{
 		libcerror_error_set(
@@ -1410,7 +1423,8 @@ int libfwps_record_get_data_as_utf8_string(
 	}
 	internal_record = (libfwps_internal_record_t *) record;
 
-	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_BINARY_STRING )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
 	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_UNICODE ) )
 	{
 		libcerror_error_set(
@@ -1541,7 +1555,8 @@ int libfwps_record_get_data_as_utf16_string_size(
 	}
 	internal_record = (libfwps_internal_record_t *) record;
 
-	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_BINARY_STRING )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
 	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_UNICODE ) )
 	{
 		libcerror_error_set(
@@ -1658,7 +1673,8 @@ int libfwps_record_get_data_as_utf16_string(
 	}
 	internal_record = (libfwps_internal_record_t *) record;
 
-	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_BINARY_STRING )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
 	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_UNICODE ) )
 	{
 		libcerror_error_set(

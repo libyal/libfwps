@@ -30,12 +30,10 @@ libfwps_la_SOURCES = \
 	libfwps_property_identifier.c libfwps_property_identifier.h \
 	libfwps_record.c libfwps_record.h \
 	libfwps_set.c libfwps_set.h \
-	libfwps_storage.c libfwps_storage.h \
 	libfwps_store.c libfwps_store.h \
 	libfwps_support.c libfwps_support.h \
 	libfwps_types.h \
-	libfwps_unused.h \
-	libfwps_value.c libfwps_value.h
+	libfwps_unused.h
 
 libfwps_la_LIBADD = \
 	@LIBCERROR_LIBADD@ \

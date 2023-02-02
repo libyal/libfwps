@@ -1,7 +1,5 @@
 TODO:
-* update Python bindings for set and store types and deprecate storage type
 * remove storage and value types
-* add record fuzz target
 * add support for named records
 
 20140921

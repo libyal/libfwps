@@ -38,7 +38,6 @@ check_PROGRAMS = \
 	fwps_test_property_identifier \
 	fwps_test_record \
 	fwps_test_set \
-	fwps_test_storage \
 	fwps_test_store \
 	fwps_test_support
 
@@ -84,18 +83,6 @@ fwps_test_set_SOURCES = \
 	fwps_test_unused.h
 
 fwps_test_set_LDADD = \
-	../libfwps/libfwps.la \
-	@LIBCERROR_LIBADD@
-
-fwps_test_storage_SOURCES = \
-	fwps_test_libcerror.h \
-	fwps_test_libfwps.h \
-	fwps_test_macros.h \
-	fwps_test_memory.c fwps_test_memory.h \
-	fwps_test_storage.c \
-	fwps_test_unused.h
-
-fwps_test_storage_LDADD = \
 	../libfwps/libfwps.la \
 	@LIBCERROR_LIBADD@
 

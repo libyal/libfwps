@@ -224,7 +224,7 @@ following property records:
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 9 | VT_UI4 (0x0013) | [yellow-background]System.status*
+| 9 | VT_UI4 (0x0013) | System.status
 |===
 
 === Property set: 01a3057a-74d6-4e80-bea7-dc4c212ce50a

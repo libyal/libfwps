@@ -206,10 +206,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\pyfwps\pyfwps_storage.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\pyfwps\pyfwps_store.c"
 				>
 			</File>
@@ -273,10 +269,6 @@
 			</File>
 			<File
 				RelativePath="..\..\pyfwps\pyfwps_sets.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\pyfwps\pyfwps_storage.h"
 				>
 			</File>
 			<File

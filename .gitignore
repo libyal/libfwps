@@ -129,7 +129,6 @@ stamp-h[1-9]
 /tests/fwps_test_property_identifier
 /tests/fwps_test_record
 /tests/fwps_test_set
-/tests/fwps_test_storage
 /tests/fwps_test_store
 /tests/fwps_test_support
 /tests/tmp*
