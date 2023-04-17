@@ -35,7 +35,6 @@ int LLVMFuzzerTestOneInput(
 	libfwps_record_t *record = NULL;
 	libfwps_set_t *set       = NULL;
 	int number_of_records    = 0;
-	int result               = 0;
 
 	if( libfwps_set_initialize(
 	     &set,
