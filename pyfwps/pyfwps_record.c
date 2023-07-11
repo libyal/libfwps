@@ -33,6 +33,7 @@
 #include "pyfwps_libfwps.h"
 #include "pyfwps_python.h"
 #include "pyfwps_record.h"
+#include "pyfwps_string.h"
 #include "pyfwps_unused.h"
 
 PyMethodDef pyfwps_record_object_methods[] = {
@@ -903,14 +904,20 @@ PyObject *pyfwps_record_get_data_as_string(
 
 		goto on_error;
 	}
-	/* Pass the string length to PyUnicode_DecodeUTF8 otherwise it makes
-	 * the end of string character is part of the string.
+#if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 3
+	string_object = pyfwps_string_new_from_utf8_rfc2279(
+			 (uint8_t *) utf8_string,
+			 utf8_string_size );
+#else
+	/* Pass the string length to PyUnicode_DecodeUTF8
+	 * otherwise it makes the end of string character is part
+	 * of the string
 	 */
 	string_object = PyUnicode_DecodeUTF8(
 	                 utf8_string,
 	                 (Py_ssize_t) utf8_string_size - 1,
-	                 errors );
-
+	                 NULL );
+#endif
 	if( string_object == NULL )
 	{
 		PyErr_Format(

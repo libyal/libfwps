@@ -209,6 +209,10 @@
 				RelativePath="..\..\pyfwps\pyfwps_store.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\pyfwps\pyfwps_string.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -252,6 +256,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\pyfwps\pyfwps_libuna.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\pyfwps\pyfwps_python.h"
 				>
 			</File>
@@ -273,6 +281,10 @@
 			</File>
 			<File
 				RelativePath="..\..\pyfwps\pyfwps_store.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyfwps\pyfwps_string.h"
 				>
 			</File>
 			<File

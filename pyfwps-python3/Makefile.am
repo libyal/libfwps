@@ -27,12 +27,14 @@ BUILT_SOURCES = \
 	pyfwps_libclocale.h \
 	pyfwps_libfguid.h \
 	pyfwps_libfwps.h \
+	pyfwps_libuna.h \
 	pyfwps_python.h \
 	pyfwps_record.c pyfwps_record.h \
 	pyfwps_records.c pyfwps_records.h \
 	pyfwps_set.c pyfwps_set.h \
 	pyfwps_sets.c pyfwps_sets.h \
 	pyfwps_store.c pyfwps_store.h \
+	pyfwps_string.c pyfwps_string.h \
 	pyfwps_unused.h
 
 pyexec_LTLIBRARIES = pyfwps.la

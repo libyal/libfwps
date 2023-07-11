@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
  [libfwps],
- [20230710],
+ [20230711],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(

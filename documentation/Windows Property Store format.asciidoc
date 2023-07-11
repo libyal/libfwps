@@ -188,6 +188,7 @@ property records where all other property sets should be numeric.
 [yellow-background]*(FMTID_InternetSite)*
 | 01a3057a-74d6-4e80-bea7-dc4c212ce50a | [yellow-background]*WPD_STORAGE_OBJECT_PROPERTIES_V1*
 | 0ded77b3-c614-456c-ae5b-285b38d7b01b | [yellow-background]*Unknown*
+| 28636aa6-953d-11d2-b5d6-00c04fd918d0 | [yellow-background]*Unknown*
 | 446d16b1-8dad-4870-a748-402ea43d788c | [yellow-background]*Unknown (System related)*
 | 46588ae2-4cbc-4338-bbfc-139326986dce | [yellow-background]*Unknown*
 | 4d545058-4fce-4578-95c8-8698a9bc0f49 | [yellow-background]*Unknown*
@@ -260,6 +261,22 @@ following property records:
 | Identifier | Type | Description
 | 21 | VT_UI4 (0x0013) | [yellow-background]*Unknown*
 |===
+
+=== Property set: 28636aa6-953d-11d2-b5d6-00c04fd918d0
+
+The property storage with identifier 28636aa6-953d-11d2-b5d6-00c04fd918d0
+contains [yellow-background]*TODO* related properties and known to contain the
+following property records:
+
+[cols="1,1,5",options="header"]
+|===
+| Identifier | Type | Description
+| 30 | VT_LPWSTR (0x001f) | System.ParsingPath (or PKEY_ParsingPath)
+|===
+
+[NOTE]
+The filename strings are not strict UTF-16 since it allows for unpaired
+surrogates, such as "U+d800" and "U+dc00".
 
 === Property set: 446d16b1-8dad-4870-a748-402ea43d788c
 
