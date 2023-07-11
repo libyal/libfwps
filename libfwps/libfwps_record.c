@@ -1279,6 +1279,8 @@ int libfwps_record_get_data_as_floating_point(
 }
 
 /* Retrieves the size of the data formatted as an UTF-8 string
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * This function uses UTF-8 RFC 2279 (or 6-byte UTF-8) to support characters outside Unicode
  * The returned size includes the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -1347,7 +1349,7 @@ int libfwps_record_get_data_as_utf8_string_size(
 		result = libuna_utf8_string_size_from_utf16_stream(
 		          internal_record->value_data,
 		          internal_record->value_data_size,
-		          LIBUNA_ENDIAN_LITTLE,
+		          LIBUNA_ENDIAN_LITTLE | LIBUNA_UTF16_STREAM_ALLOW_UNPAIRED_SURROGATE,
 		          utf8_string_size,
 		          error );
 	}
@@ -1396,6 +1398,7 @@ int libfwps_record_get_data_as_utf8_string_size(
 
 /* Retrieves the data formatted as an UTF-8 string
  * The function uses a codepage if necessary, it uses the codepage set for the library
+ * This function uses UTF-8 RFC 2279 (or 6-byte UTF-8) to support characters outside Unicode
  * The size should include the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -1479,7 +1482,7 @@ int libfwps_record_get_data_as_utf8_string(
 		          utf8_string_size,
 		          internal_record->value_data,
 		          internal_record->value_data_size,
-		          LIBUNA_ENDIAN_LITTLE,
+		          LIBUNA_ENDIAN_LITTLE | LIBUNA_UTF16_STREAM_ALLOW_UNPAIRED_SURROGATE,
 		          error );
 	}
 	/* Codepage 65000 represents UTF-7
@@ -1529,6 +1532,8 @@ int libfwps_record_get_data_as_utf8_string(
 }
 
 /* Retrieves the size of the data formatted as an UTF-16 string
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * This function uses UCS-2 (with surrogates) to support characters outside Unicode
  * The returned size includes the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -1597,7 +1602,7 @@ int libfwps_record_get_data_as_utf16_string_size(
 		result = libuna_utf16_string_size_from_utf16_stream(
 		          internal_record->value_data,
 		          internal_record->value_data_size,
-		          LIBUNA_ENDIAN_LITTLE,
+		          LIBUNA_ENDIAN_LITTLE | LIBUNA_UTF16_STREAM_ALLOW_UNPAIRED_SURROGATE,
 		          utf16_string_size,
 		          error );
 	}
@@ -1646,6 +1651,7 @@ int libfwps_record_get_data_as_utf16_string_size(
 
 /* Retrieves the data formatted as an UTF-16 string
  * The function uses a codepage if necessary, it uses the codepage set for the library
+ * This function uses UCS-2 (with surrogates) to support characters outside Unicode
  * The size should include the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -1729,7 +1735,7 @@ int libfwps_record_get_data_as_utf16_string(
 		          utf16_string_size,
 		          internal_record->value_data,
 		          internal_record->value_data_size,
-		          LIBUNA_ENDIAN_LITTLE,
+		          LIBUNA_ENDIAN_LITTLE | LIBUNA_UTF16_STREAM_ALLOW_UNPAIRED_SURROGATE,
 		          error );
 	}
 	/* Codepage 65000 represents UTF-7

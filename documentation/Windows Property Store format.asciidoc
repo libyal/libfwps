@@ -53,6 +53,7 @@ in the section entitled "GNU Free Documentation License".
 | 0.0.5 | J.B. Metz | October 2014 | Switched to asccidoc format.
 | 0.0.6 | J.B. Metz | June 2015 | Additional information.
 | 0.0.7 | J.B. Metz | January 2023 | Changes to formatting and additional information.
+| 0.0.8 | J.B. Metz | July 2023 | Additional information regarding encoding of filenames.
 |===
 
 :numbered:
@@ -502,6 +503,10 @@ following property records:
 | 10 | VT_LPWSTR (0x001f) | Filename (System.ItemNameDisplay or PKEY_ItemNameDisplay) +
 Contains an UTF-16 little-endian string
 |===
+
+[NOTE]
+The filename strings are not strict UTF-16 since it allows for unpaired
+surrogates, such as "U+d800" and "U+dc00".
 
 === Document Summary Information properties: d5cdd502-2e9c-101b-9397-08002b2cf9ae
 
