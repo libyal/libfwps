@@ -80,6 +80,13 @@ PyMethodDef pyfwps_record_object_methods[] = {
 	  "\n"
 	  "Retrieves the data as a string." },
 
+	{ "get_data_as_path_string",
+	  (PyCFunction) pyfwps_record_get_data_as_path_string,
+	  METH_NOARGS,
+	  "get_data_as_path_string() -> Unicode string\n"
+	  "\n"
+	  "Retrieves the data as a path string." },
+
 	{ "get_data_as_guid",
 	  (PyCFunction) pyfwps_record_get_data_as_guid,
 	  METH_NOARGS,
@@ -127,6 +134,12 @@ PyGetSetDef pyfwps_record_object_get_set_definitions[] = {
 	  (getter) pyfwps_record_get_data_as_string,
 	  (setter) 0,
 	  "The data as a string.",
+	  NULL },
+
+	{ "data_as_path_string",
+	  (getter) pyfwps_record_get_data_as_path_string,
+	  (setter) 0,
+	  "The data as a path string.",
 	  NULL },
 
 	{ "data_as_guid",
@@ -884,6 +897,129 @@ PyObject *pyfwps_record_get_data_as_string(
 	Py_BEGIN_ALLOW_THREADS
 
 	result = libfwps_record_get_data_as_utf8_string(
+	          pyfwps_record->record,
+	          (uint8_t *) utf8_string,
+	          utf8_string_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve data as UTF-8 string.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	/* Pass the string length to PyUnicode_DecodeUTF8
+	 * otherwise it makes the end of string character is part
+	 * of the string
+	 */
+	string_object = PyUnicode_DecodeUTF8(
+	                 utf8_string,
+	                 (Py_ssize_t) utf8_string_size - 1,
+	                 NULL );
+
+	if( string_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to convert UTF-8 string into Unicode object.",
+		 function );
+
+		goto on_error;
+	}
+	PyMem_Free(
+	 utf8_string );
+
+	return( string_object );
+
+on_error:
+	if( utf8_string != NULL )
+	{
+		PyMem_Free(
+		 utf8_string );
+	}
+	return( NULL );
+}
+
+/* Retrieves the data as a path string
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyfwps_record_get_data_as_path_string(
+           pyfwps_record_t *pyfwps_record,
+           PyObject *arguments PYFWPS_ATTRIBUTE_UNUSED )
+{
+	PyObject *string_object  = NULL;
+	libcerror_error_t *error = NULL;
+	const char *errors       = NULL;
+	static char *function    = "pyfwps_value_get_data_as_path_string";
+	char *utf8_string        = NULL;
+	size_t utf8_string_size  = 0;
+	int result               = 0;
+
+	PYFWPS_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyfwps_record == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid record.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_record_get_data_as_utf8_path_string_size(
+	          pyfwps_record->record,
+	          &utf8_string_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result == -1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to determine size of data as UTF-8 string.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	else if( ( result == 0 )
+	      || ( utf8_string_size == 0 ) )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
+	utf8_string = (char *) PyMem_Malloc(
+	                        sizeof( char ) * utf8_string_size );
+
+	if( utf8_string == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to create UTF-8 string.",
+		 function );
+
+		goto on_error;
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_record_get_data_as_utf8_path_string(
 	          pyfwps_record->record,
 	          (uint8_t *) utf8_string,
 	          utf8_string_size,

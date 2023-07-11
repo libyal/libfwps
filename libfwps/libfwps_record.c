@@ -1280,7 +1280,6 @@ int libfwps_record_get_data_as_floating_point(
 
 /* Retrieves the size of the data formatted as an UTF-8 string
  * The function uses a codepage if necessary, it uses the codepage set for the library
- * This function uses UTF-8 RFC 2279 (or 6-byte UTF-8) to support characters outside Unicode
  * The returned size includes the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -1291,6 +1290,509 @@ int libfwps_record_get_data_as_utf8_string_size(
 {
 	libfwps_internal_record_t *internal_record = NULL;
 	static char *function                      = "libfwps_record_get_data_as_utf8_string_size";
+	uint8_t is_ascii_string                    = 0;
+	int result                                 = 0;
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record entry.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_BINARY_STRING )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_UNICODE ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: invalid record entry - unsupported value type.",
+		 function );
+
+		return( -1 );
+	}
+	if( utf8_string_size == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid UTF-8 string size.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( internal_record->value_data == NULL )
+	 || ( internal_record->value_data_size == 0 ) )
+	{
+		*utf8_string_size = 0;
+
+		return( 1 );
+	}
+	if( internal_record->value_type == LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	{
+		is_ascii_string = 1;
+	}
+	/* String is in UTF-16 little-endian
+	 */
+	if( is_ascii_string == 0 )
+	{
+		result = libuna_utf8_string_size_from_utf16_stream(
+		          internal_record->value_data,
+		          internal_record->value_data_size,
+		          LIBUNA_ENDIAN_LITTLE,
+		          utf8_string_size,
+		          error );
+	}
+	/* Codepage 65000 represents UTF-7
+	 */
+	else if( internal_record->ascii_codepage == 65000 )
+	{
+		result = libuna_utf8_string_size_from_utf7_stream(
+			  internal_record->value_data,
+			  internal_record->value_data_size,
+			  utf8_string_size,
+			  error );
+	}
+	/* Codepage 65001 represents UTF-8
+	 */
+	else if( internal_record->ascii_codepage == 65001 )
+	{
+		result = libuna_utf8_string_size_from_utf8_stream(
+			  internal_record->value_data,
+			  internal_record->value_data_size,
+			  utf8_string_size,
+			  error );
+	}
+	else
+	{
+		result = libuna_utf8_string_size_from_byte_stream(
+			  internal_record->value_data,
+			  internal_record->value_data_size,
+			  internal_record->ascii_codepage,
+			  utf8_string_size,
+			  error );
+	}
+	if( result != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to determine size of value data as UTF-8 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data formatted as an UTF-8 string
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_data_as_utf8_string(
+     libfwps_record_t *record,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_data_as_utf8_string";
+	uint8_t is_ascii_string                    = 0;
+	int result                                 = 0;
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record entry.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_BINARY_STRING )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_UNICODE ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: invalid record entry - unsupported value type.",
+		 function );
+
+		return( -1 );
+	}
+	if( utf8_string == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid UTF-8 string.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( utf8_string_size == 0 )
+	 || ( utf8_string_size > (size_t) SSIZE_MAX ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid UTF-8 string size value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( internal_record->value_data == NULL )
+	 || ( internal_record->value_data_size == 0 ) )
+	{
+		utf8_string[ 0 ] = 0;
+
+		return( 1 );
+	}
+	if( internal_record->value_type == LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	{
+		is_ascii_string = 1;
+	}
+	/* String is in UTF-16 little-endian
+	 */
+	if( is_ascii_string == 0 )
+	{
+		result = libuna_utf8_string_copy_from_utf16_stream(
+		          utf8_string,
+		          utf8_string_size,
+		          internal_record->value_data,
+		          internal_record->value_data_size,
+		          LIBUNA_ENDIAN_LITTLE,
+		          error );
+	}
+	/* Codepage 65000 represents UTF-7
+	 */
+	else if( internal_record->ascii_codepage == 65000 )
+	{
+		result = libuna_utf8_string_copy_from_utf7_stream(
+		          utf8_string,
+		          utf8_string_size,
+		          internal_record->value_data,
+		          internal_record->value_data_size,
+		          error );
+	}
+	/* Codepage 65001 represents UTF-8
+	 */
+	else if( internal_record->ascii_codepage == 65001 )
+	{
+		result = libuna_utf8_string_copy_from_utf8_stream(
+		          utf8_string,
+		          utf8_string_size,
+		          internal_record->value_data,
+		          internal_record->value_data_size,
+		          error );
+	}
+	else
+	{
+		result = libuna_utf8_string_copy_from_byte_stream(
+		          utf8_string,
+		          utf8_string_size,
+		          internal_record->value_data,
+		          internal_record->value_data_size,
+		          internal_record->ascii_codepage,
+		          error );
+	}
+	if( result != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy value data to UTF-8 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the size of the data formatted as an UTF-16 string
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_data_as_utf16_string_size(
+     libfwps_record_t *record,
+     size_t *utf16_string_size,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_data_as_utf16_string_size";
+	uint8_t is_ascii_string                    = 0;
+	int result                                 = 0;
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record entry.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_BINARY_STRING )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_UNICODE ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: invalid record entry - unsupported value type.",
+		 function );
+
+		return( -1 );
+	}
+	if( utf16_string_size == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid UTF-16 string size.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( internal_record->value_data == NULL )
+	 || ( internal_record->value_data_size == 0 ) )
+	{
+		*utf16_string_size = 0;
+
+		return( 1 );
+	}
+	if( internal_record->value_type == LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	{
+		is_ascii_string = 1;
+	}
+	/* String is in UTF-16 little-endian
+	 */
+	if( is_ascii_string == 0 )
+	{
+		result = libuna_utf16_string_size_from_utf16_stream(
+		          internal_record->value_data,
+		          internal_record->value_data_size,
+		          LIBUNA_ENDIAN_LITTLE,
+		          utf16_string_size,
+		          error );
+	}
+	/* Codepage 65000 represents UTF-7
+	 */
+	else if( internal_record->ascii_codepage == 65000 )
+	{
+		result = libuna_utf16_string_size_from_utf7_stream(
+			  internal_record->value_data,
+			  internal_record->value_data_size,
+			  utf16_string_size,
+			  error );
+	}
+	/* Codepage 65001 represents UTF-8
+	 */
+	else if( internal_record->ascii_codepage == 65001 )
+	{
+		result = libuna_utf16_string_size_from_utf8_stream(
+			  internal_record->value_data,
+			  internal_record->value_data_size,
+			  utf16_string_size,
+			  error );
+	}
+	else
+	{
+		result = libuna_utf16_string_size_from_byte_stream(
+			  internal_record->value_data,
+			  internal_record->value_data_size,
+			  internal_record->ascii_codepage,
+			  utf16_string_size,
+			  error );
+	}
+	if( result != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to determine size of value data as UTF-16 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data formatted as an UTF-16 string
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_data_as_utf16_string(
+     libfwps_record_t *record,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_data_as_utf16_string";
+	uint8_t is_ascii_string                    = 0;
+	int result                                 = 0;
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record entry.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_BINARY_STRING )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_STRING_UNICODE ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: invalid record entry - unsupported value type.",
+		 function );
+
+		return( -1 );
+	}
+	if( utf16_string == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid UTF-16 string.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( utf16_string_size == 0 )
+	 || ( utf16_string_size > (size_t) SSIZE_MAX ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid UTF-16 string size value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( internal_record->value_data == NULL )
+	 || ( internal_record->value_data_size == 0 ) )
+	{
+		utf16_string[ 0 ] = 0;
+
+		return( 1 );
+	}
+	if( internal_record->value_type == LIBFWPS_VALUE_TYPE_STRING_ASCII )
+	{
+		is_ascii_string = 1;
+	}
+	/* String is in UTF-16 little-endian
+	 */
+	if( is_ascii_string == 0 )
+	{
+		result = libuna_utf16_string_copy_from_utf16_stream(
+		          utf16_string,
+		          utf16_string_size,
+		          internal_record->value_data,
+		          internal_record->value_data_size,
+		          LIBUNA_ENDIAN_LITTLE,
+		          error );
+	}
+	/* Codepage 65000 represents UTF-7
+	 */
+	else if( internal_record->ascii_codepage == 65000 )
+	{
+		result = libuna_utf16_string_copy_from_utf7_stream(
+		          utf16_string,
+		          utf16_string_size,
+		          internal_record->value_data,
+		          internal_record->value_data_size,
+		          error );
+	}
+	/* Codepage 65001 represents UTF-8
+	 */
+	else if( internal_record->ascii_codepage == 65001 )
+	{
+		result = libuna_utf16_string_copy_from_utf8_stream(
+		          utf16_string,
+		          utf16_string_size,
+		          internal_record->value_data,
+		          internal_record->value_data_size,
+		          error );
+	}
+	else
+	{
+		result = libuna_utf16_string_copy_from_byte_stream(
+		          utf16_string,
+		          utf16_string_size,
+		          internal_record->value_data,
+		          internal_record->value_data_size,
+		          internal_record->ascii_codepage,
+		          error );
+	}
+	if( result != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy value data to UTF-16 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the size of the data formatted as an UTF-8 path string
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * This function uses UTF-8 RFC 2279 (or 6-byte UTF-8) to support characters outside Unicode
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_data_as_utf8_path_string_size(
+     libfwps_record_t *record,
+     size_t *utf8_string_size,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_data_as_utf8_path_string_size";
 	uint8_t is_ascii_string                    = 0;
 	int result                                 = 0;
 
@@ -1396,20 +1898,20 @@ int libfwps_record_get_data_as_utf8_string_size(
 	return( 1 );
 }
 
-/* Retrieves the data formatted as an UTF-8 string
+/* Retrieves the data formatted as an UTF-8 path string
  * The function uses a codepage if necessary, it uses the codepage set for the library
  * This function uses UTF-8 RFC 2279 (or 6-byte UTF-8) to support characters outside Unicode
  * The size should include the end of string character
  * Returns 1 if successful or -1 on error
  */
-int libfwps_record_get_data_as_utf8_string(
+int libfwps_record_get_data_as_utf8_path_string(
      libfwps_record_t *record,
      uint8_t *utf8_string,
      size_t utf8_string_size,
      libcerror_error_t **error )
 {
 	libfwps_internal_record_t *internal_record = NULL;
-	static char *function                      = "libfwps_record_get_data_as_utf8_string";
+	static char *function                      = "libfwps_record_get_data_as_utf8_path_string";
 	uint8_t is_ascii_string                    = 0;
 	int result                                 = 0;
 
@@ -1531,19 +2033,19 @@ int libfwps_record_get_data_as_utf8_string(
 	return( 1 );
 }
 
-/* Retrieves the size of the data formatted as an UTF-16 string
+/* Retrieves the size of the data formatted as an UTF-16 path string
  * The function uses a codepage if necessary, it uses the codepage set for the library
  * This function uses UCS-2 (with surrogates) to support characters outside Unicode
  * The returned size includes the end of string character
  * Returns 1 if successful or -1 on error
  */
-int libfwps_record_get_data_as_utf16_string_size(
+int libfwps_record_get_data_as_utf16_path_string_size(
      libfwps_record_t *record,
      size_t *utf16_string_size,
      libcerror_error_t **error )
 {
 	libfwps_internal_record_t *internal_record = NULL;
-	static char *function                      = "libfwps_record_get_data_as_utf16_string_size";
+	static char *function                      = "libfwps_record_get_data_as_utf16_path_string_size";
 	uint8_t is_ascii_string                    = 0;
 	int result                                 = 0;
 
@@ -1649,20 +2151,20 @@ int libfwps_record_get_data_as_utf16_string_size(
 	return( 1 );
 }
 
-/* Retrieves the data formatted as an UTF-16 string
+/* Retrieves the data formatted as an UTF-16 path string
  * The function uses a codepage if necessary, it uses the codepage set for the library
  * This function uses UCS-2 (with surrogates) to support characters outside Unicode
  * The size should include the end of string character
  * Returns 1 if successful or -1 on error
  */
-int libfwps_record_get_data_as_utf16_string(
+int libfwps_record_get_data_as_utf16_path_string(
      libfwps_record_t *record,
      uint16_t *utf16_string,
      size_t utf16_string_size,
      libcerror_error_t **error )
 {
 	libfwps_internal_record_t *internal_record = NULL;
-	static char *function                      = "libfwps_record_get_data_as_utf16_string";
+	static char *function                      = "libfwps_record_get_data_as_utf16_path_string";
 	uint8_t is_ascii_string                    = 0;
 	int result                                 = 0;
 

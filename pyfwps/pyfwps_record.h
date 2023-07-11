@@ -86,6 +86,10 @@ PyObject *pyfwps_record_get_data_as_string(
            pyfwps_record_t *pyfwps_record,
            PyObject *arguments );
 
+PyObject *pyfwps_record_get_data_as_path_string(
+           pyfwps_record_t *pyfwps_record,
+           PyObject *arguments );
+
 PyObject *pyfwps_record_get_data_as_guid(
            pyfwps_record_t *pyfwps_record,
            PyObject *arguments );

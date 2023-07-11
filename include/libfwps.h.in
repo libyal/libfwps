@@ -202,7 +202,6 @@ int libfwps_record_get_data_as_floating_point(
 
 /* Retrieves the size of the data formatted as an UTF-8 string
  * The function uses a codepage if necessary, it uses the codepage set for the library
- * This function uses UTF-8 RFC 2279 (or 6-byte UTF-8) to support characters outside Unicode
  * The returned size includes the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -214,7 +213,6 @@ int libfwps_record_get_data_as_utf8_string_size(
 
 /* Retrieves the data formatted as an UTF-8 string
  * The function uses a codepage if necessary, it uses the codepage set for the library
- * This function uses UTF-8 RFC 2279 (or 6-byte UTF-8) to support characters outside Unicode
  * The size should include the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -227,7 +225,6 @@ int libfwps_record_get_data_as_utf8_string(
 
 /* Retrieves the size of the data formatted as an UTF-16 string
  * The function uses a codepage if necessary, it uses the codepage set for the library
- * This function uses UCS-2 (with surrogates) to support characters outside Unicode
  * The returned size includes the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -239,12 +236,61 @@ int libfwps_record_get_data_as_utf16_string_size(
 
 /* Retrieves the data formatted as an UTF-16 string
  * The function uses a codepage if necessary, it uses the codepage set for the library
- * This function uses UCS-2 (with surrogates) to support characters outside Unicode
  * The size should include the end of string character
  * Returns 1 if successful or -1 on error
  */
 LIBFWPS_EXTERN \
 int libfwps_record_get_data_as_utf16_string(
+     libfwps_record_t *record,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libfwps_error_t **error );
+
+/* Retrieves the size of the data formatted as an UTF-8 path string
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * This function uses UTF-8 RFC 2279 (or 6-byte UTF-8) to support characters outside Unicode
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_utf8_path_string_size(
+     libfwps_record_t *record,
+     size_t *utf8_string_size,
+     libfwps_error_t **error );
+
+/* Retrieves the data formatted as an UTF-8 path string
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * This function uses UTF-8 RFC 2279 (or 6-byte UTF-8) to support characters outside Unicode
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_utf8_path_string(
+     libfwps_record_t *record,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libfwps_error_t **error );
+
+/* Retrieves the size of the data formatted as an UTF-16 path string
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * This function uses UCS-2 (with surrogates) to support characters outside Unicode
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_utf16_path_string_size(
+     libfwps_record_t *record,
+     size_t *utf16_string_size,
+     libfwps_error_t **error );
+
+/* Retrieves the data formatted as an UTF-16 path string
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * This function uses UCS-2 (with surrogates) to support characters outside Unicode
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_as_utf16_path_string(
      libfwps_record_t *record,
      uint16_t *utf16_string,
      size_t utf16_string_size,
