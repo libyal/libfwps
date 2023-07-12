@@ -835,7 +835,6 @@ PyObject *pyfwps_record_get_data_as_string(
 {
 	PyObject *string_object  = NULL;
 	libcerror_error_t *error = NULL;
-	const char *errors       = NULL;
 	static char *function    = "pyfwps_value_get_data_as_string";
 	char *utf8_string        = NULL;
 	size_t utf8_string_size  = 0;
@@ -958,7 +957,6 @@ PyObject *pyfwps_record_get_data_as_path_string(
 {
 	PyObject *string_object  = NULL;
 	libcerror_error_t *error = NULL;
-	const char *errors       = NULL;
 	static char *function    = "pyfwps_value_get_data_as_path_string";
 	char *utf8_string        = NULL;
 	size_t utf8_string_size  = 0;
