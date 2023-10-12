@@ -42,6 +42,9 @@ PKGCONFIG_FILES = \
 	libfwps.pc.in
 
 SETUP_PY_FILES = \
+	pyproject.toml \
+	setup.cfg \
+	setup.cfg.in \
 	setup.py
 
 SPEC_FILES = \
