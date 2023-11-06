@@ -57,11 +57,13 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f libfwps_definitions.h
-	/bin/rm -f libfwps.rc
-	/bin/rm -f Makefile
+	-rm -f libfwps_definitions.h
+	-rm -f libfwps.rc
+	-rm -f Makefile
 
-splint:
+sources-local: $(BUILT_SOURCES)
+
+splint-local:
 	@echo "Running splint on libfwps ..."
 	-splint -preproc -redef $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(libfwps_la_SOURCES)
 

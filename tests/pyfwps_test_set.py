@@ -32,7 +32,7 @@ class SetTypeTests(unittest.TestCase):
 
   def test_get_number_of_records(self):
     """Tests the get_number_of_records function and number_of_records property."""
-    test_source = unittest.source
+    test_source = getattr(unittest, "source", None)
     if not test_source:
       raise unittest.SkipTest("missing source")
 

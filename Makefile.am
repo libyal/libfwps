@@ -86,30 +86,14 @@ library:
 	(cd $(srcdir)/po && $(MAKE) $(AM_MAKEFLAGS))
 
 distclean: clean
-	/bin/rm -f Makefile
-	/bin/rm -f config.status
-	/bin/rm -f config.cache
-	/bin/rm -f config.log
-	/bin/rm -f libfwps.pc
-	/bin/rm -f libfwps.spec
+	-rm -f Makefile
+	-rm -f config.status
+	-rm -f config.cache
+	-rm -f config.log
+	-rm -f libfwps.pc
+	-rm -f libfwps.spec
 	@for dir in ${subdirs}; do \
 		(cd $$dir && $(MAKE) distclean) \
 		|| case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
 	done && test -z "$$fail"
-
-splint:
-	(cd $(srcdir)/libcerror && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libcthreads && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libcdata && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libclocale && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libcnotify && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libuna && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libfdatetime && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libfguid && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libfole && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libfwps && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/pyfwps && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/po && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/tests && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/ossfuzz && $(MAKE) splint $(AM_MAKEFLAGS))
 

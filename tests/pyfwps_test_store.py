@@ -32,7 +32,7 @@ class StoreTypeTests(unittest.TestCase):
 
   def test_get_number_of_sets(self):
     """Tests the get_number_of_sets function and number_of_sets property."""
-    test_source = unittest.source
+    test_source = getattr(unittest, "source", None)
     if not test_source:
       raise unittest.SkipTest("missing source")
 

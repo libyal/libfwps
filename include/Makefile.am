@@ -19,9 +19,9 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f libfwps.h
-	/bin/rm -f libfwps/definitions.h
-	/bin/rm -f libfwps/features.h
-	/bin/rm -f libfwps/types.h
-	/bin/rm -f Makefile
+	-rm -f libfwps.h
+	-rm -f libfwps/definitions.h
+	-rm -f libfwps/features.h
+	-rm -f libfwps/types.h
+	-rm -f Makefile
 
