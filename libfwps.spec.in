@@ -32,7 +32,7 @@ Header files and libraries for developing applications for libfwps.
 Summary: Python 3 bindings for libfwps
 Group: System Environment/Libraries
 Requires: libfwps = %{version}-%{release} python3
-BuildRequires: python3-devel
+BuildRequires: python3-devel python3-setuptools
 
 %description -n libfwps-python3
 Python 3 bindings for libfwps
@@ -41,7 +41,7 @@ Python 3 bindings for libfwps
 %setup -q
 
 %build
-%configure --prefix=/usr --libdir=%{_libdir} --mandir=%{_mandir} --enable-python3
+%configure --prefix=/usr --libdir=%{_libdir} --mandir=%{_mandir} --enable-python
 make %{?_smp_mflags}
 
 %install
