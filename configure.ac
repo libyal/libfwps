@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
  [libfwps],
- [20231126],
+ [20231227],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -85,9 +85,6 @@ AX_LIBFDATETIME_CHECK_ENABLE
 dnl Check if libfguid or required headers and functions are available
 AX_LIBFGUID_CHECK_ENABLE
 
-dnl Check if libfole or required headers and functions are available
-AX_LIBFOLE_CHECK_ENABLE
-
 dnl Check if libfwps required headers and functions are available
 AX_LIBFWPS_CHECK_LOCAL
 
@@ -119,7 +116,7 @@ CFLAGS="$CFLAGS -Wall";
 
 dnl Check if requires and build requires should be set in spec file
 AS_IF(
- [test "x$ac_cv_libcerror" = xyes || test "x$ac_cv_libcthreads" = xyes || test "x$ac_cv_libcdata" = xyes || test "x$ac_cv_libclocale" = xyes || test "x$ac_cv_libcnotify" = xyes || test "x$ac_cv_libuna" = xyes || test "x$ac_cv_libfdatetime" = xyes || test "x$ac_cv_libfguid" = xyes || test "x$ac_cv_libfole" = xyes],
+ [test "x$ac_cv_libcerror" = xyes || test "x$ac_cv_libcthreads" = xyes || test "x$ac_cv_libcdata" = xyes || test "x$ac_cv_libclocale" = xyes || test "x$ac_cv_libcnotify" = xyes || test "x$ac_cv_libuna" = xyes || test "x$ac_cv_libfdatetime" = xyes || test "x$ac_cv_libfguid" = xyes],
  [AC_SUBST(
   [libfwps_spec_requires],
   [Requires:])
@@ -147,7 +144,6 @@ AC_CONFIG_FILES([libcnotify/Makefile])
 AC_CONFIG_FILES([libuna/Makefile])
 AC_CONFIG_FILES([libfdatetime/Makefile])
 AC_CONFIG_FILES([libfguid/Makefile])
-AC_CONFIG_FILES([libfole/Makefile])
 AC_CONFIG_FILES([libfwps/Makefile])
 AC_CONFIG_FILES([pyfwps/Makefile])
 AC_CONFIG_FILES([po/Makefile.in])
@@ -185,7 +181,6 @@ Building:
    libuna support:          $ac_cv_libuna
    libfdatetime support:    $ac_cv_libfdatetime
    libfguid support:        $ac_cv_libfguid
-   libfole support:         $ac_cv_libfole
 
 Features:
    Multi-threading support: $ac_cv_libcthreads_multi_threading

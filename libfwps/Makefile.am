@@ -8,7 +8,6 @@ AM_CPPFLAGS = \
 	@LIBUNA_CPPFLAGS@ \
 	@LIBFDATETIME_CPPFLAGS@ \
 	@LIBFGUID_CPPFLAGS@ \
-	@LIBFOLE_CPPFLAGS@ \
 	@PTHREAD_CPPFLAGS@ \
 	@LIBFWPS_DLL_EXPORT@
 
@@ -25,7 +24,6 @@ libfwps_la_SOURCES = \
 	libfwps_libcerror.h \
 	libfwps_libcnotify.h \
 	libfwps_libfguid.h \
-	libfwps_libfole.h \
 	libfwps_libuna.h \
 	libfwps_property_identifier.c libfwps_property_identifier.h \
 	libfwps_record.c libfwps_record.h \
@@ -43,7 +41,6 @@ libfwps_la_LIBADD = \
 	@LIBUNA_LIBADD@ \
 	@LIBFDATETIME_LIBADD@ \
 	@LIBFGUID_LIBADD@ \
-	@LIBFOLE_LIBADD@ \
 	@PTHREAD_LIBADD@
 
 libfwps_la_LDFLAGS = -no-undefined -version-info 1:0:0

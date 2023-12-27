@@ -30,7 +30,6 @@
 #include "libfwps_definitions.h"
 #include "libfwps_libcerror.h"
 #include "libfwps_libcnotify.h"
-#include "libfwps_libfole.h"
 #include "libfwps_libuna.h"
 #include "libfwps_record.h"
 #include "libfwps_types.h"

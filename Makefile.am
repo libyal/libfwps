@@ -11,7 +11,6 @@ SUBDIRS = \
 	libuna \
 	libfdatetime \
 	libfguid \
-	libfole \
 	libfwps \
 	pyfwps \
 	po \
@@ -79,7 +78,6 @@ library:
 	(cd $(srcdir)/libuna && $(MAKE) $(AM_MAKEFLAGS))
 	(cd $(srcdir)/libfdatetime && $(MAKE) $(AM_MAKEFLAGS))
 	(cd $(srcdir)/libfguid && $(MAKE) $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libfole && $(MAKE) $(AM_MAKEFLAGS))
 	(cd $(srcdir)/libfwps && $(MAKE) $(AM_MAKEFLAGS))
 	(cd $(srcdir)/po && $(MAKE) $(AM_MAKEFLAGS))
 

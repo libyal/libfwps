@@ -12,7 +12,6 @@ MSVSCPP_FILES = \
 	libcthreads/libcthreads.vcproj \
 	libfdatetime/libfdatetime.vcproj \
 	libfguid/libfguid.vcproj \
-	libfole/libfole.vcproj \
 	libfwps/libfwps.vcproj \
 	libuna/libuna.vcproj \
 	pyfwps/pyfwps.vcproj \
