@@ -1,7 +1,7 @@
 /*
  * OSS-Fuzz target for libfwps set type
  *
- * Copyright (C) 2013-2023, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2013-2024, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
