@@ -38,6 +38,13 @@
 
 PyMethodDef pyfwps_record_object_methods[] = {
 
+	{ "get_entry_name",
+	  (PyCFunction) pyfwps_record_get_entry_name,
+	  METH_NOARGS,
+	  "get_entry_name() -> Unicode string or None\n"
+	  "\n"
+	  "Retrieves the entry name." },
+
 	{ "get_entry_type",
 	  (PyCFunction) pyfwps_record_get_entry_type,
 	  METH_NOARGS,
@@ -99,6 +106,12 @@ PyMethodDef pyfwps_record_object_methods[] = {
 };
 
 PyGetSetDef pyfwps_record_object_get_set_definitions[] = {
+
+	{ "entry_name",
+	  (getter) pyfwps_record_get_entry_name,
+	  (setter) 0,
+	  "The entry name.",
+	  NULL },
 
 	{ "entry_type",
 	  (getter) pyfwps_record_get_entry_type,
@@ -398,6 +411,127 @@ void pyfwps_record_free(
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyfwps_record );
+}
+
+/* Retrieves the entry name
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyfwps_record_get_entry_name(
+           pyfwps_record_t *pyfwps_record,
+           PyObject *arguments PYFWPS_ATTRIBUTE_UNUSED )
+{
+	PyObject *string_object  = NULL;
+	libcerror_error_t *error = NULL;
+	static char *function    = "pyfwps_record_get_entry_name";
+	char *utf8_string        = NULL;
+	size_t utf8_string_size  = 0;
+	int result               = 0;
+
+	PYFWPS_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyfwps_record == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid record.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_record_get_utf8_entry_name_size(
+	          pyfwps_record->record,
+	          &utf8_string_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result == -1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to determine size of entry name as UTF-8 string.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	else if( ( result == 0 )
+	      || ( utf8_string_size == 0 ) )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
+	utf8_string = (char *) PyMem_Malloc(
+	                        sizeof( char ) * utf8_string_size );
+
+	if( utf8_string == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to create UTF-8 string.",
+		 function );
+
+		goto on_error;
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_record_get_utf8_entry_name(
+	          pyfwps_record->record,
+	          (uint8_t *) utf8_string,
+	          utf8_string_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve entry name as UTF-8 string.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	/* Pass the string length to PyUnicode_DecodeUTF8 otherwise it makes
+	 * the end of string character is part of the string
+	 */
+	string_object = PyUnicode_DecodeUTF8(
+	                 utf8_string,
+	                 (Py_ssize_t) utf8_string_size - 1,
+	                 NULL );
+
+	if( string_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to convert UTF-8 string into Unicode object.",
+		 function );
+
+		goto on_error;
+	}
+	PyMem_Free(
+	 utf8_string );
+
+	return( string_object );
+
+on_error:
+	if( utf8_string != NULL )
+	{
+		PyMem_Free(
+		 utf8_string );
+	}
+	return( NULL );
 }
 
 /* Retrieves the entry type

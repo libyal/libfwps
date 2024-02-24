@@ -62,6 +62,10 @@ int pyfwps_record_init(
 void pyfwps_record_free(
       pyfwps_record_t *pyfwps_record );
 
+PyObject *pyfwps_record_get_entry_name(
+           pyfwps_record_t *pyfwps_record,
+           PyObject *arguments );
+
 PyObject *pyfwps_record_get_entry_type(
            pyfwps_record_t *pyfwps_record,
            PyObject *arguments );

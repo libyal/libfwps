@@ -119,6 +119,48 @@ int libfwps_record_free(
      libfwps_record_t **record,
      libfwps_error_t **error );
 
+/* Retrieves the size of the UTF-8 encoded entry name
+ * The returned size includes the end of string character
+ * Returns 1 if successful, 0 if not available or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf8_entry_name_size(
+     libfwps_record_t *record,
+     size_t *utf8_string_size,
+     libfwps_error_t **error );
+
+/* Retrieves the UTF-8 encoded entry name
+ * The size should include the end of string character
+ * Returns 1 if successful, 0 if not available or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf8_entry_name(
+     libfwps_record_t *record,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libfwps_error_t **error );
+
+/* Retrieves the size of the UTF-16 encoded entry name
+ * The returned size includes the end of string character
+ * Returns 1 if successful, 0 if not available or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf16_entry_name_size(
+     libfwps_record_t *record,
+     size_t *utf16_string_size,
+     libfwps_error_t **error );
+
+/* Retrieves the UTF-16 encoded entry name
+ * The size should include the end of string character
+ * Returns 1 if successful, 0 if not available or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf16_entry_name(
+     libfwps_record_t *record,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libfwps_error_t **error );
+
 /* Retrieves the entry type
  * Returns 1 if successful, 0 if not available or -1 on error
  */

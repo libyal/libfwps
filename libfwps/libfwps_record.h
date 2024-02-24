@@ -45,6 +45,14 @@ struct libfwps_internal_record
 	 */
 	uint32_t size;
 
+	/* The entry name
+	 */
+	uint8_t *entry_name;
+
+	/* The entry name size
+	 */
+	uint32_t entry_name_size;
+
 	/* The entry type
 	 */
 	uint32_t entry_type;
@@ -85,6 +93,32 @@ int libfwps_record_copy_from_byte_stream(
      const uint8_t *byte_stream,
      size_t byte_stream_size,
      int ascii_codepage,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf8_entry_name_size(
+     libfwps_record_t *record,
+     size_t *utf8_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf8_entry_name(
+     libfwps_record_t *record,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf16_entry_name_size(
+     libfwps_record_t *record,
+     size_t *utf16_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf16_entry_name(
+     libfwps_record_t *record,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
      libcerror_error_t **error );
 
 LIBFWPS_EXTERN \

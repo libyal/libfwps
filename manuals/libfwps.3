@@ -1,4 +1,4 @@
-.Dd July 11, 2023
+.Dd February 24, 2024
 .Dt libfwps 3
 .Os libfwps
 .Sh NAME
@@ -32,6 +32,14 @@ Format class identifier functions
 Record functions
 .Ft int
 .Fn libfwps_record_free "libfwps_record_t **record" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_utf8_entry_name_size "libfwps_record_t *record" "size_t *utf8_string_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_utf8_entry_name "libfwps_record_t *record" "uint8_t *utf8_string" "size_t utf8_string_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_utf16_entry_name_size "libfwps_record_t *record" "size_t *utf16_string_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_utf16_entry_name "libfwps_record_t *record" "uint16_t *utf16_string" "size_t utf16_string_size" "libfwps_error_t **error"
 .Ft int
 .Fn libfwps_record_get_entry_type "libfwps_record_t *record" "uint32_t *entry_type" "libfwps_error_t **error"
 .Ft int
