@@ -43,7 +43,19 @@ Record functions
 .Ft int
 .Fn libfwps_record_get_entry_type "libfwps_record_t *record" "uint32_t *entry_type" "libfwps_error_t **error"
 .Ft int
+.Fn libfwps_record_get_utf8_value_name_size "libfwps_record_t *record" "size_t *utf8_string_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_utf8_value_name "libfwps_record_t *record" "uint8_t *utf8_string" "size_t utf8_string_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_utf16_value_name_size "libfwps_record_t *record" "size_t *utf16_string_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_utf16_value_name "libfwps_record_t *record" "uint16_t *utf16_string" "size_t utf16_string_size" "libfwps_error_t **error"
+.Ft int
 .Fn libfwps_record_get_value_type "libfwps_record_t *record" "uint32_t *value_type" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_size "libfwps_record_t *record" "size_t *data_size" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data "libfwps_record_t *record" "uint8_t *data" "size_t data_size" "libfwps_error_t **error"
 .Ft int
 .Fn libfwps_record_get_data_as_boolean "libfwps_record_t *record" "uint8_t *value_boolean" "libfwps_error_t **error"
 .Ft int

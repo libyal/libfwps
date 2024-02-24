@@ -52,12 +52,26 @@ PyMethodDef pyfwps_record_object_methods[] = {
 	  "\n"
 	  "Retrieves the entry type." },
 
+	{ "get_value_name",
+	  (PyCFunction) pyfwps_record_get_value_name,
+	  METH_NOARGS,
+	  "get_value_name() -> Unicode string or None\n"
+	  "\n"
+	  "Retrieves the value name." },
+
 	{ "get_value_type",
 	  (PyCFunction) pyfwps_record_get_value_type,
 	  METH_NOARGS,
 	  "get_value_type() -> Integer\n"
 	  "\n"
 	  "Retrieves the value type." },
+
+	{ "get_data",
+	  (PyCFunction) pyfwps_record_get_data,
+	  METH_NOARGS,
+	  "get_data() -> Bytes or None\n"
+	  "\n"
+	  "Retrieves the data." },
 
 	{ "get_data_as_boolean",
 	  (PyCFunction) pyfwps_record_get_data_as_boolean,
@@ -119,10 +133,22 @@ PyGetSetDef pyfwps_record_object_get_set_definitions[] = {
 	  "The entry type.",
 	  NULL },
 
+	{ "value_name",
+	  (getter) pyfwps_record_get_value_name,
+	  (setter) 0,
+	  "The value name.",
+	  NULL },
+
 	{ "value_type",
 	  (getter) pyfwps_record_get_value_type,
 	  (setter) 0,
 	  "The value type.",
+	  NULL },
+
+	{ "data",
+	  (getter) pyfwps_record_get_data,
+	  (setter) 0,
+	  "The data.",
 	  NULL },
 
 	{ "data_as_boolean",
@@ -593,6 +619,127 @@ PyObject *pyfwps_record_get_entry_type(
 	return( integer_object );
 }
 
+/* Retrieves the value name
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyfwps_record_get_value_name(
+           pyfwps_record_t *pyfwps_record,
+           PyObject *arguments PYFWPS_ATTRIBUTE_UNUSED )
+{
+	PyObject *string_object  = NULL;
+	libcerror_error_t *error = NULL;
+	static char *function    = "pyfwps_record_get_value_name";
+	char *utf8_string        = NULL;
+	size_t utf8_string_size  = 0;
+	int result               = 0;
+
+	PYFWPS_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyfwps_record == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid record.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_record_get_utf8_value_name_size(
+	          pyfwps_record->record,
+	          &utf8_string_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result == -1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to determine size of value name as UTF-8 string.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	else if( ( result == 0 )
+	      || ( utf8_string_size == 0 ) )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
+	utf8_string = (char *) PyMem_Malloc(
+	                        sizeof( char ) * utf8_string_size );
+
+	if( utf8_string == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to create UTF-8 string.",
+		 function );
+
+		goto on_error;
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_record_get_utf8_value_name(
+	          pyfwps_record->record,
+	          (uint8_t *) utf8_string,
+	          utf8_string_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve value name as UTF-8 string.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	/* Pass the string length to PyUnicode_DecodeUTF8 otherwise it makes
+	 * the end of string character is part of the string
+	 */
+	string_object = PyUnicode_DecodeUTF8(
+	                 utf8_string,
+	                 (Py_ssize_t) utf8_string_size - 1,
+	                 NULL );
+
+	if( string_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to convert UTF-8 string into Unicode object.",
+		 function );
+
+		goto on_error;
+	}
+	PyMem_Free(
+	 utf8_string );
+
+	return( string_object );
+
+on_error:
+	if( utf8_string != NULL )
+	{
+		PyMem_Free(
+		 utf8_string );
+	}
+	return( NULL );
+}
+
 /* Retrieves the value type
  * Returns a Python object if successful or NULL on error
  */
@@ -643,6 +790,130 @@ PyObject *pyfwps_record_get_value_type(
 	                  (unsigned long) value_32bit );
 
 	return( integer_object );
+}
+
+/* Retrieves the data
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyfwps_record_get_data(
+           pyfwps_record_t *pyfwps_record,
+           PyObject *arguments PYFWPS_ATTRIBUTE_UNUSED )
+{
+	PyObject *bytes_object   = NULL;
+	libcerror_error_t *error = NULL;
+	char *data               = NULL;
+	static char *function    = "pyfwps_record_get_data";
+	size_t data_size         = 0;
+	int result               = 0;
+
+	PYFWPS_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyfwps_record == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid record.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_record_get_data_size(
+	          pyfwps_record->record,
+	          &data_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result == -1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve data size.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	else if( ( result == 0 )
+	      || ( data_size == 0 ) )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
+	data = (char *) PyMem_Malloc(
+	                 sizeof( char ) * data_size );
+
+	if( data == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to create data.",
+		 function );
+
+		goto on_error;
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libfwps_record_get_data(
+	          pyfwps_record->record,
+	          (uint8_t *) data,
+	          data_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyfwps_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve data.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	/* This is a binary string so include the full size
+	 */
+#if PY_MAJOR_VERSION >= 3
+	bytes_object = PyBytes_FromStringAndSize(
+	                data,
+	                (Py_ssize_t) data_size );
+#else
+	bytes_object = PyString_FromStringAndSize(
+	                data,
+	                (Py_ssize_t) data_size );
+#endif
+	if( bytes_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to convert data into Bytes object.",
+		 function );
+
+		goto on_error;
+	}
+	PyMem_Free(
+	 data );
+
+	return( bytes_object );
+
+on_error:
+	if( data != NULL )
+	{
+		PyMem_Free(
+		 data );
+	}
+	return( NULL );
 }
 
 /* Retrieves the data as a boolean value

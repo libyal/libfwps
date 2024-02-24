@@ -178,6 +178,11 @@ int libfwps_internal_record_free(
 			memory_free(
 			 ( *internal_record )->entry_name );
 		}
+		if( ( *internal_record )->value_name != NULL )
+		{
+			memory_free(
+			 ( *internal_record )->value_name );
+		}
 		if( ( *internal_record )->value_data != NULL )
 		{
 			memory_free(
@@ -208,6 +213,7 @@ int libfwps_record_copy_from_byte_stream(
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	system_character_t *value_string           = NULL;
+	uint16_t value_16bit                       = 0;
 #endif
 
 	if( record == NULL )
@@ -230,6 +236,17 @@ int libfwps_record_copy_from_byte_stream(
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
 		 "%s: invalid record - entry name already set.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_record->value_name != NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid record - value name already set.",
 		 function );
 
 		return( -1 );
@@ -483,6 +500,117 @@ int libfwps_record_copy_from_byte_stream(
 
 			goto on_error;
 	}
+	if( internal_record->value_type == LIBFWPS_VALUE_TYPE_STREAM )
+	{
+		if( byte_stream_offset > ( byte_stream_size - 4 ) )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+			 "%s: invalid byte stream size value too small.",
+			 function );
+
+			goto on_error;
+		}
+		byte_stream_copy_to_uint32_little_endian(
+		 &( byte_stream[ byte_stream_offset ] ),
+		 name_size );
+
+		byte_stream_offset += 4;
+
+		if( ( name_size > byte_stream_size )
+		 || ( byte_stream_offset > ( byte_stream_size - name_size ) ) )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid name size value out of bounds.",
+			 function );
+
+			goto on_error;
+		}
+		internal_record->value_name = (uint8_t *) memory_allocate(
+		                                           sizeof( uint8_t ) * name_size );
+
+		if( internal_record->value_name == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_MEMORY,
+			 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
+			 "%s: unable to create value name.",
+			 function );
+
+			goto on_error;
+		}
+		if( memory_copy(
+		     internal_record->value_name,
+		     &( byte_stream[ byte_stream_offset ] ),
+		     name_size ) == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_MEMORY,
+			 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
+			 "%s: unable to copy value name data.",
+			 function );
+
+			goto on_error;
+		}
+		internal_record->value_name_size = name_size;
+
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libcnotify_verbose != 0 )
+		{
+			if( libfwps_debug_print_utf16_string_value(
+			     function,
+			     "value name\t\t\t",
+			     internal_record->value_name,
+			     internal_record->value_name_size,
+			     LIBUNA_ENDIAN_LITTLE,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_PRINT_FAILED,
+				 "%s: unable to print UTF-16 string value.",
+				 function );
+
+				goto on_error;
+			}
+		}
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
+		byte_stream_offset += name_size;
+
+		if( byte_stream_offset > ( byte_stream_size - 2 ) )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+			 "%s: invalid byte stream size value too small.",
+			 function );
+
+			goto on_error;
+		}
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libcnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint16_little_endian(
+			 &( byte_stream[ byte_stream_offset ] ),
+			 value_16bit );
+			libcnotify_printf(
+			 "%s: unknown1\t\t\t\t: 0x%04" PRIx16 "\n",
+			 function,
+			 value_16bit );
+		}
+#endif
+		byte_stream_offset += 2;
+	}
 	if( internal_record->value_data_size == 0 )
 	{
 		if( byte_stream_offset > ( byte_stream_size - 4 ) )
@@ -618,6 +746,15 @@ on_error:
 		internal_record->value_data = NULL;
 	}
 	internal_record->value_data_size = 0;
+
+	if( internal_record->value_name != NULL )
+	{
+		memory_free(
+		 internal_record->value_name );
+
+		internal_record->value_name = NULL;
+	}
+	internal_record->value_name_size = 0;
 
 	if( internal_record->entry_name != NULL )
 	{
@@ -871,6 +1008,206 @@ int libfwps_record_get_entry_type(
 	return( 1 );
 }
 
+/* Retrieves the size of the UTF-8 encoded value name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_utf8_value_name_size(
+     libfwps_record_t *record,
+     size_t *utf8_string_size,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_utf8_value_name_size";
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( ( internal_record->value_name_size == 0 )
+	 || ( internal_record->value_name == NULL ) )
+	{
+		return( 0 );
+	}
+	if( libuna_utf8_string_size_from_utf16_stream(
+	     internal_record->value_name,
+	     internal_record->value_name_size,
+	     LIBUNA_ENDIAN_LITTLE,
+	     utf8_string_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve size of value name as UTF-8 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the UTF-8 encoded value name
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_utf8_value_name(
+     libfwps_record_t *record,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_utf8_value_name";
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( ( internal_record->value_name_size == 0 )
+	 || ( internal_record->value_name == NULL ) )
+	{
+		return( 0 );
+	}
+	if( libuna_utf8_string_copy_from_utf16_stream(
+	     utf8_string,
+	     utf8_string_size,
+	     internal_record->value_name,
+	     internal_record->value_name_size,
+	     LIBUNA_ENDIAN_LITTLE,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve value name as UTF-8 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the size of the UTF-16 encoded value name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_utf16_value_name_size(
+     libfwps_record_t *record,
+     size_t *utf16_string_size,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_utf16_value_name_size";
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( ( internal_record->value_name_size == 0 )
+	 || ( internal_record->value_name == NULL ) )
+	{
+		return( 0 );
+	}
+	if( libuna_utf16_string_size_from_utf16_stream(
+	     internal_record->value_name,
+	     internal_record->value_name_size,
+	     LIBUNA_ENDIAN_LITTLE,
+	     utf16_string_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve size of value name as UTF-16 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the UTF-16 encoded value name
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_utf16_value_name(
+     libfwps_record_t *record,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_utf16_value_name";
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( ( internal_record->value_name_size == 0 )
+	 || ( internal_record->value_name == NULL ) )
+	{
+		return( 0 );
+	}
+	if( libuna_utf16_string_copy_from_utf16_stream(
+	     utf16_string,
+	     utf16_string_size,
+	     internal_record->value_name,
+	     internal_record->value_name_size,
+	     LIBUNA_ENDIAN_LITTLE,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve value name as UTF-16 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
 /* Retrieves the value type
  * Returns 1 if successful or -1 on error
  */
@@ -908,6 +1245,122 @@ int libfwps_record_get_value_type(
 	}
 	*value_type = internal_record->value_type;
 
+	return( 1 );
+}
+
+/* Retrieves the data size
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_data_size(
+     libfwps_record_t *record,
+     size_t *data_size,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_data_size";
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( data_size == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid data size.",
+		 function );
+
+		return( -1 );
+	}
+	*data_size = internal_record->value_data_size;
+
+	return( 1 );
+}
+
+/* Retrieves the data
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_data(
+     libfwps_record_t *record,
+     uint8_t *data,
+     size_t data_size,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_data";
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( internal_record->value_data == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid record entry - missing value data.",
+		 function );
+
+		return( -1 );
+	}
+	if( data == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid data.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( data_size < internal_record->value_data_size )
+	 || ( data_size > (size_t) SSIZE_MAX ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid data size value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	if( memory_copy(
+	     data,
+	     internal_record->value_data,
+	     internal_record->value_data_size ) == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
+		 "%s: unable to copy data.",
+		 function );
+
+		return( -1 );
+	}
 	return( 1 );
 }
 

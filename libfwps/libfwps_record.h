@@ -57,6 +57,14 @@ struct libfwps_internal_record
 	 */
 	uint32_t entry_type;
 
+	/* The value name
+	 */
+	uint8_t *value_name;
+
+	/* The value name size
+	 */
+	uint32_t value_name_size;
+
 	/* The value type
 	 */
 	uint32_t value_type;
@@ -128,9 +136,48 @@ int libfwps_record_get_entry_type(
      libcerror_error_t **error );
 
 LIBFWPS_EXTERN \
+int libfwps_record_get_utf8_value_name_size(
+     libfwps_record_t *record,
+     size_t *utf8_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf8_value_name(
+     libfwps_record_t *record,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf16_value_name_size(
+     libfwps_record_t *record,
+     size_t *utf16_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_utf16_value_name(
+     libfwps_record_t *record,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
 int libfwps_record_get_value_type(
      libfwps_record_t *record,
      uint32_t *value_type,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data_size(
+     libfwps_record_t *record,
+     size_t *data_size,
+     libcerror_error_t **error );
+
+LIBFWPS_EXTERN \
+int libfwps_record_get_data(
+     libfwps_record_t *record,
+     uint8_t *data,
+     size_t data_size,
      libcerror_error_t **error );
 
 LIBFWPS_EXTERN \

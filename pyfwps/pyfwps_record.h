@@ -70,7 +70,15 @@ PyObject *pyfwps_record_get_entry_type(
            pyfwps_record_t *pyfwps_record,
            PyObject *arguments );
 
+PyObject *pyfwps_record_get_value_name(
+           pyfwps_record_t *pyfwps_record,
+           PyObject *arguments );
+
 PyObject *pyfwps_record_get_value_type(
+           pyfwps_record_t *pyfwps_record,
+           PyObject *arguments );
+
+PyObject *pyfwps_record_get_data(
            pyfwps_record_t *pyfwps_record,
            PyObject *arguments );
 
