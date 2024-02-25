@@ -210,6 +210,10 @@ int libfwps_record_copy_from_byte_stream(
 	static char *function                      = "libfwps_record_copy_from_byte_stream";
 	size_t byte_stream_offset                  = 0;
 	uint32_t name_size                         = 0;
+	uint32_t number_of_values                  = 0;
+	uint32_t value_index                       = 0;
+	uint32_t vector_value_data_size            = 0;
+	int has_variable_data_size                 = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	system_character_t *value_string           = NULL;
@@ -446,13 +450,19 @@ int libfwps_record_copy_from_byte_stream(
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
-		 "%s: value type\t\t\t: %" PRIu32 "\n",
+		 "%s: value type\t\t\t: 0x%04" PRIx32 "\n",
 		 function,
 		 internal_record->value_type );
 	}
 #endif
-	switch( internal_record->value_type )
+	/* TODO add support for VT_ARRAY and VT_BYREF
+	 */
+	switch( internal_record->value_type & 0xffffefffUL )
 	{
+		case LIBFWPS_VALUE_TYPE_NULL:
+			internal_record->value_data_size = 0;
+			break;
+
 		case LIBFWPS_VALUE_TYPE_BOOLEAN:
 		case LIBFWPS_VALUE_TYPE_INTEGER_8BIT_SIGNED:
 		case LIBFWPS_VALUE_TYPE_INTEGER_8BIT_UNSIGNED:
@@ -487,7 +497,7 @@ int libfwps_record_copy_from_byte_stream(
 		case LIBFWPS_VALUE_TYPE_STREAM:
 		case LIBFWPS_VALUE_TYPE_STRING_ASCII:
 		case LIBFWPS_VALUE_TYPE_STRING_UNICODE:
-			internal_record->value_data_size = 0;
+			has_variable_data_size = 1;
 			break;
 
 		default:
@@ -495,8 +505,9 @@ int libfwps_record_copy_from_byte_stream(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-			 "%s: invalid record entry - unsupported value type.",
-			 function );
+			 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+			 function,
+			 internal_record->value_type );
 
 			goto on_error;
 	}
@@ -611,7 +622,122 @@ int libfwps_record_copy_from_byte_stream(
 #endif
 		byte_stream_offset += 2;
 	}
-	if( internal_record->value_data_size == 0 )
+	if( ( internal_record->value_type & 0x0000f000UL ) == 0x00001000UL )
+	{
+		if( byte_stream_offset > ( byte_stream_size - 4 ) )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+			 "%s: invalid byte stream size value too small.",
+			 function );
+
+			goto on_error;
+		}
+		byte_stream_copy_to_uint32_little_endian(
+		 &( byte_stream[ byte_stream_offset ] ),
+		 number_of_values );
+
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libcnotify_verbose != 0 )
+		{
+			if( has_variable_data_size == 0 )
+			{
+				libcnotify_printf(
+				 "%s: value data size\t\t\t: %" PRIu32 "\n",
+				 function,
+				 internal_record->value_data_size );
+			}
+			libcnotify_printf(
+			 "%s: number of values\t\t\t: %" PRIu32 "\n",
+			 function,
+			 number_of_values );
+		}
+#endif
+		byte_stream_offset += 4;
+
+		if( has_variable_data_size == 0 )
+		{
+			if( number_of_values > ( (size_t) SSIZE_MAX / internal_record->value_data_size ) )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+				 "%s: invalid number of values value out of bounds.",
+				 function );
+
+				goto on_error;
+			}
+			internal_record->value_data_size *= number_of_values;
+		}
+		else
+		{
+			if( number_of_values == 0xffffffffUL )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+				 "%s: invalid number of values value out of bounds.",
+				 function );
+
+				goto on_error;
+			}
+			for( value_index = 0;
+			     value_index < number_of_values;
+			     value_index++ )
+			{
+				byte_stream_copy_to_uint32_little_endian(
+				 &( byte_stream[ byte_stream_offset ] ),
+				 vector_value_data_size );
+
+#if defined( HAVE_DEBUG_OUTPUT )
+				if( libcnotify_verbose != 0 )
+				{
+					libcnotify_printf(
+					 "%s: vector value: %" PRIu32 " data size\t\t: %" PRIu32 "\n",
+					 function,
+					 value_index,
+					 vector_value_data_size );
+				}
+#endif
+				byte_stream_offset += 4;
+
+				if( ( internal_record->value_type & 0x00000fffUL ) == LIBFWPS_VALUE_TYPE_STRING_UNICODE )
+				{
+					if( vector_value_data_size > ( (uint32_t) UINT32_MAX / 2 ) )
+					{
+						libcerror_error_set(
+						 error,
+						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+						 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+						 "%s: invalid vector value: %" PRIu32 " data size value out of bounds.",
+						 function,
+						 value_index );
+
+						goto on_error;
+					}
+					vector_value_data_size *= 2;
+				}
+				if( vector_value_data_size > ( (size_t) SSIZE_MAX - internal_record->value_data_size ) )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+					 "%s: invalid vector value: %" PRIu32 " data size value out of bounds.",
+					 function,
+					 value_index );
+
+					goto on_error;
+				}
+				internal_record->value_data_size += vector_value_data_size;
+			}
+		}
+	}
+	else if( has_variable_data_size != 0 )
 	{
 		if( byte_stream_offset > ( byte_stream_size - 4 ) )
 		{
@@ -632,6 +758,17 @@ int libfwps_record_copy_from_byte_stream(
 
 		if( internal_record->value_type == LIBFWPS_VALUE_TYPE_STRING_UNICODE )
 		{
+			if( internal_record->value_data_size > ( (size_t) SSIZE_MAX / 2 ) )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+				 "%s: invalid value data size value out of bounds.",
+				 function );
+
+				goto on_error;
+			}
 			internal_record->value_data_size *= 2;
 		}
 	}
@@ -653,7 +790,7 @@ int libfwps_record_copy_from_byte_stream(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-			 "%s: invalid valud data size value out of bounds.",
+			 "%s: invalid value data size value out of bounds.",
 			 function );
 
 			goto on_error;
@@ -725,7 +862,8 @@ int libfwps_record_copy_from_byte_stream(
 			 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
 		}
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	internal_record->ascii_codepage = ascii_codepage;
 
 	return( 1 );
@@ -1394,8 +1532,9 @@ int libfwps_record_get_data_as_boolean(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -1468,8 +1607,9 @@ int libfwps_record_get_data_as_8bit_integer(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -1542,8 +1682,9 @@ int libfwps_record_get_data_as_16bit_integer(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -1619,8 +1760,9 @@ int libfwps_record_get_data_as_32bit_integer(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -1690,14 +1832,16 @@ int libfwps_record_get_data_as_64bit_integer(
 
 	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_64BIT_SIGNED )
 	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_64BIT_UNSIGNED )
-	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_CURRENCY ) )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_CURRENCY )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_FILETIME ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -1771,8 +1915,9 @@ int libfwps_record_get_data_as_filetime(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -1850,8 +1995,9 @@ int libfwps_record_get_data_as_floating_point(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -1946,8 +2092,9 @@ int libfwps_record_get_data_as_utf8_string_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -2064,8 +2211,9 @@ int libfwps_record_get_data_as_utf8_string(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -2197,8 +2345,9 @@ int libfwps_record_get_data_as_utf16_string_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -2315,8 +2464,9 @@ int libfwps_record_get_data_as_utf16_string(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -2449,8 +2599,9 @@ int libfwps_record_get_data_as_utf8_path_string_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -2568,8 +2719,9 @@ int libfwps_record_get_data_as_utf8_path_string(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -2702,8 +2854,9 @@ int libfwps_record_get_data_as_utf16_path_string_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -2821,8 +2974,9 @@ int libfwps_record_get_data_as_utf16_path_string(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}
@@ -2949,8 +3103,9 @@ int libfwps_record_get_data_as_guid(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid record entry - unsupported value type.",
-		 function );
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
 
 		return( -1 );
 	}

@@ -1,4 +1,4 @@
-.Dd February 24, 2024
+.Dd February 25, 2024
 .Dt libfwps 3
 .Os libfwps
 .Sh NAME
@@ -10,6 +10,16 @@
 Support functions
 .Ft const char *
 .Fn libfwps_get_version "void"
+.Pp
+Notify functions
+.Ft void
+.Fn libfwps_notify_set_verbose "int verbose"
+.Ft int
+.Fn libfwps_notify_set_stream "FILE *stream" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_notify_stream_open "const char *filename" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_notify_stream_close "libfwps_error_t **error"
 .Pp
 Error functions
 .Ft void

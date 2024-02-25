@@ -26,6 +26,7 @@ libfwps_la_SOURCES = \
 	libfwps_libcnotify.h \
 	libfwps_libfguid.h \
 	libfwps_libuna.h \
+	libfwps_notify.c libfwps_notify.h \
 	libfwps_property_identifier.c libfwps_property_identifier.h \
 	libfwps_record.c libfwps_record.h \
 	libfwps_set.c libfwps_set.h \

@@ -130,6 +130,7 @@ stamp-h[1-9]
 /setup.cfg
 /tests/*.exe
 /tests/fwps_test_error
+/tests/fwps_test_notify
 /tests/fwps_test_property_identifier
 /tests/fwps_test_record
 /tests/fwps_test_set

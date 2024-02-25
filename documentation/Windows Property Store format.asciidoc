@@ -161,9 +161,10 @@ of:
 | Offset | Size | Value | Description
 | 0 | 2 | | Property value type +
 Contains an OLE defines property (variant) types. +
-Also see `[LIBFOLE]`
-| 2 | 2 | 0x00 | Padding
+Also see https://github.com/libyal/libfole/blob/main/documentation/OLE%20definitions.asciidoc[[LIBFOLE\]]
+| 2 | 2 | 0x00 | [yellow-background]*Unknown (Padding)*
 | 4 | ... | | Property value data
+| ... | ... | 0x00 | [yellow-background]*Unknown (Alignment padding?)*
 |===
 
 [NOTE]
@@ -172,8 +173,8 @@ The padding is sometimes considered part of the property value type.
 == Property sets
 
 [NOTE]
-In the MSDN document the property records are sometimes indicated as a
-combination of the the property set identifier and the value identifier e.g.
+Note that property records are sometimes indicated as a combination of the
+property set identifier and the value identifier e.g.
 `b725f130-47ef-101a-a5f1-02608c9eebac/10`
 
 === [[format_class_identifiers]]Format class (or property set) identifiers
@@ -518,8 +519,7 @@ following property records:
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| 10 | VT_LPWSTR (0x001f) | Filename (System.ItemNameDisplay or PKEY_ItemNameDisplay) +
-Contains an UTF-16 little-endian string
+| 10 | VT_LPWSTR (0x001f) | Filename (System.ItemNameDisplay or PKEY_ItemNameDisplay)
 |===
 
 [NOTE]
@@ -539,10 +539,10 @@ following property records:
 | 0x0001 | 0x0002 | PIDDSI_CODEPAGE | Codepage +
 The codepage of the strings in the property section
 | 0x0002 | 0x001e +
-0x001f | PIDDSI_CATEGORY | Category +
+VT_LPWSTR (0x001f) | PIDDSI_CATEGORY | Category +
 ASCII or Unicode string
 | 0x0003 | 0x001e +
-0x001f | PIDDSI_PRESFORMAT | Presentation format +
+VT_LPWSTR (0x001f) | PIDDSI_PRESFORMAT | Presentation format +
 ASCII or Unicode string +
 [yellow-background]*TODO add reference to section below*
 | 0x0004 | 0x0003 | PIDDSI_BYTECOUNT | Number of bytes (in document) +
@@ -567,10 +567,10 @@ Vector of Variant values
 0x101f | PIDDSI_DOCPARTS | Document parts +
 Vector of ASCII or Unicode string values
 | 0x000e | 0x001e +
-0x001f | PIDDSI_MANAGER | Manager +
+VT_LPWSTR (0x001f) | PIDDSI_MANAGER | Manager +
 ASCII or Unicode string
 | 0x000f | 0x001e +
-0x001f | PIDDSI_COMPANY | Company +
+VT_LPWSTR (0x001f) | PIDDSI_COMPANY | Company +
 ASCII or Unicode string
 | 0x0010 | 0x000b | PIDDSI_LINKSDIRTY | Links dirty +
 Boolean +
@@ -579,11 +579,11 @@ True if the links have changed outside the application.
 | | | |
 | 0x0013 | 0x000b | PIDDSI_SHAREDDOC | Shared document +
 Boolean +
-According to MSDN this always must be false.
+According to Microsoft documentation this always must be false.
 | 0x0014 | | PIDDSI_LINKBASE | [yellow-background]*Link base* +
-According to MSDN this value must not be written
+According to Microsoft documentation this value must not be written
 | 0x0015 | | PIDDSI_HLINKS | i[yellow-background]*Hyper links* +
-According to MSDN this value must not be written
+According to Microsoft documentation this value must not be written
 | 0x0016 | 0x000b | PIDDSI_HYPERLINKSCHANGED | Hyper links changed +
 Boolean +
 True if the hyper links have changed outside the application.
@@ -594,16 +594,16 @@ Where the major version is stored in the upper 16-bit and the minor version in t
 Binary data (BLOB)
 | | | |
 | 0x001a | 0x001e +
-0x001f | PIDDSI_CONTENTTYPE | Content type +
+VT_LPWSTR (0x001f) | PIDDSI_CONTENTTYPE | Content type +
 ASCII or Unicode string
 | 0x001b | 0x001e +
-0x001f | PIDDSI_CONTENTSTATUS | Content status +
+VT_LPWSTR (0x001f) | PIDDSI_CONTENTSTATUS | Content status +
 ASCII or Unicode string
 | 0x001c | 0x001e +
-0x001f | PIDDSI_LANGUAGE | Language +
+VT_LPWSTR (0x001f) | PIDDSI_LANGUAGE | Language +
 ASCII or Unicode string
 | 0x001d | 0x001e +
-0x001f | PIDDSI_DOCVERSION | Document version +
+VT_LPWSTR (0x001f) | PIDDSI_DOCVERSION | Document version +
 ASCII or Unicode string
 |===
 
@@ -680,15 +680,10 @@ values:
 [cols="1,1,5",options="header"]
 |===
 | Identifier | Type | Description
-| AutoList | VT_STREAM (0x0042) | The auto list +
-Stream containing the cached auto list +
-[yellow-background]*Contains an UTF-16 little-endian string that contains base64 encoded data without padding.*
-| AutolistCacheTime | VT_FILETIME (0x0040) | The date and time the auto list was cached +
-Contains a FILETIME
-| AutolistCacheKey | VT_LPWSTR (0x001f) | The key to identify the cached auto list +
-Contains an UTF-16 little-endian string
-| OriginURL | VT_LPWSTR (0x001f) | The URL of origin +
-Contains an UTF-16 little-endian string
+| AutoList | VT_STREAM (0x0042) | The auto list
+| AutolistCacheTime | VT_FILETIME (0x0040) | The date and time the auto list was cached
+| AutolistCacheKey | VT_LPWSTR (0x001f) | The key to identify the cached auto list
+| OriginURL | VT_LPWSTR (0x001f) | The URL of origin
 |===
 
 === Property set: ef6b490d-5cd8-437a-affc-da8b60ee4a3c
@@ -735,28 +730,28 @@ property records:
 Signed 16-bit Integer +
 The codepage of the strings in the property section
 | 0x0002 | 0x001e +
-0x001f | PIDSI_TITLE | Title +
+VT_LPWSTR (0x001f) | PIDSI_TITLE | Title +
 ASCII or Unicode string
 | 0x0003 | 0x001e +
-0x001f | PIDSI_SUBJECT | Subject +
+VT_LPWSTR (0x001f) | PIDSI_SUBJECT | Subject +
 ASCII or Unicode string
 | 0x0004 | 0x001e +
-0x001f | PIDSI_AUTHOR | Author +
+VT_LPWSTR (0x001f) | PIDSI_AUTHOR | Author +
 ASCII or Unicode string
 | 0x0005 | 0x001e +
-0x001f | PIDSI_KEYWORDS | Keywords +
+VT_LPWSTR (0x001f) | PIDSI_KEYWORDS | Keywords +
 ASCII or Unicode string
 | 0x0006 | 0x001e +
-0x001f | PIDSI_COMMENTS | Comments +
+VT_LPWSTR (0x001f) | PIDSI_COMMENTS | Comments +
 ASCII or Unicode string
 | 0x0007 | 0x001e +
-0x001f | PIDSI_TEMPLATE | Template +
+VT_LPWSTR (0x001f) | PIDSI_TEMPLATE | Template +
 ASCII or Unicode string
 | 0x0008 | 0x001e +
-0x001f | PIDSI_LASTAUTHOR | Last Saved By +
+VT_LPWSTR (0x001f) | PIDSI_LASTAUTHOR | Last Saved By +
 ASCII or Unicode string
 | 0x0009 | 0x001e +
-0x001f | PIDSI_REVNUMBER | Revision Number +
+VT_LPWSTR (0x001f) | PIDSI_REVNUMBER | Revision Number +
 ASCII or Unicode string
 | 0x000a | 0x0040 | PIDSI_EDITTIME | Total editing time +
 FILETIME +
@@ -776,9 +771,9 @@ Signed 32-bit Integer
 | 0x0011 | 0x0047 | PIDSI_THUMBNAIL | Thumbnail +
 [yellow-background]*TODO*
 | 0x0012 | 0x001e +
-0x001f | PIDSI_APPNAME | Creating application name +
+VT_LPWSTR (0x001f) | PIDSI_APPNAME | Creating application name +
 ASCII or Unicode string
-| 0x0013 | 0x0003 | PIDSI_SECURITY | Security +
+| VT_UI4 (0x0013) | 0x0003 | PIDSI_SECURITY | Security +
 Signed 32-bit Integer +
 [yellow-background]*TODO add reference to section below*
 |===
@@ -840,7 +835,7 @@ DEFINE_SHLGUID(FMTID_InternetSite,0x000214A1L,0,0);
 | Title: | Object Linking and Embedding (OLE) definitions
 | Author(s): | Joachim Metz
 | Date: | September 2009
-| URL: | https://googledrive.com/host/0B3fBvzttpiiSaDZmMHFNNDgtNDA/OLE%20Definitions.pdf
+| URL: | https://github.com/libyal/libfole/blob/main/documentation/OLE%20definitions.asciidoc
 |===
 
 `[LIBOLECF]`
@@ -850,24 +845,25 @@ DEFINE_SHLGUID(FMTID_InternetSite,0x000214A1L,0,0);
 | Title: | Object Linking and Embedding (OLE) Compound File (CF) format specification
 | Author(s): | Joachim Metz
 | Date: | December 2008
-| URL: | https://googledrive.com/host/0B3fBvzttpiiSS0hEb0pjU2h6a2c/OLE%20Compound%20File%20format.pdf
-|===
-
-`[MSDN]`
-
-[cols="1,5",options="header"]
-|===
-| Title: | Microsoft Developer Network
-| URL: | http://msdn.microsoft.com/
+| URL: | https://github.com/libyal/libolecf/blob/main/documentation/OLE%20Compound%20File%20format.asciidoc
 |===
 
 `[MS-PROPSTORE]`
 
 [cols="1,5",options="header"]
 |===
-| Title: | `[MS-PROPSTORE]` Property Store Binary File Format
-| Date: | August 12, 2009
-| URL: | http://msdn.microsoft.com/
+| Title: | `[MS-OLEPS]`: Object Linking and Embedding (OLE) Property Set Data Structures
+| Date: | April 8, 2008
+| URL: | https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-oleps/bf7aeae8-c47a-4939-9f45-700158dac3bc
+|===
+
+`[MS-PROPSTORE]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | `[MS-PROPSTORE]`: Property Store Binary File Format
+| Date: | July 16, 2010
+| URL: | https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-propstore/39ea873f-7af5-44dd-92f9-bc1f293852cc
 |===
 
 [appendix]

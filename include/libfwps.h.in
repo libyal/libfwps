@@ -46,6 +46,40 @@ const char *libfwps_get_version(
              void );
 
 /* -------------------------------------------------------------------------
+ * Notify functions
+ * ------------------------------------------------------------------------- */
+
+/* Sets the verbose notification
+ */
+LIBFWPS_EXTERN \
+void libfwps_notify_set_verbose(
+      int verbose );
+
+/* Sets the notification stream
+ * Returns 1 if successful or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_notify_set_stream(
+     FILE *stream,
+     libfwps_error_t **error );
+
+/* Opens the notification stream using a filename
+ * The stream is opened in append mode
+ * Returns 1 if successful or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_notify_stream_open(
+     const char *filename,
+     libfwps_error_t **error );
+
+/* Closes the notification stream if opened using a filename
+ * Returns 0 if successful or -1 on error
+ */
+LIBFWPS_EXTERN \
+int libfwps_notify_stream_close(
+     libfwps_error_t **error );
+
+/* -------------------------------------------------------------------------
  * Error functions
  * ------------------------------------------------------------------------- */
 

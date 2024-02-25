@@ -1144,7 +1144,7 @@ PyObject *pyfwps_record_get_data_as_integer(
 		case LIBFWPS_VALUE_TYPE_FILETIME:
 			Py_BEGIN_ALLOW_THREADS
 
-			result = libfwps_record_get_data_as_filetime(
+			result = libfwps_record_get_data_as_64bit_integer(
 			          pyfwps_record->record,
 			          &value_64bit,
 			          &error );
