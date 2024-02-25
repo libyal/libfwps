@@ -377,7 +377,7 @@ These that properties have not been confirmed yet.
 [cols="1,1,1,5",options="header"]
 |===
 | Identifier | Type | Property identifier | Description
-| 0x0002 | 0x0008 | PIDASI_FORMAT |
+| 0x0002 | VT_BSTR (0x0008) | PIDASI_FORMAT |
 | 0x0003 | VT_UI4 (0x0013) | PIDASI_TIMELENGTH | Value in milliseconds
 | 0x0004 | VT_UI4 (0x0013) | PIDASI_AVG_DATA_RATE | Value in Hz
 | 0x0005 | VT_UI4 (0x0013) | PIDASI_SAMPLE_RATE | Value in bits
@@ -535,74 +535,74 @@ following property records:
 [cols="1,1,1,5",options="header"]
 |===
 | Identifier | Type | Property identifier | Description
-| 0x0000 | 0x0001 | | [yellow-background]*Unknown (NULL)*
-| 0x0001 | 0x0002 | PIDDSI_CODEPAGE | Codepage +
+| 0x0000 | VT_NULL (0x0001) | | [yellow-background]*Unknown (NULL)*
+| 0x0001 | VT_I2 (0x0002) | PIDDSI_CODEPAGE | Codepage +
 The codepage of the strings in the property section
-| 0x0002 | 0x001e +
+| 0x0002 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDDSI_CATEGORY | Category +
 ASCII or Unicode string
-| 0x0003 | 0x001e +
+| 0x0003 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDDSI_PRESFORMAT | Presentation format +
 ASCII or Unicode string +
 [yellow-background]*TODO add reference to section below*
-| 0x0004 | 0x0003 | PIDDSI_BYTECOUNT | Number of bytes (in document) +
+| 0x0004 | VT_I4 (0x0003) | PIDDSI_BYTECOUNT | Number of bytes (in document) +
 Signed 32-bit Integer
-| 0x0005 | 0x0003 | PIDDSI_LINECOUNT | Number of lines (in document) +
+| 0x0005 | VT_I4 (0x0003) | PIDDSI_LINECOUNT | Number of lines (in document) +
 Signed 32-bit Integer
-| 0x0006 | 0x0003 | PIDDSI_PARCOUNT | Number of paragraphs (in document) +
+| 0x0006 | VT_I4 (0x0003) | PIDDSI_PARCOUNT | Number of paragraphs (in document) +
 Signed 32-bit Integer
-| 0x0007 | 0x0003 | PIDDSI_SLIDECOUNT | Number of slides (in document) +
+| 0x0007 | VT_I4 (0x0003) | PIDDSI_SLIDECOUNT | Number of slides (in document) +
 Signed 32-bit Integer
-| 0x0008 | 0x0003 | PIDDSI_NOTECOUNT | Number of notes (in document) +
+| 0x0008 | VT_I4 (0x0003) | PIDDSI_NOTECOUNT | Number of notes (in document) +
 Signed 32-bit Integer
-| 0x0009 | 0x0003 | PIDDSI_HIDDENCOUNT | Number of hidden slides (in document) +
+| 0x0009 | VT_I4 (0x0003) | PIDDSI_HIDDENCOUNT | Number of hidden slides (in document) +
 Signed 32-bit Integer
-| 0x000a | 0x0003 | PIDDSI_MMCLIPCOUNT | Number of multimedia clips (in document) +
+| 0x000a | VT_I4 (0x0003) | PIDDSI_MMCLIPCOUNT | Number of multimedia clips (in document) +
 Signed 32-bit Integer
-| 0x000b | 0x000b | PIDDSI_SCALE | Scale +
+| 0x000b | VT_BOOL (0x000b) | PIDDSI_SCALE | Scale +
 Boolean
-| 0x000c | 0x100c | PIDDSI_HEADINGPAIR | Heading pair +
+| 0x000c | VT_VECTOR+VT_VARIANT (0x100c) | PIDDSI_HEADINGPAIR | Heading pair +
 Vector of Variant values
-| 0x000d | 0x101e +
-0x101f | PIDDSI_DOCPARTS | Document parts +
+| 0x000d | VT_VECTOR+VT_LPSTR (0x101e) +
+VT_VECTOR+VT_LPWSTR (0x101f) | PIDDSI_DOCPARTS | Document parts +
 Vector of ASCII or Unicode string values
-| 0x000e | 0x001e +
+| 0x000e | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDDSI_MANAGER | Manager +
 ASCII or Unicode string
-| 0x000f | 0x001e +
+| 0x000f | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDDSI_COMPANY | Company +
 ASCII or Unicode string
-| 0x0010 | 0x000b | PIDDSI_LINKSDIRTY | Links dirty +
+| 0x0010 | VT_BOOL (0x000b) | PIDDSI_LINKSDIRTY | Links dirty +
 Boolean +
 True if the links have changed outside the application.
-| 0x0011 | 0x0003 | PIDDSI_CCHWITHSPACES | Number of characters including white-space (in document)
+| 0x0011 | VT_I4 (0x0003) | PIDDSI_CCHWITHSPACES | Number of characters including white-space (in document)
 | | | |
-| 0x0013 | 0x000b | PIDDSI_SHAREDDOC | Shared document +
+| 0x0013 | VT_BOOL (0x000b) | PIDDSI_SHAREDDOC | Shared document +
 Boolean +
 According to Microsoft documentation this always must be false.
 | 0x0014 | | PIDDSI_LINKBASE | [yellow-background]*Link base* +
 According to Microsoft documentation this value must not be written
 | 0x0015 | | PIDDSI_HLINKS | i[yellow-background]*Hyper links* +
 According to Microsoft documentation this value must not be written
-| 0x0016 | 0x000b | PIDDSI_HYPERLINKSCHANGED | Hyper links changed +
+| 0x0016 | VT_BOOL (0x000b) | PIDDSI_HYPERLINKSCHANGED | Hyper links changed +
 Boolean +
 True if the hyper links have changed outside the application.
-| 0x0017 | 0x0003 | PIDDSI_VERSION | Creating application version +
+| 0x0017 | VT_I4 (0x0003) | PIDDSI_VERSION | Creating application version +
 Signed 32-bit Integer +
 Where the major version is stored in the upper 16-bit and the minor version in the lower 16‑bit. E.g. a value of 0x000e0000 represents 14.0
-| 0x0018 | 0x0041 | PIDDSI_DIGSIG | [yellow-background]*Digital signature* +
+| 0x0018 | VT_BLOB (0x0041) | PIDDSI_DIGSIG | [yellow-background]*Digital signature* +
 Binary data (BLOB)
 | | | |
-| 0x001a | 0x001e +
+| 0x001a | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDDSI_CONTENTTYPE | Content type +
 ASCII or Unicode string
-| 0x001b | 0x001e +
+| 0x001b | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDDSI_CONTENTSTATUS | Content status +
 ASCII or Unicode string
-| 0x001c | 0x001e +
+| 0x001c | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDDSI_LANGUAGE | Language +
 ASCII or Unicode string
-| 0x001d | 0x001e +
+| 0x001d | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDDSI_DOCVERSION | Document version +
 ASCII or Unicode string
 |===
@@ -725,55 +725,55 @@ property records:
 |===
 | Identifier | Type | Property identifier | Description
 | 0x0000 | | PIDSI_DICTIONARY | [yellow-background]*Reserved*
-| 0x0000 | 0x0001 | | [yellow-background]*Unknown (NULL), could be PIDSI_DICTIONARY*
-| 0x0001 | 0x0002 | PIDSI_CODEPAGE | Codepage +
+| 0x0000 | VT_NULL (0x0001) | | [yellow-background]*Unknown (NULL), could be PIDSI_DICTIONARY*
+| 0x0001 | VT_I2 (0x0002) | PIDSI_CODEPAGE | Codepage +
 Signed 16-bit Integer +
 The codepage of the strings in the property section
-| 0x0002 | 0x001e +
+| 0x0002 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDSI_TITLE | Title +
 ASCII or Unicode string
-| 0x0003 | 0x001e +
+| 0x0003 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDSI_SUBJECT | Subject +
 ASCII or Unicode string
-| 0x0004 | 0x001e +
+| 0x0004 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDSI_AUTHOR | Author +
 ASCII or Unicode string
-| 0x0005 | 0x001e +
+| 0x0005 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDSI_KEYWORDS | Keywords +
 ASCII or Unicode string
-| 0x0006 | 0x001e +
+| 0x0006 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDSI_COMMENTS | Comments +
 ASCII or Unicode string
-| 0x0007 | 0x001e +
+| 0x0007 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDSI_TEMPLATE | Template +
 ASCII or Unicode string
-| 0x0008 | 0x001e +
+| 0x0008 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDSI_LASTAUTHOR | Last Saved By +
 ASCII or Unicode string
-| 0x0009 | 0x001e +
+| 0x0009 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDSI_REVNUMBER | Revision Number +
 ASCII or Unicode string
-| 0x000a | 0x0040 | PIDSI_EDITTIME | Total editing time +
+| 0x000a | VT_FILETIME (0x0040) | PIDSI_EDITTIME | Total editing time +
 FILETIME +
 Value contains a duration
-| 0x000b | 0x0040 | PIDSI_LASTPRINTED | Last printed date and time +
+| 0x000b | VT_FILETIME (0x0040) | PIDSI_LASTPRINTED | Last printed date and time +
 FILETIME
-| 0x000c | 0x0040 | PIDSI_CREATE_DTM | Creation date and time +
+| 0x000c | VT_FILETIME (0x0040) | PIDSI_CREATE_DTM | Creation date and time +
 FILETIME
-| 0x000d | 0x0040 | PIDSI_LASTSAVE_DTM | Last saved date and time +
+| 0x000d | VT_FILETIME (0x0040) | PIDSI_LASTSAVE_DTM | Last saved date and time +
 FILETIME
-| 0x000e | 0x0003 | PIDSI_PAGECOUNT | Number of pages +
+| 0x000e | VT_I4 (0x0003) | PIDSI_PAGECOUNT | Number of pages +
 Signed 32-bit Integer
-| 0x000f | 0x0003 | PIDSI_WORDCOUNT | Number of words +
+| 0x000f | VT_I4 (0x0003) | PIDSI_WORDCOUNT | Number of words +
 Signed 32-bit Integer
-| 0x0010 | 0x0003 | PIDSI_CHARCOUNT | Number of characters +
+| 0x0010 | VT_I4 (0x0003) | PIDSI_CHARCOUNT | Number of characters +
 Signed 32-bit Integer
-| 0x0011 | 0x0047 | PIDSI_THUMBNAIL | Thumbnail +
+| 0x0011 | VT_CF (0x0047) | PIDSI_THUMBNAIL | Thumbnail +
 [yellow-background]*TODO*
-| 0x0012 | 0x001e +
+| 0x0012 | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDSI_APPNAME | Creating application name +
 ASCII or Unicode string
-| VT_UI4 (0x0013) | 0x0003 | PIDSI_SECURITY | Security +
+| 0x0013 | VT_I4 (0x0003) | PIDSI_SECURITY | Security +
 Signed 32-bit Integer +
 [yellow-background]*TODO add reference to section below*
 |===
