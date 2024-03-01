@@ -561,10 +561,10 @@ Signed 32-bit Integer
 Signed 32-bit Integer
 | 0x000b | VT_BOOL (0x000b) | PIDDSI_SCALE | Scale +
 Boolean
-| 0x000c | 0x100c | PIDDSI_HEADINGPAIR | Heading pair +
+| 0x000c | VT_VECTOR+VT_VARIANT (0x100c) | PIDDSI_HEADINGPAIR | Heading pair +
 Vector of Variant values
-| 0x000d | 0x101e +
-0x101f | PIDDSI_DOCPARTS | Document parts +
+| 0x000d | VT_VECTOR+VT_LPSTR (0x101e) +
+VT_VECTOR+VT_LPWSTR (0x101f) | PIDDSI_DOCPARTS | Document parts +
 Vector of ASCII or Unicode string values
 | 0x000e | VT_LPSTR (0x001e) +
 VT_LPWSTR (0x001f) | PIDDSI_MANAGER | Manager +
