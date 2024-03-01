@@ -1,5 +1,5 @@
 /*
- * The internal libcnotify header
+ * The libcnotify header wrapper
  *
  * Copyright (C) 2013-2024, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -44,7 +44,7 @@
 
 #include <libcnotify.h>
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBCNOTIFY ) */
 
-#endif
+#endif /* !defined( _LIBFWPS_LIBCNOTIFY_H ) */
 

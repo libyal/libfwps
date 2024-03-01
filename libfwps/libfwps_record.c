@@ -659,7 +659,8 @@ int libfwps_record_copy_from_byte_stream(
 
 		if( has_variable_data_size == 0 )
 		{
-			if( number_of_values > ( (size_t) SSIZE_MAX / internal_record->value_data_size ) )
+			if( ( internal_record->value_data_size > 0 )
+			 && ( number_of_values > ( (size_t) SSIZE_MAX / internal_record->value_data_size ) ) )
 			{
 				libcerror_error_set(
 				 error,
@@ -674,12 +675,13 @@ int libfwps_record_copy_from_byte_stream(
 		}
 		else
 		{
-			if( number_of_values == 0xffffffffUL )
+			if( ( number_of_values > ( ( byte_stream_size - byte_stream_offset ) / 4 ) )
+			 || ( number_of_values == 0xffffffffUL ) )
 			{
 				libcerror_error_set(
 				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+				 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
 				 "%s: invalid number of values value out of bounds.",
 				 function );
 

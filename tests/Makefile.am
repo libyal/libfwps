@@ -21,6 +21,7 @@ TESTS = \
 	$(TESTS_PYFWPS)
 
 check_SCRIPTS = \
+	pyfwps_test_record.py \
 	pyfwps_test_set.py \
 	pyfwps_test_store.py \
 	pyfwps_test_support.py \
