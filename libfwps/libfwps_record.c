@@ -213,11 +213,11 @@ int libfwps_record_copy_from_byte_stream(
 	uint32_t number_of_values                  = 0;
 	uint32_t value_index                       = 0;
 	uint32_t vector_value_data_size            = 0;
+	uint16_t value_16bit                       = 0;
 	int has_variable_data_size                 = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	system_character_t *value_string           = NULL;
-	uint16_t value_16bit                       = 0;
 #endif
 
 	if( record == NULL )
@@ -671,7 +671,22 @@ int libfwps_record_copy_from_byte_stream(
 
 				goto on_error;
 			}
+#if defined( HAVE_DEBUG_OUTPUT )
+			if( libcnotify_verbose != 0 )
+			{
+				libcnotify_printf(
+				 "%s: vector values data:\n",
+				 function,
+				 value_index );
+				libcnotify_print_data(
+				 &( byte_stream[ byte_stream_offset ] ),
+				 internal_record->value_data_size,
+				 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
+			}
+#endif
 			internal_record->value_data_size *= number_of_values;
+
+			byte_stream_offset += internal_record->value_data_size;
 		}
 		else
 		{
@@ -691,6 +706,17 @@ int libfwps_record_copy_from_byte_stream(
 			     value_index < number_of_values;
 			     value_index++ )
 			{
+				if( byte_stream_offset > ( byte_stream_size - 4 ) )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+					 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+					 "%s: invalid byte stream size value too small.",
+					 function );
+
+					goto on_error;
+				}
 				byte_stream_copy_to_uint32_little_endian(
 				 &( byte_stream[ byte_stream_offset ] ),
 				 vector_value_data_size );
@@ -735,32 +761,101 @@ int libfwps_record_copy_from_byte_stream(
 
 					goto on_error;
 				}
-				internal_record->value_data_size += vector_value_data_size;
+#if defined( HAVE_DEBUG_OUTPUT )
+				if( libcnotify_verbose != 0 )
+				{
+					libcnotify_printf(
+					 "%s: vector value: %" PRIu32 " data:\n",
+					 function,
+					 value_index );
+					libcnotify_print_data(
+					 &( byte_stream[ byte_stream_offset ] ),
+					 vector_value_data_size,
+					 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
+				}
+#endif
+				byte_stream_offset += vector_value_data_size;
+
+				internal_record->value_data_size += 4 + vector_value_data_size;
+
+				if( byte_stream_offset <= ( byte_stream_size - 2 ) )
+				{
+					byte_stream_copy_to_uint16_little_endian(
+					 &( byte_stream[ byte_stream_offset ] ),
+					 value_16bit );
+
+					if( value_16bit == 0 )
+					{
+#if defined( HAVE_DEBUG_OUTPUT )
+						if( libcnotify_verbose != 0 )
+						{
+							libcnotify_printf(
+							 "%s: alignment padding data:\n",
+							 function );
+							libcnotify_print_data(
+							 &( byte_stream[ byte_stream_offset ] ),
+							 2,
+							 0 );
+						}
+#endif
+						byte_stream_offset += 2;
+
+						internal_record->value_data_size += 2;
+					}
+				}
 			}
 		}
 	}
-	else if( has_variable_data_size != 0 )
+	else
 	{
-		if( byte_stream_offset > ( byte_stream_size - 4 ) )
+		if( has_variable_data_size != 0 )
 		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-			 "%s: invalid byte stream size value too small.",
-			 function );
+			if( byte_stream_offset > ( byte_stream_size - 4 ) )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+				 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+				 "%s: invalid byte stream size value too small.",
+				 function );
 
-			goto on_error;
+				goto on_error;
+			}
+			byte_stream_copy_to_uint32_little_endian(
+			 &( byte_stream[ byte_stream_offset ] ),
+			 internal_record->value_data_size );
+
+			byte_stream_offset += 4;
+
+			if( internal_record->value_type == LIBFWPS_VALUE_TYPE_STRING_UNICODE )
+			{
+				if( internal_record->value_data_size > ( (size_t) SSIZE_MAX / 2 ) )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+					 "%s: invalid value data size value out of bounds.",
+					 function );
+
+					goto on_error;
+				}
+				internal_record->value_data_size *= 2;
+			}
 		}
-		byte_stream_copy_to_uint32_little_endian(
-		 &( byte_stream[ byte_stream_offset ] ),
-		 internal_record->value_data_size );
-
-		byte_stream_offset += 4;
-
-		if( internal_record->value_type == LIBFWPS_VALUE_TYPE_STRING_UNICODE )
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libcnotify_verbose != 0 )
 		{
-			if( internal_record->value_data_size > ( (size_t) SSIZE_MAX / 2 ) )
+			libcnotify_printf(
+			 "%s: value data size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 internal_record->value_data_size );
+		}
+#endif
+		if( internal_record->value_data_size > 0 )
+		{
+			if( ( internal_record->value_data_size > byte_stream_size )
+			 || ( byte_stream_offset > ( byte_stream_size - internal_record->value_data_size ) ) )
 			{
 				libcerror_error_set(
 				 error,
@@ -771,84 +866,59 @@ int libfwps_record_copy_from_byte_stream(
 
 				goto on_error;
 			}
-			internal_record->value_data_size *= 2;
-		}
-	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: value data size\t\t\t: %" PRIu32 "\n",
-		 function,
-		 internal_record->value_data_size );
-	}
+			if( libcnotify_verbose != 0 )
+			{
+				libcnotify_printf(
+				 "%s: value data:\n",
+				 function );
+				libcnotify_print_data(
+				 &( byte_stream[ byte_stream_offset ] ),
+				 internal_record->value_data_size,
+				 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
+			}
 #endif
-	if( internal_record->value_data_size > 0 )
-	{
-		if( ( internal_record->value_data_size > byte_stream_size )
-		 || ( byte_stream_offset > ( byte_stream_size - internal_record->value_data_size ) ) )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-			 "%s: invalid value data size value out of bounds.",
-			 function );
+			if( internal_record->value_data_size > MEMORY_MAXIMUM_ALLOCATION_SIZE )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
+				 "%s: invalid value data size value exceeds maximum.",
+				 function );
 
-			goto on_error;
-		}
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: value data:\n",
-			 function );
-			libcnotify_print_data(
-			 &( byte_stream[ byte_stream_offset ] ),
-			 internal_record->value_data_size,
-			 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
-		}
-#endif
-		if( internal_record->value_data_size > MEMORY_MAXIMUM_ALLOCATION_SIZE )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-			 "%s: invalid value data size value exceeds maximum.",
-			 function );
+				goto on_error;
+			}
+			internal_record->value_data = (uint8_t *) memory_allocate(
+			                                           sizeof( uint8_t ) * internal_record->value_data_size );
 
-			goto on_error;
-		}
-		internal_record->value_data = (uint8_t *) memory_allocate(
-		                                           sizeof( uint8_t ) * internal_record->value_data_size );
+			if( internal_record->value_data == NULL )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_MEMORY,
+				 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
+				 "%s: unable to create value data.",
+				 function );
 
-		if( internal_record->value_data == NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_MEMORY,
-			 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-			 "%s: unable to create value data.",
-			 function );
+				goto on_error;
+			}
+			if( memory_copy(
+			     internal_record->value_data,
+			     &( byte_stream[ byte_stream_offset ] ),
+			     internal_record->value_data_size ) == NULL )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_MEMORY,
+				 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
+				 "%s: unable to copy value data.",
+				 function );
 
-			goto on_error;
+				goto on_error;
+			}
+			byte_stream_offset += internal_record->value_data_size;
 		}
-		if( memory_copy(
-		     internal_record->value_data,
-		     &( byte_stream[ byte_stream_offset ] ),
-		     internal_record->value_data_size ) == NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_MEMORY,
-			 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
-			 "%s: unable to copy value data.",
-			 function );
-
-			goto on_error;
-		}
-		byte_stream_offset += internal_record->value_data_size;
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )

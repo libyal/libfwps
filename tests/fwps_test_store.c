@@ -325,6 +325,44 @@ int fwps_test_store_copy_from_byte_stream(
 	 "error",
 	 error );
 
+	/* Clean up
+	 */
+	result = libfwps_store_free(
+	          &store,
+	          &error );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "store",
+	 store );
+
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Initialize test
+	 */
+	result = libfwps_store_initialize(
+	          &store,
+	          &error );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	FWPS_TEST_ASSERT_IS_NOT_NULL(
+	 "store",
+	 store );
+
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	/* Test error cases
 	 */
 	result = libfwps_store_copy_from_byte_stream(
@@ -441,6 +479,84 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libfwps_store_get_number_of_sets function
+ * Returns 1 if successful or 0 if not
+ */
+int fwps_test_store_get_number_of_sets(
+     libfwps_store_t *store )
+{
+	libcerror_error_t *error = NULL;
+	int number_of_sets       = 0;
+	int result               = 0;
+
+	/* Test regular cases
+	 */
+	result = libfwps_store_get_number_of_sets(
+	          store,
+	          &number_of_sets,
+	          &error );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "number_of_sets",
+	 number_of_sets,
+	 1 );
+
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libfwps_store_get_number_of_sets(
+	          NULL,
+	          &number_of_sets,
+	          &error );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	FWPS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libfwps_store_get_number_of_sets(
+	          store,
+	          NULL,
+	          &error );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	FWPS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -453,6 +569,12 @@ int main(
      char * const argv[] FWPS_TEST_ATTRIBUTE_UNUSED )
 #endif
 {
+#if !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 )
+	libcerror_error_t *error = NULL;
+	libfwps_store_t *store   = NULL;
+	int result               = 0;
+#endif
+
 	FWPS_TEST_UNREFERENCED_PARAMETER( argc )
 	FWPS_TEST_UNREFERENCED_PARAMETER( argv )
 
@@ -468,9 +590,89 @@ int main(
 	 "libfwps_store_copy_from_byte_stream",
 	 fwps_test_store_copy_from_byte_stream );
 
+#if !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 )
+
+	/* Initialize store for tests
+	 */
+	result = libfwps_store_initialize(
+	          &store,
+	          &error );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	FWPS_TEST_ASSERT_IS_NOT_NULL(
+	 "store",
+	 store );
+
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libfwps_store_copy_from_byte_stream(
+	          store,
+	          fwps_test_store_data1,
+	          145,
+	          LIBFWPS_CODEPAGE_WINDOWS_1252,
+	          &error );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	FWPS_TEST_RUN_WITH_ARGS(
+	 "libfwps_store_get_number_of_sets",
+	 fwps_test_store_get_number_of_sets,
+	 store );
+
+	/* TODO: add tests for libfwps_store_get_set_by_index */
+
+	/* Clean up
+	 */
+	result = libfwps_store_free(
+	          &store,
+	          &error );
+
+	FWPS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "store",
+	 store );
+
+	FWPS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 ) */
+
 	return( EXIT_SUCCESS );
 
 on_error:
+#if !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 )
+
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( store != NULL )
+	{
+		libfwps_store_free(
+		 &store,
+		 NULL );
+	}
+#endif /* !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 ) */
+
 	return( EXIT_FAILURE );
 }
 

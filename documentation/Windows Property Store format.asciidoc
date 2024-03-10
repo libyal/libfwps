@@ -93,7 +93,7 @@ The last property set should be of size 0 to terminate the property store.
 In Windows Shell items the size of the property store is not necessarily stored
 directly before the first property set.
 
-=== Property set (or Property storage or Shell property sheet)
+=== Property set (or property storage or shell property sheet)
 
 The property set is variable of size and consists of:
 
