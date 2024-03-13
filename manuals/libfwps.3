@@ -1,4 +1,4 @@
-.Dd February 25, 2024
+.Dd March 13, 2024
 .Dt libfwps 3
 .Os libfwps
 .Sh NAME
@@ -76,6 +76,8 @@ Record functions
 .Fn libfwps_record_get_data_as_32bit_integer "libfwps_record_t *record" "uint32_t *value_32bit" "libfwps_error_t **error"
 .Ft int
 .Fn libfwps_record_get_data_as_64bit_integer "libfwps_record_t *record" "uint64_t *value_64bit" "libfwps_error_t **error"
+.Ft int
+.Fn libfwps_record_get_data_as_floatingtime "libfwps_record_t *record" "uint64_t *floatingtime" "libfwps_error_t **error"
 .Ft int
 .Fn libfwps_record_get_data_as_filetime "libfwps_record_t *record" "uint64_t *filetime" "libfwps_error_t **error"
 .Ft int

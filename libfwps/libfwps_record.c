@@ -474,12 +474,16 @@ int libfwps_record_copy_from_byte_stream(
 			internal_record->value_data_size = 2;
 			break;
 
+		case LIBFWPS_VALUE_TYPE_ERROR:
 		case LIBFWPS_VALUE_TYPE_FLOAT_32BIT:
 		case LIBFWPS_VALUE_TYPE_INTEGER_32BIT_SIGNED:
 		case LIBFWPS_VALUE_TYPE_INTEGER_32BIT_UNSIGNED:
+		case LIBFWPS_VALUE_TYPE_INTEGER_SIGNED:
+		case LIBFWPS_VALUE_TYPE_INTEGER_UNSIGNED:
 			internal_record->value_data_size = 4;
 			break;
 
+		case LIBFWPS_VALUE_TYPE_APPLICATION_TIME:
 		case LIBFWPS_VALUE_TYPE_CURRENCY:
 		case LIBFWPS_VALUE_TYPE_DOUBLE_64BIT:
 		case LIBFWPS_VALUE_TYPE_FILETIME:
@@ -493,6 +497,7 @@ int libfwps_record_copy_from_byte_stream(
 			internal_record->value_data_size = 16;
 			break;
 
+		case LIBFWPS_VALUE_TYPE_BINARY_DATA:
 		case LIBFWPS_VALUE_TYPE_BINARY_STRING:
 		case LIBFWPS_VALUE_TYPE_STREAM:
 		case LIBFWPS_VALUE_TYPE_STRING_ASCII:
@@ -1824,9 +1829,11 @@ int libfwps_record_get_data_as_32bit_integer(
 	}
 	internal_record = (libfwps_internal_record_t *) record;
 
-	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_32BIT_SIGNED )
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_ERROR )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_32BIT_SIGNED )
 	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_32BIT_UNSIGNED )
-	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_ERROR ) )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_SIGNED )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_UNSIGNED ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -1902,10 +1909,11 @@ int libfwps_record_get_data_as_64bit_integer(
 	}
 	internal_record = (libfwps_internal_record_t *) record;
 
-	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_64BIT_SIGNED )
-	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_64BIT_UNSIGNED )
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_APPLICATION_TIME )
 	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_CURRENCY )
-	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_FILETIME ) )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_FILETIME )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_64BIT_SIGNED )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_INTEGER_64BIT_UNSIGNED ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -1953,6 +1961,82 @@ int libfwps_record_get_data_as_64bit_integer(
 	byte_stream_copy_to_uint64_little_endian(
 	 internal_record->value_data,
 	 *value_64bit );
+
+	return( 1 );
+}
+
+/* Retrieves the data as a 64-bit floatingtime value
+ * Returns 1 if successful or -1 on error
+ */
+int libfwps_record_get_data_as_floatingtime(
+     libfwps_record_t *record,
+     uint64_t *floatingtime,
+     libcerror_error_t **error )
+{
+	libfwps_internal_record_t *internal_record = NULL;
+	static char *function                      = "libfwps_record_get_data_as_floatingtime";
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record entry.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfwps_internal_record_t *) record;
+
+	if( internal_record->value_type != LIBFWPS_VALUE_TYPE_APPLICATION_TIME )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: invalid record entry - unsupported value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_record->value_type );
+
+		return( -1 );
+	}
+	if( internal_record->value_data == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid record entry - missing value data.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_record->value_data_size != 8 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported value data size.",
+		 function );
+
+		return( -1 );
+	}
+	if( floatingtime == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid floatingtime.",
+		 function );
+
+		return( -1 );
+	}
+	byte_stream_copy_to_uint64_little_endian(
+	 internal_record->value_data,
+	 *floatingtime );
 
 	return( 1 );
 }
@@ -2060,7 +2144,8 @@ int libfwps_record_get_data_as_floating_point(
 	}
 	internal_record = (libfwps_internal_record_t *) record;
 
-	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_FLOAT_32BIT )
+	if( ( internal_record->value_type != LIBFWPS_VALUE_TYPE_APPLICATION_TIME )
+	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_FLOAT_32BIT )
 	 && ( internal_record->value_type != LIBFWPS_VALUE_TYPE_DOUBLE_64BIT ) )
 	{
 		libcerror_error_set(

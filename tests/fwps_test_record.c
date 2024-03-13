@@ -793,6 +793,7 @@ int main(
 	return( EXIT_SUCCESS );
 
 on_error:
+#if defined( __GNUC__ ) && !defined( LIBFWPS_DLL_IMPORT )
 #if !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 )
 
 	if( error != NULL )
@@ -807,6 +808,7 @@ on_error:
 		 NULL );
 	}
 #endif /* !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFWPS_DLL_IMPORT ) */
 
 	return( EXIT_FAILURE );
 }
