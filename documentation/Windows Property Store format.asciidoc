@@ -81,7 +81,7 @@ The property store is variable of size and consists of:
 |===
 | Offset | Size | Value | Description
 | 0 | 4 | | Size of the property store +
-[yellow-background]*Includes the 4 bytes of the size itself*
+The size includes the 4 bytes of the size itself
 | 4 | ... | | Zero or more property sets
 | ... | 4 | 0 | Terminal identifier +
 Signifies the end of the property store
@@ -101,7 +101,7 @@ The property set is variable of size and consists of:
 |===
 | Offset | Size | Value | Description
 | 0 | 4 | | Size of the property set +
-[yellow-background]*Includes the 4 bytes of the size itself*
+The size includes the 4 bytes of the size itself
 | 4 | 4 | "1SPS" | Version +
 (Serialized property storage version 1)
 | 8 | 16 | | Format class (or property set) identifier +
@@ -129,7 +129,7 @@ The numeric property record is variable of size and consists of:
 |===
 | Offset | Size | Value | Description
 | 0 | 4 | | Size of the property record +
-[yellow-background]*Includes the 4 bytes of the size itself*
+The size includes the 4 bytes of the size itself
 | 4 | 4 | | Entry type (or property identifier)
 | 8 | 1 | 0x00 | Reserved
 | 9 | ... | | Typed property value
@@ -143,7 +143,7 @@ The name property record is variable of size and consists of:
 |===
 | Offset | Size | Value | Description
 | 0 | 4 | | Size of the property record +
-[yellow-background]*Includes the 4 bytes of the size itself*
+The size includes the 4 bytes of the size itself
 | 4 | 4 | | Entry name size
 | 8 | 1 | 0x00 | Reserved
 | 9 | ... | | Entry name string +
