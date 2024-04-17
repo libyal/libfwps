@@ -15,13 +15,11 @@ EXTRA_DIST = \
 	libfwps/features.h.in \
 	libfwps/types.h.in
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	libfwps.h \
+	libfwps/definitions.h \
+	libfwps/features.h \
+	libfwps/types.h \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f libfwps.h
-	-rm -f libfwps/definitions.h
-	-rm -f libfwps/features.h
-	-rm -f libfwps/types.h
-	-rm -f Makefile
 
