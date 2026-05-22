@@ -24,6 +24,10 @@
 
 /* The libfwps type support features
  */
+#if defined( WINAPI ) || @HAVE_MULTI_THREAD_SUPPORT@
+#define LIBFWPS_HAVE_MULTI_THREAD_SUPPORT	1
+#endif
+
 #if !defined( LIBFWPS_DEPRECATED )
 #if defined( __GNUC__ ) && __GNUC__ >= 3
 #define LIBFWPS_DEPRECATED	__attribute__ ((__deprecated__))

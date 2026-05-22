@@ -31,14 +31,17 @@
  */
 #if defined( LIBFWPS_DLL_EXPORT )
 #define LIBFWPS_EXTERN __declspec(dllexport)
+#define LIBFWPS_EXTERN_VARIABLE extern __declspec(dllexport)
 
 #elif defined( LIBFWPS_DLL_IMPORT )
-#define LIBFWPS_EXTERN extern __declspec(dllimport)
+#define LIBFWPS_EXTERN __declspec(dllimport)
+#define LIBFWPS_EXTERN_VARIABLE extern __declspec(dllimport)
 
 #else
 #define LIBFWPS_EXTERN extern
+#define LIBFWPS_EXTERN_VARIABLE extern
 
-#endif
+#endif /* defined( LIBFWPS_DLL_EXPORT ) */
 
 #endif /* !defined( _LIBFWPS_EXTERN_H ) */
 
