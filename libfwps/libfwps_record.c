@@ -691,7 +691,9 @@ int libfwps_record_copy_from_byte_stream(
 #endif
 			internal_record->value_data_size *= number_of_values;
 
+#if defined( HAVE_DEBUG_OUTPUT )
 			byte_stream_offset += internal_record->value_data_size;
+#endif
 		}
 		else
 		{
@@ -922,7 +924,9 @@ int libfwps_record_copy_from_byte_stream(
 
 				goto on_error;
 			}
+#if defined( HAVE_DEBUG_OUTPUT )
 			byte_stream_offset += internal_record->value_data_size;
+#endif
 		}
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
