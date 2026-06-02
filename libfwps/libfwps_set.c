@@ -33,12 +33,12 @@
 #include "libfwps_set.h"
 #include "libfwps_types.h"
 
-const char *libfwps_serialized_property_set_signature = "1SPS";
+static const char *libfwps_serialized_property_set_signature = "1SPS";
 
-uint8_t libfwps_format_class_identifier_named_properties[ 16 ] = {
+static uint8_t libfwps_format_class_identifier_named_properties[ 16 ] = {
 	0x05, 0xd5, 0xcd, 0xd5, 0x9c, 0x2e, 0x1b, 0x10, 0x93, 0x97, 0x08, 0x00, 0x2b, 0x2c, 0xf9, 0xae };
 
-uint8_t libfwps_format_class_identifier_unknown1[ 16 ] = {
+static uint8_t libfwps_format_class_identifier_unknown1[ 16 ] = {
 	0x30, 0xf1, 0x25, 0xb7, 0xef, 0x47, 0x1a, 0x10, 0xa5, 0xf1, 0x02, 0x60, 0x8c, 0x9e, 0xeb, 0xac };
 
 /* Creates a set

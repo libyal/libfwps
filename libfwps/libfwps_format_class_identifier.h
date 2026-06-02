@@ -40,7 +40,7 @@ struct libfwps_format_class_identifier_definition
 {
 	/* The class identifier
 	 */
-	uint8_t *class_identifier;
+	const uint8_t *class_identifier;
 
 	/* The identifier
 	 */
@@ -51,8 +51,11 @@ struct libfwps_format_class_identifier_definition
 	const char *description;
 };
 
-extern uint8_t libfwps_format_class_identifier_document_summary_information[ 16 ];
-extern uint8_t libfwps_format_class_identifier_summary_information[ 16 ];
+LIBFWPS_INTERNAL \
+const uint8_t libfwps_format_class_identifier_document_summary_information[ 16 ];
+
+LIBFWPS_INTERNAL \
+const uint8_t libfwps_format_class_identifier_summary_information[ 16 ];
 
 LIBFWPS_EXTERN \
 const char *libfwps_format_class_identifier_get_identifier(

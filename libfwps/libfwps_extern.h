@@ -24,6 +24,19 @@
 
 #include <common.h>
 
+#if !defined( __CYGWIN__ ) && !defined( _WIN32 ) && defined( __has_attribute )
+#if __has_attribute( visibility )
+#define LIBFWPS_INTERNAL	__attribute__((visibility("hidden"))) extern
+
+#else
+#define LIBFWPS_INTERNAL	extern
+
+#endif /* __has_attribute( visibility ) */
+#else
+#define LIBFWPS_INTERNAL	extern
+
+#endif /* !defined( __CYGWIN__ ) && !defined( _WIN32 ) && defined( __has_attribute ) */
+
 /* Define HAVE_LOCAL_LIBFWPS for local use of libfwps
  */
 #if !defined( HAVE_LOCAL_LIBFWPS )
@@ -32,7 +45,7 @@
 
 #else
 #define LIBFWPS_EXTERN		/* extern */
-#define LIBFWPS_EXTERN_VARIABLE	extern
+#define LIBFWPS_EXTERN_VARIABLE	LIBFWPS_INTERNAL
 
 #endif /* !defined( HAVE_LOCAL_LIBFWPS ) */
 
