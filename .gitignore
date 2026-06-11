@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20251129
+# Version: 20260604
 
 # Generic auto-generated build files
 *~
@@ -128,7 +128,12 @@ stamp-h[1-9]
 /libfwps/libfwps.rc
 /libfwps/libfwps_definitions.h
 /pyproject.toml
+/tests/*.dir
 /tests/*.exe
+/tests/*.log
+/tests/*.tmp
+/tests/atconfig
+/tests/atlocal
 /tests/fwps_test_error
 /tests/fwps_test_notify
 /tests/fwps_test_property_identifier
@@ -137,6 +142,10 @@ stamp-h[1-9]
 /tests/fwps_test_store
 /tests/fwps_test_support
 /tests/notify_stream.log
+/tests/package.m4
+/tests/test_library
+/tests/test_manpages
+/tests/test_python_module
 /tests/tmp*
 
 # Local library dependencies specific files
