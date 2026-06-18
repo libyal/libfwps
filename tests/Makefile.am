@@ -11,8 +11,6 @@ AM_CPPFLAGS = \
 	@PTHREAD_CPPFLAGS@ \
 	@LIBFWPS_DLL_IMPORT@
 
-check_PYTHONdir = $(abs_top_builddir)
-
 BUILT_SOURCES = package.m4
 
 check_AUTOTESTS = \
@@ -23,7 +21,7 @@ if HAVE_PYTHON_TESTS
 check_AUTOTESTS += test_python_module
 endif
 
-check_PYTHON_SCRIPTS = \
+check_SCRIPTS = \
 	pyfwps_test_record.py \
 	pyfwps_test_set.py \
 	pyfwps_test_store.py \
@@ -161,7 +159,7 @@ test_python_module: package.m4 test_python_module.at
 
 EXTRA_DIST = \
 	$(check_AUTOTESTS:=.at) \
-	$(check_PYTHON_SCRIPTS) \
+	$(check_SCRIPTS) \
 	package.m4 \
 	test_macros.at
 
