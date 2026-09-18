@@ -28,156 +28,160 @@ import pyfwps
 
 
 class RecordTypeTests(unittest.TestCase):
-  """Tests the record type."""
+    """Tests the record type."""
 
-  _TEST_DATA = bytes(bytearray([
-      0x89, 0x00, 0x00, 0x00, 0x31, 0x53, 0x50, 0x53, 0xe2, 0x8a, 0x58, 0x46,
-      0xbc, 0x4c, 0x38, 0x43, 0xbb, 0xfc, 0x13, 0x93, 0x26, 0x98, 0x6d, 0xce,
-      0x6d, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x1f, 0x00, 0x00,
-      0x00, 0x2e, 0x00, 0x00, 0x00, 0x53, 0x00, 0x2d, 0x00, 0x31, 0x00, 0x2d,
-      0x00, 0x35, 0x00, 0x2d, 0x00, 0x32, 0x00, 0x31, 0x00, 0x2d, 0x00, 0x34,
-      0x00, 0x30, 0x00, 0x36, 0x00, 0x30, 0x00, 0x32, 0x00, 0x38, 0x00, 0x39,
-      0x00, 0x33, 0x00, 0x32, 0x00, 0x33, 0x00, 0x2d, 0x00, 0x31, 0x00, 0x39,
-      0x00, 0x39, 0x00, 0x37, 0x00, 0x30, 0x00, 0x31, 0x00, 0x30, 0x00, 0x32,
-      0x00, 0x32, 0x00, 0x2d, 0x00, 0x33, 0x00, 0x39, 0x00, 0x32, 0x00, 0x34,
-      0x00, 0x38, 0x00, 0x30, 0x00, 0x31, 0x00, 0x36, 0x00, 0x38, 0x00, 0x31,
-      0x00, 0x2d, 0x00, 0x31, 0x00, 0x30, 0x00, 0x30, 0x00, 0x30, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]))
+    # fmt: off
 
-  def test_get_entry_name(self):
-    """Tests the get_entry_name function and entry_name property."""
-    fwps_set = pyfwps.set()
+    _TEST_DATA = bytes(bytearray([
+        0x89, 0x00, 0x00, 0x00, 0x31, 0x53, 0x50, 0x53, 0xe2, 0x8a, 0x58, 0x46,
+        0xbc, 0x4c, 0x38, 0x43, 0xbb, 0xfc, 0x13, 0x93, 0x26, 0x98, 0x6d, 0xce,
+        0x6d, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x1f, 0x00, 0x00,
+        0x00, 0x2e, 0x00, 0x00, 0x00, 0x53, 0x00, 0x2d, 0x00, 0x31, 0x00, 0x2d,
+        0x00, 0x35, 0x00, 0x2d, 0x00, 0x32, 0x00, 0x31, 0x00, 0x2d, 0x00, 0x34,
+        0x00, 0x30, 0x00, 0x36, 0x00, 0x30, 0x00, 0x32, 0x00, 0x38, 0x00, 0x39,
+        0x00, 0x33, 0x00, 0x32, 0x00, 0x33, 0x00, 0x2d, 0x00, 0x31, 0x00, 0x39,
+        0x00, 0x39, 0x00, 0x37, 0x00, 0x30, 0x00, 0x31, 0x00, 0x30, 0x00, 0x32,
+        0x00, 0x32, 0x00, 0x2d, 0x00, 0x33, 0x00, 0x39, 0x00, 0x32, 0x00, 0x34,
+        0x00, 0x38, 0x00, 0x30, 0x00, 0x31, 0x00, 0x36, 0x00, 0x38, 0x00, 0x31,
+        0x00, 0x2d, 0x00, 0x31, 0x00, 0x30, 0x00, 0x30, 0x00, 0x30, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]))
 
-    fwps_set.copy_from_byte_stream(self._TEST_DATA)
+    # fmt: on
 
-    fwps_record = fwps_set.get_record(0)
-    self.assertIsNotNone(fwps_record)
+    def test_get_entry_name(self):
+        """Tests the get_entry_name function and entry_name property."""
+        fwps_set = pyfwps.set()
 
-    entry_name = fwps_record.get_entry_name()
-    self.assertIsNone(entry_name)
+        fwps_set.copy_from_byte_stream(self._TEST_DATA)
 
-    self.assertIsNone(fwps_record.entry_name)
+        fwps_record = fwps_set.get_record(0)
+        self.assertIsNotNone(fwps_record)
 
-  def test_get_entry_type(self):
-    """Tests the get_entry_type function and entry_type property."""
-    fwps_set = pyfwps.set()
+        entry_name = fwps_record.get_entry_name()
+        self.assertIsNone(entry_name)
 
-    fwps_set.copy_from_byte_stream(self._TEST_DATA)
+        self.assertIsNone(fwps_record.entry_name)
 
-    fwps_record = fwps_set.get_record(0)
-    self.assertIsNotNone(fwps_record)
+    def test_get_entry_type(self):
+        """Tests the get_entry_type function and entry_type property."""
+        fwps_set = pyfwps.set()
 
-    entry_type = fwps_record.get_entry_type()
-    self.assertEqual(entry_type, 4)
+        fwps_set.copy_from_byte_stream(self._TEST_DATA)
 
-    self.assertEqual(fwps_record.entry_type, 4)
+        fwps_record = fwps_set.get_record(0)
+        self.assertIsNotNone(fwps_record)
 
-  def test_get_value_name(self):
-    """Tests the get_value_name function and value_name property."""
-    fwps_set = pyfwps.set()
+        entry_type = fwps_record.get_entry_type()
+        self.assertEqual(entry_type, 4)
 
-    fwps_set.copy_from_byte_stream(self._TEST_DATA)
+        self.assertEqual(fwps_record.entry_type, 4)
 
-    fwps_record = fwps_set.get_record(0)
-    self.assertIsNotNone(fwps_record)
+    def test_get_value_name(self):
+        """Tests the get_value_name function and value_name property."""
+        fwps_set = pyfwps.set()
 
-    value_name = fwps_record.get_value_name()
-    self.assertIsNone(value_name)
+        fwps_set.copy_from_byte_stream(self._TEST_DATA)
 
-    self.assertIsNone(fwps_record.value_name)
+        fwps_record = fwps_set.get_record(0)
+        self.assertIsNotNone(fwps_record)
 
-  def test_get_value_type(self):
-    """Tests the get_value_type function and value_type property."""
-    fwps_set = pyfwps.set()
+        value_name = fwps_record.get_value_name()
+        self.assertIsNone(value_name)
 
-    fwps_set.copy_from_byte_stream(self._TEST_DATA)
+        self.assertIsNone(fwps_record.value_name)
 
-    fwps_record = fwps_set.get_record(0)
-    self.assertIsNotNone(fwps_record)
+    def test_get_value_type(self):
+        """Tests the get_value_type function and value_type property."""
+        fwps_set = pyfwps.set()
 
-    value_type = fwps_record.get_value_type()
-    self.assertEqual(value_type, 0x001f)
+        fwps_set.copy_from_byte_stream(self._TEST_DATA)
 
-    self.assertEqual(fwps_record.value_type, 0x001f)
+        fwps_record = fwps_set.get_record(0)
+        self.assertIsNotNone(fwps_record)
 
-  def test_get_data(self):
-    """Tests the get_data function and data property."""
-    fwps_set = pyfwps.set()
+        value_type = fwps_record.get_value_type()
+        self.assertEqual(value_type, 0x001F)
 
-    fwps_set.copy_from_byte_stream(self._TEST_DATA)
+        self.assertEqual(fwps_record.value_type, 0x001F)
 
-    fwps_record = fwps_set.get_record(0)
-    self.assertIsNotNone(fwps_record)
+    def test_get_data(self):
+        """Tests the get_data function and data property."""
+        fwps_set = pyfwps.set()
 
-    data = fwps_record.get_data()
-    self.assertIsNotNone(data)
+        fwps_set.copy_from_byte_stream(self._TEST_DATA)
 
-    self.assertIsNotNone(fwps_record.data)
+        fwps_record = fwps_set.get_record(0)
+        self.assertIsNotNone(fwps_record)
 
-  def test_get_data_as_boolean(self):
-    """Tests the get_data_as_boolean function and data_as_boolean property."""
-    fwps_set = pyfwps.set()
+        data = fwps_record.get_data()
+        self.assertIsNotNone(data)
 
-    fwps_set.copy_from_byte_stream(self._TEST_DATA)
+        self.assertIsNotNone(fwps_record.data)
 
-    fwps_record = fwps_set.get_record(0)
-    self.assertIsNotNone(fwps_record)
+    def test_get_data_as_boolean(self):
+        """Tests the get_data_as_boolean function and data_as_boolean property."""
+        fwps_set = pyfwps.set()
 
-    with self.assertRaises(IOError):
-      fwps_record.get_data_as_boolean()
+        fwps_set.copy_from_byte_stream(self._TEST_DATA)
 
-    with self.assertRaises(IOError):
-      fwps_record.data_as_boolean
+        fwps_record = fwps_set.get_record(0)
+        self.assertIsNotNone(fwps_record)
 
-  def test_get_data_as_integer(self):
-    """Tests the get_data_as_integer function and data_as_integer property."""
-    fwps_set = pyfwps.set()
+        with self.assertRaises(IOError):
+            fwps_record.get_data_as_boolean()
 
-    fwps_set.copy_from_byte_stream(self._TEST_DATA)
+        with self.assertRaises(IOError):
+            fwps_record.data_as_boolean
 
-    fwps_record = fwps_set.get_record(0)
-    self.assertIsNotNone(fwps_record)
+    def test_get_data_as_integer(self):
+        """Tests the get_data_as_integer function and data_as_integer property."""
+        fwps_set = pyfwps.set()
 
-    with self.assertRaises(IOError):
-      fwps_record.get_data_as_integer()
+        fwps_set.copy_from_byte_stream(self._TEST_DATA)
 
-    with self.assertRaises(IOError):
-      fwps_record.data_as_integer
+        fwps_record = fwps_set.get_record(0)
+        self.assertIsNotNone(fwps_record)
 
-  def test_get_data_as_floating_point(self):
-    """Tests the get_data_as_floating_point function and data_as_floating_point property."""
-    fwps_set = pyfwps.set()
+        with self.assertRaises(IOError):
+            fwps_record.get_data_as_integer()
 
-    fwps_set.copy_from_byte_stream(self._TEST_DATA)
+        with self.assertRaises(IOError):
+            fwps_record.data_as_integer
 
-    fwps_record = fwps_set.get_record(0)
-    self.assertIsNotNone(fwps_record)
+    def test_get_data_as_floating_point(self):
+        """Tests the get_data_as_floating_point function and data_as_floating_point property."""
+        fwps_set = pyfwps.set()
 
-    with self.assertRaises(IOError):
-      fwps_record.get_data_as_floating_point()
+        fwps_set.copy_from_byte_stream(self._TEST_DATA)
 
-    with self.assertRaises(IOError):
-      fwps_record.data_as_floating_point
+        fwps_record = fwps_set.get_record(0)
+        self.assertIsNotNone(fwps_record)
 
-  def test_get_data_as_string(self):
-    """Tests the get_data_as_string function and data_as_string property."""
-    fwps_set = pyfwps.set()
+        with self.assertRaises(IOError):
+            fwps_record.get_data_as_floating_point()
 
-    fwps_set.copy_from_byte_stream(self._TEST_DATA)
+        with self.assertRaises(IOError):
+            fwps_record.data_as_floating_point
 
-    fwps_record = fwps_set.get_record(0)
-    self.assertIsNotNone(fwps_record)
+    def test_get_data_as_string(self):
+        """Tests the get_data_as_string function and data_as_string property."""
+        fwps_set = pyfwps.set()
 
-    data_as_string = fwps_record.get_data_as_string()
-    self.assertIsNotNone(data_as_string)
+        fwps_set.copy_from_byte_stream(self._TEST_DATA)
 
-    self.assertIsNotNone(fwps_record.data_as_string)
+        fwps_record = fwps_set.get_record(0)
+        self.assertIsNotNone(fwps_record)
+
+        data_as_string = fwps_record.get_data_as_string()
+        self.assertIsNotNone(data_as_string)
+
+        self.assertIsNotNone(fwps_record.data_as_string)
 
 
 if __name__ == "__main__":
-  argument_parser = argparse.ArgumentParser()
+    argument_parser = argparse.ArgumentParser()
 
-  options, unknown_options = argument_parser.parse_known_args()
-  unknown_options.insert(0, sys.argv[0])
+    options, unknown_options = argument_parser.parse_known_args()
+    unknown_options.insert(0, sys.argv[0])
 
-  unittest.main(argv=unknown_options, verbosity=2)
+    unittest.main(argv=unknown_options, verbosity=2)
