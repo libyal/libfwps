@@ -105,7 +105,7 @@ void ossfuzz_fuzz_record(
 	          record,
 	          &utf8_string_size,
 	          NULL );
-       
+
 	if( ( result == 1 )
 	 && ( utf8_string_size > 0 )
 	 && ( utf8_string_size <= OSS_FUZZ_MAXIMUM_DATA_SIZE ) )
@@ -131,7 +131,7 @@ void ossfuzz_fuzz_record(
 	          record,
 	          &utf16_string_size,
 	          NULL );
-       
+
 	if( ( result == 1 )
 	 && ( utf16_string_size > 0 )
 	 && ( ( utf16_string_size * sizeof( uint16_t ) ) <= OSS_FUZZ_MAXIMUM_DATA_SIZE ) )
@@ -157,7 +157,7 @@ void ossfuzz_fuzz_record(
 	          record,
 	          &utf8_string_size,
 	          NULL );
-       
+
 	if( ( result == 1 )
 	 && ( utf8_string_size > 0 )
 	 && ( utf8_string_size <= OSS_FUZZ_MAXIMUM_DATA_SIZE ) )
@@ -183,7 +183,7 @@ void ossfuzz_fuzz_record(
 	          record,
 	          &utf16_string_size,
 	          NULL );
-       
+
 	if( ( result == 1 )
 	 && ( utf16_string_size > 0 )
 	 && ( ( utf16_string_size * sizeof( uint16_t ) ) <= OSS_FUZZ_MAXIMUM_DATA_SIZE ) )
@@ -209,7 +209,7 @@ void ossfuzz_fuzz_record(
 	          record,
 	          &data_size,
 	          NULL );
-       
+
 	if( ( result == 1 )
 	 && ( data_size > 0 )
 	 && ( data_size <= OSS_FUZZ_MAXIMUM_DATA_SIZE ) )
@@ -275,7 +275,7 @@ void ossfuzz_fuzz_record(
 	          record,
 	          &utf8_string_size,
 	          NULL );
-       
+
 	if( ( result == 1 )
 	 && ( utf8_string_size > 0 )
 	 && ( utf8_string_size <= OSS_FUZZ_MAXIMUM_DATA_SIZE ) )
@@ -301,7 +301,7 @@ void ossfuzz_fuzz_record(
 	          record,
 	          &utf16_string_size,
 	          NULL );
-       
+
 	if( ( result == 1 )
 	 && ( utf16_string_size > 0 )
 	 && ( ( utf16_string_size * sizeof( uint16_t ) ) <= OSS_FUZZ_MAXIMUM_DATA_SIZE ) )
@@ -327,7 +327,7 @@ void ossfuzz_fuzz_record(
 	          record,
 	          &utf8_string_size,
 	          NULL );
-       
+
 	if( ( result == 1 )
 	 && ( utf8_string_size > 0 )
 	 && ( utf8_string_size <= OSS_FUZZ_MAXIMUM_DATA_SIZE ) )
@@ -353,7 +353,7 @@ void ossfuzz_fuzz_record(
 	          record,
 	          &utf16_string_size,
 	          NULL );
-       
+
 	if( ( result == 1 )
 	 && ( utf16_string_size > 0 )
 	 && ( ( utf16_string_size * sizeof( uint16_t ) ) <= OSS_FUZZ_MAXIMUM_DATA_SIZE ) )

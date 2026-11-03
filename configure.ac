@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
   [libfwps],
-  [20261029],
+  [20261103],
   [https://github.com/libyal/libfwps/issues])
 
 AC_CONFIG_SRCDIR(
