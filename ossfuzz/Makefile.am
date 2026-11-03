@@ -1,7 +1,15 @@
 if HAVE_LIB_FUZZING_ENGINE
 AM_CPPFLAGS = \
 	-I../include -I$(top_srcdir)/include \
-	-I../common -I$(top_srcdir)/common
+	-I../common -I$(top_srcdir)/common \
+	-I../libfwps -I$(top_srcdir)/libfwps \
+	@LIBCERROR_CPPFLAGS@ \
+	@LIBCTHREADS_CPPFLAGS@ \
+	@LIBCDATA_CPPFLAGS@ \
+	@LIBCNOTIFY_CPPFLAGS@ \
+	@LIBUNA_CPPFLAGS@ \
+	@LIBFDATETIME_CPPFLAGS@ \
+	@LIBFGUID_CPPFLAGS@
 
 bin_PROGRAMS = \
 	record_fuzzer \
